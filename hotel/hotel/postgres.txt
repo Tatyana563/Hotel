@@ -1,0 +1,63 @@
+CREATE TABLE city(
+id serial PRIMARY KEY,
+name VARCHAR (64)  NOT NULL UNIQUE,
+country VARCHAR (64)  NOT NULL
+                   );
+
+CREATE TABLE hotel(
+id serial PRIMARY KEY,
+name VARCHAR (64)  NOT NULL UNIQUE,
+type hotel_stars,
+meals hotel_meals,
+distance INTEGER,
+city_fk_id INTEGER,
+CONSTRAINT hotel_city FOREIGN KEY (city_fk_id)
+REFERENCES hotel(id));
+
+
+CREATE TABLE room(
+id serial PRIMARY KEY,
+number INTEGER,
+type room_type,
+sleeps sleeps_type,
+price INTEGER,
+square DOUBLE PRECISION,
+parking BOOLEAN,
+animals BOOLEAN,
+hotel_fk_id INTEGER,
+CONSTRAINT room_hotel FOREIGN KEY(hotel_fk_id)
+REFERENCES hotel(id));
+
+CREATE TYPE hotel_stars AS ENUM ('ONE',
+ 'TWO',
+ 'THREE',
+ 'FOUR',
+ 'FIVE');
+
+CREATE TYPE hotel_meals AS ENUM (
+'BREAKFAST',
+'BREAKFAST_DINNER',
+'SELF_CATERING',
+'ALL_INCLUSIVE');
+
+	CREATE TYPE room_type AS ENUM (
+	'SINGLE',
+    'DOUBLE',
+    'SUITE');
+
+	CREATE TYPE sleeps_type AS ENUM ( 'ONE',
+    'TWO',
+    'THREE',
+    'FOUR');
+
+    CREATE SEQUENCE city_sequence
+                            start 1
+                            increment 1
+
+    						CREATE SEQUENCE hotel_sequence
+                            start 1
+                            increment 1
+
+    						CREATE SEQUENCE hotel_sequence
+                            start 1
+                            increment 1
