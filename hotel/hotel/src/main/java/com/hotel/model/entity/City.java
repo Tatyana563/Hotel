@@ -1,4 +1,4 @@
-package com.hotel.model;
+package com.hotel.model.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +13,8 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="CITY")
-public class CityEntity implements Serializable {
+@Table(name="city")
+public class City implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_city")
     @SequenceGenerator(name="seq_city", sequenceName = "city_sequence", allocationSize = 1)
@@ -23,17 +23,17 @@ public class CityEntity implements Serializable {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "COUNTRY", nullable = false)
+   @Column(name = "COUNTRY", nullable = false)
     private String countryName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cityEntity")
-    private List<HotelEntity> hotelList = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
+    private List<Hotel> hotelList = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CityEntity that = (CityEntity) o;
+        City that = (City) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(countryName, that.countryName) &&

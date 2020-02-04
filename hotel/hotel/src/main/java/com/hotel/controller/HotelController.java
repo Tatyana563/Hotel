@@ -1,8 +1,8 @@
 package com.hotel.controller;
 
-import com.hotel.model.HotelEntity;
-import com.hotel.model.Meals;
-import com.hotel.model.StarRating;
+import com.hotel.model.entity.Hotel;
+import com.hotel.model.enumeration.Meals;
+import com.hotel.model.enumeration.StarRating;
 import com.hotel.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,18 +15,20 @@ public class HotelController {
     @Autowired
     private HotelService hotelService;
 
-@RequestMapping(value = "/hotel/new", method = RequestMethod.POST)
-    public void create(
+@RequestMapping(value = "/hotel2/new", method = RequestMethod.POST)
+    public String create(
         @RequestParam("name") String name,
-        @RequestParam("rate") StarRating rating,
-        @RequestParam("meals") Meals meals,
+        @RequestParam("rate") String rating,
+        @RequestParam(value = "meals", required = false) String meals,
         @RequestParam("distance") Integer distance
 ){
-    final HotelEntity hotel = new HotelEntity();
+    final Hotel hotel = new Hotel();
     hotel.setName(name);
-    hotel.setStarRating(rating);
+    hotel.setStarRating(StarRating.valueOf(rating));
     hotel.setDistance(distance);
-    hotel.setMeals(meals);
+    hotel.setMeals(Meals.valueOf(meals));
     hotelService.save(hotel);
+return "hotel_creation";
 }
+
 }

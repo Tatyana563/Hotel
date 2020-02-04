@@ -1,5 +1,7 @@
-package com.hotel.model;
+package com.hotel.model.entity;
 
+import com.hotel.model.enumeration.RoomType;
+import com.hotel.model.enumeration.Sleeps;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,8 +13,8 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="ROOM")
-public class RoomEntity implements Serializable {
+@Table(name="room")
+public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_city")
     @SequenceGenerator(name="seq_city", sequenceName = "city_sequence", allocationSize = 1)
@@ -21,7 +23,7 @@ public class RoomEntity implements Serializable {
     private Integer number;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE", nullable = false)
+   @Column(name = "TYPE", nullable = false)
     private RoomType type;
 
     @Enumerated(EnumType.STRING)
@@ -34,24 +36,24 @@ public class RoomEntity implements Serializable {
     @Column(name = "SQUARE")
     private Double square;
 
-    @Column(name = "PARKING")
+   @Column(name = "PARKING")
     private Boolean parking;
 
-    @Column(name = "ANIMALS")
+   @Column(name = "ANIMALS")
     private Boolean pets;
 
-    @Column(name = "HOTEL_FK_ID")
+    @Column(name = "HOTEL_FK_ID", insertable = false, updatable = false)
     private Integer hotelId;
 
     @ManyToOne(/*cascade = CascadeType.ALL*/)
     @JoinColumn(name = "HOTEL_FK_ID")
-    private HotelEntity hotelEntity;
+    private Hotel hotel;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RoomEntity that = (RoomEntity) o;
+        Room that = (Room) o;
         return Objects.equals(number, that.number) &&
                 type == that.type &&
                 sleeps == that.sleeps &&
@@ -60,11 +62,11 @@ public class RoomEntity implements Serializable {
                 Objects.equals(parking, that.parking) &&
                 Objects.equals(pets, that.pets) &&
                 Objects.equals(hotelId, that.hotelId) &&
-                Objects.equals(hotelEntity, that.hotelEntity);
+                Objects.equals(hotel, that.hotel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, type, sleeps, price, square, parking, pets, hotelId, hotelEntity);
+        return Objects.hash(number, type, sleeps, price, square, parking, pets, hotelId, hotel);
     }
 }

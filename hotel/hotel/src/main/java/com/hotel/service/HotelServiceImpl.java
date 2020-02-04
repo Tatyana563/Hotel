@@ -1,6 +1,6 @@
 package com.hotel.service;
 
-import com.hotel.model.HotelEntity;
+import com.hotel.model.entity.Hotel;
 import com.hotel.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,21 +15,21 @@ public class HotelServiceImpl implements HotelService {
 
     @Transactional
     @Override
-    public void save(HotelEntity hotelEntity) {
-        hotelRepository.save(hotelEntity);
+    public void save(Hotel hotel) {
+        hotelRepository.save(hotel);
 
     }
 
     @Transactional
     @Override
     public void delete(int id) {
-     HotelEntity hotelEntity = findById(id).get();
-     hotelRepository.delete(hotelEntity);
+     Hotel hotel = findById(id).get();
+     hotelRepository.delete(hotel);
     }
 
     @Transactional
-    public Optional<HotelEntity> findById(int id){
-        Optional<HotelEntity> hotel = hotelRepository.findById(id);
+    public Optional<Hotel> findById(int id){
+        Optional<Hotel> hotel = hotelRepository.findById(id);
         return Optional.ofNullable(hotel).orElse(null);
     }
 }
