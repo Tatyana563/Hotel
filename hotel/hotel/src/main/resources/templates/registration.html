@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="content">
+    <form name="f" th:action="@{/user/new}" method="post">
+        <fieldset>
+            <legend>Please fill in the registration form:</legend>
+
+            <table width="100%" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td align="right" width="100">Login</td>
+                    <td><input type="text" name="login" maxlength="50" size="20"></td>
+                </tr>
+                <tr>
+                    <td align="right">Password</td>
+                    <td><input type="password" name="password" maxlength="50" size="20"></td>
+                </tr>
+
+                <tr>
+                    <td align="right">E-mail</td>
+                    <td><input type="email" name="email" maxlength="50" size="20"></td>
+                </tr>
+
+                <tr>
+                    <td align="right">Phone</td>
+                    <td><input type="tel" name="phonenumber" maxlength="50" size="20"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Save"></td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+</div>
+</body>
+</html>

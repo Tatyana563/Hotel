@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .hotels {
+            text-align: center;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px 20px 10px 20px;
+            border: 1px solid #000;
+        }
+        th {
+            font: bold 1.2rem cursive;
+            text-transform: uppercase;
+        }
+        tr:hover {
+            background: bisque;
+        }
+    </style>
+</head>
+<body>
+<form name="f" th:action="@{/}" method="post">
+
+</form>
+<table class="table hotels">
+    <thead>
+    <tr class="headings">
+        <th class="column-title" th:text="id" />
+        <th class="column-title" th:text="name" />
+        <th class="column-title" th:text="type" />
+        <th class="column-title" th:text="meals" />
+        <th class="column-title" th:text="distance" />
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="hotel: ${hotels}">
+        <td  th:text="${hotel.id}"> </td>
+        <td  th:text="${hotel.name}"</td>
+        <td  th:text="${hotel.starRating}"</td>
+        <td  th:text="${hotel.meals}"</td>
+        <td  th:text="${hotel.distance}"</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

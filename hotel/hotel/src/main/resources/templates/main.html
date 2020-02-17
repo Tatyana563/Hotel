@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="contentforlogin">
+    <form name="f" th:action="@{/login}" method="post">
+        <fieldset>
+            <legend></legend>
+            <div th:if="${param.error}" class="alert alert-error">
+                Username or password is wrong!!!
+            </div>
+            <h2>Welcome!<h2>
+        </fieldset>
+    </form>
+</div>
+</body>
+</html>

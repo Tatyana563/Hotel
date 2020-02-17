@@ -4,8 +4,10 @@ import com.hotel.model.entity.Hotel;
 import com.hotel.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +27,12 @@ public class HotelServiceImpl implements HotelService {
     public void delete(int id) {
      Hotel hotel = findById(id).get();
      hotelRepository.delete(hotel);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Hotel> listAll() {
+        return hotelRepository.findAll();
     }
 
     @Transactional

@@ -61,3 +61,21 @@ CREATE TYPE hotel_meals AS ENUM (
     						CREATE SEQUENCE hotel_sequence
                             start 1
                             increment 1
+
+                            CREATE TABLE app_user(
+                                               user_id serial PRIMARY KEY,
+                                               username VARCHAR NOT NULL,
+                                               password VARCHAR NOT NULL,
+                                               phone VARCHAR (64),
+                                               email VARCHAR (64)  NOT NULL
+
+                                                                    );
+  CREATE TABLE task(
+id serial PRIMARY KEY,
+error_message VARCHAR,
+status VARCHAR NOT NULL,
+user_fk_id INTEGER NOT NULL,
+CONSTRAINT task_user FOREIGN KEY(user_fk_id)
+REFERENCES app_user(user_id));
+
+)

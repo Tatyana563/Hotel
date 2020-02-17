@@ -5,7 +5,10 @@ import com.hotel.model.enumeration.Meals;
 import com.hotel.model.enumeration.StarRating;
 import com.hotel.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HotelController {
     @Autowired
     private HotelService hotelService;
-
+    @Secured("ADMIN_ROLE")
 @RequestMapping(value = "/hotel2/new", method = RequestMethod.POST)
     public String create(
         @RequestParam("name") String name,
@@ -29,6 +32,13 @@ public class HotelController {
     hotel.setMeals(Meals.valueOf(meals));
     hotelService.save(hotel);
 return "hotel_creation";
+}
+
+@GetMapping("/")
+    public String mainPage(final Model model) {
+    model.addAttribute("hotels", hotelService.listAll());
+    return "/all_hotels";
+
 }
 
 }
