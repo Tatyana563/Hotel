@@ -14,4 +14,4 @@ tasks
 - send an email when a new user is registered
 - use forgot the password - send email
 - after log in redirect to all hotels page
--only admin can create hotels
+- only admin can create hotels

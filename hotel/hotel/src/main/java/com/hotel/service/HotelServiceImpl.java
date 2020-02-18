@@ -1,8 +1,10 @@
 package com.hotel.service;
 
+import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.entity.Hotel;
 import com.hotel.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,9 @@ import java.util.Optional;
 public class HotelServiceImpl implements HotelService {
     @Autowired
     private HotelRepository hotelRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Transactional
     @Override
@@ -29,6 +34,15 @@ public class HotelServiceImpl implements HotelService {
      hotelRepository.delete(hotel);
     }
 
+    @Override
+    public List<HotelBriefInfo> listAllHotelsBriefInfo() {
+
+        jdbcTemplate.query("select h.name, c.name from hotel h inner join city c on h.city_id = c.id",
+                );
+
+        return hotelRepository.listHotelsBriefInfo();
+    }
+
     @Transactional(readOnly = true)
     @Override
     public List<Hotel> listAll() {
@@ -40,4 +54,11 @@ public class HotelServiceImpl implements HotelService {
         Optional<Hotel> hotel = hotelRepository.findById(id);
         return Optional.ofNullable(hotel).orElse(null);
     }
+
+    @Transactional(readOnly = true)
+    public List<Hotel> listAllSorted()
+    {
+        return hotelRepository.findByOrderByDistanceAsc();
+    }
+
 }

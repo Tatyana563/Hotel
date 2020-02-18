@@ -15,14 +15,16 @@ import java.util.List;
 
 @Service
 public class TaskServiceImpl {
+    @Autowired
     private TaskRepository taskRepository;
+    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
+  /*  @Autowired
     public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
-    }
+    }*/
 
     public Collection<Task> getAllNotProcessedtasks(){
         List<TaskStatus> statuses = new ArrayList<>();
@@ -33,15 +35,15 @@ public class TaskServiceImpl {
     @Transactional
     public void createTask(int userId, boolean isNew){
    Task task = new Task();
-  // task.setUserEntity(userRepository.getOne(userId));
-  task.setUserEntity(userRepository.loadUserByUserId(userId));
+   task.setUserEntity(userRepository.getOne(userId));
+ // task.setUserEntity(userRepository.loadUserByUserId(userId));
    task.setStatus(isNew?TaskStatus.CREATED:TaskStatus.UPDATED);
 taskRepository.save(task);
     }
     @Transactional
     public void updateTask(int taskId,  TaskStatus status, String errorMessage){
-       // Task taskEntity = taskRepository.getOne(taskId);
-        Task task = taskRepository.loadTaskByTaskId(taskId);
+       Task task = taskRepository.getOne(taskId);
+      //  Task task = taskRepository.loadTaskByTaskId(taskId);
         task.setStatus(status);
         task.setErrorMessage(errorMessage);
        taskRepository.save(task);

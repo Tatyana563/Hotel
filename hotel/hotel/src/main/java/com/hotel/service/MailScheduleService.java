@@ -7,34 +7,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.Instant;
 import java.util.Collection;
-
+@Service
 public class MailScheduleService {
+   @Autowired
    private UserServiceImpl userService;
-   private TaskServiceImpl taskService;
-   private JavaMailSender javaMailSender;
 
-@Autowired
+   @Autowired
+   private TaskServiceImpl taskService;
+
+   @Autowired
+  private JavaMailSender javaMailSender;
+
+/*@Autowired
    public MailScheduleService(UserServiceImpl userService, TaskServiceImpl taskService, JavaMailSender javaMailSender) {
       this.userService = userService;
       this.taskService = taskService;
       this.javaMailSender = javaMailSender;
-   }
+   }*/
    private void sendEmailInternal(UserEntity userEntity, boolean created) throws MessagingException {
       MimeMessage mimeMessage = javaMailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
       helper.setText("Your username:" + userEntity.getName(), "Your password" + userEntity.getPassword());
-      helper.setTo("nikolaev.english@gmail.com");
+      helper.setTo("kornushkova56@gmail.com");
       helper.setSubject(created ? "New user is created" : "New user is updated");
       javaMailSender.send(mimeMessage);
    }
 
    @Scheduled(cron = "0/1 * * * * * ")
    public void sendEmail() throws MessagingException {
+      System.out.println("run task " + Instant.now());
       Collection<Task> tasks = taskService.getAllNotProcessedtasks();
       if (CollectionUtils.isEmpty(tasks)) return;
       for (Task taskEntity : tasks) {

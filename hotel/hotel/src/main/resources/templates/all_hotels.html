@@ -33,17 +33,35 @@
         <th class="column-title" th:text="type" />
         <th class="column-title" th:text="meals" />
         <th class="column-title" th:text="distance" />
+        <th class="column-title" th:text="edit" />
     </tr>
     </thead>
     <tbody>
     <tr th:each="hotel: ${hotels}">
         <td  th:text="${hotel.id}"> </td>
-        <td  th:text="${hotel.name}"</td>
-        <td  th:text="${hotel.starRating}"</td>
-        <td  th:text="${hotel.meals}"</td>
-        <td  th:text="${hotel.distance}"</td>
+        <td  th:text="${hotel.name}"></td>
+        <td  th:text="${hotel.starRating}"></td>
+        <td  th:text="${hotel.meals}"></td>
+        <td  th:text="${hotel.distance}"></td>
+        <td><form th:action="@{/edit}" method="post">
+            <input type="hidden" name="hotelId" th:value="${hotel.id}">
+            <input type="submit"/>
+        </form>
+        </td>
     </tr>
     </tbody>
 </table>
+<!--<div>Available hotels:</div>-->
+<!--<form method="post" action="filter">-->
+<!--    <input type="text" name="filter">-->
+<!--    <button type="submit">Find</button>-->
+<!--</form>-->
+<!--<tr th:each="accomodation: ${accomodation}">-->
+<!--    <td  th:text="${accomodation.id}"> </td>-->
+<!--    <td  th:text="${accomodation.name}"</td>-->
+<!--    <td  th:text="${accomodation.starRating}"</td>-->
+<!--    <td  th:text="${accomodation.meals}"</td>-->
+<!--    <td  th:text="${accomodation.distance}"</td>-->
+<!--</tr>-->
 </body>
 </html>

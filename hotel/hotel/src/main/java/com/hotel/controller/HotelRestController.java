@@ -1,5 +1,6 @@
 package com.hotel.controller;
 
+import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.Meals;
 import com.hotel.model.enumeration.StarRating;
@@ -7,11 +8,18 @@ import com.hotel.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+
 @RestController
 @RequestMapping("/hotel")
 public class HotelRestController {
     @Autowired
     private HotelService hotelService;
+
+    @GetMapping("/all_hotels_brief")
+    public Collection<HotelBriefInfo> allHotelsBriefInfo() {
+        return hotelService.listAllHotelsBriefInfo();
+    }
 
     //http://localhost:8080/hotel/add?name=Barcelona=&star=FIVE&meal=BREAKFAST&distance=500&cityId=1
     @GetMapping("/add")
