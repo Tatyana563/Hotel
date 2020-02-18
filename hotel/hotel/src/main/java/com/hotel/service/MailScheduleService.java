@@ -37,7 +37,7 @@ public class MailScheduleService {
       MimeMessage mimeMessage = javaMailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
      // helper.setText("Your password" + userEntity.getPassword());
-      helper.setText("Your password" + userController.pass);
+      helper.setText("Your password" + userEntity.getPassword());
 
     //  helper.setText("Your password" + userEntity.getName());
       helper.setTo("kornushkova56@gmail.com");
