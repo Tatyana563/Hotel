@@ -11,11 +11,11 @@ Explanation:
 $                 # end-of-string
 
 tasks
-- send an email when a new user is registered (password issue)
+- send an email when a new user is registered (password issue?)
 - use forgot the password - send email
 - after log in redirect to all hotels page - done!
-- only admin can create hotels
-- make id able to edit hotels by admin
+- only admin can create hotels - done!
+- make it able to edit hotels by admin
 
 issues:
 password can't be decoded

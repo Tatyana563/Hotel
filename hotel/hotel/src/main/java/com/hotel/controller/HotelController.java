@@ -21,7 +21,7 @@ public class HotelController {
     @Autowired
     private HotelRepository hotelRepository;
 
-    @Secured("ADMIN_ROLE")
+   // @Secured("ADMIN_ROLE")
     @RequestMapping(value = "/hotel2/new", method = RequestMethod.POST)
     public String create(
             @RequestParam("name") String name,
@@ -75,7 +75,7 @@ public class HotelController {
         return "hotel_creation";
     }
 
-    @Secured("ADMIN_ROLE")
+   // @Secured("ADMIN_ROLE")
     @GetMapping("/new")
     public String newPage(final Model model) {
         // model.addAttribute("hotels", hotelService.listAll());
