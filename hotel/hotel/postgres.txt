@@ -12,7 +12,7 @@ meals hotel_meals,
 distance INTEGER,
 city_fk_id INTEGER,
 CONSTRAINT hotel_city FOREIGN KEY (city_fk_id)
-REFERENCES hotel(id));
+REFERENCES city(id));
 
 
 CREATE TABLE room(
@@ -79,3 +79,8 @@ CONSTRAINT task_user FOREIGN KEY(user_fk_id)
 REFERENCES app_user(user_id));
 
 )
+
+alter table hotel
+DROP CONSTRAINT hotel_name_key - is not right
+
+ALTER TABLE hotel ADD UNIQUE (name);

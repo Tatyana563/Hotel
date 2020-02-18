@@ -36,12 +36,17 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public List<HotelBriefInfo> listAllHotelsBriefInfo() {
+        return null;
+    }
+
+ /*   @Override
+    public List<HotelBriefInfo> listAllHotelsBriefInfo() {
 
         jdbcTemplate.query("select h.name, c.name from hotel h inner join city c on h.city_id = c.id",
                 );
 
         return hotelRepository.listHotelsBriefInfo();
-    }
+    }*/
 
     @Transactional(readOnly = true)
     @Override

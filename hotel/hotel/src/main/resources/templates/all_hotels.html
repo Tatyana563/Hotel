@@ -43,9 +43,9 @@
         <td  th:text="${hotel.starRating}"></td>
         <td  th:text="${hotel.meals}"></td>
         <td  th:text="${hotel.distance}"></td>
-        <td><form th:action="@{/edit}" method="post">
-            <input type="hidden" name="hotelId" th:value="${hotel.id}">
-            <input type="submit"/>
+        <td><form th:action="@{/edit}" method="post" >
+          <input type="hidden" name="hotelId" th:value="${hotel.id}">
+            <input type="submit" value="edit"/>
         </form>
         </td>
     </tr>

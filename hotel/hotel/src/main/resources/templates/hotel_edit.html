@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="content">
+    <form name="f" th:action="@{/hotel2/edit}" method="post">
+        <fieldset>
+            <legend>Please fill in the registration form:</legend>
+
+            <table width="100%" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td align="right" width="100">Name</td>
+                    <td><input type="text" name="name" maxlength="50" size="20" th:value="${hotel.name}"></td>
+                </tr>
+                <tr>
+                    <td align="right">Type</td>
+                    <td><input type="text" name="rate" maxlength="50" size="20"  th:value="${hotel.starRating}"></td>
+                </tr>
+
+                <tr>
+                    <td align="right">Meals</td>
+                    <td><input type="text" name="meals" maxlength="50" size="20" th:value="${hotel.meals}"></td>
+                </tr>
+
+                <tr>
+                    <td align="right">Distance</td>
+                    <td><input type="number" name="distance" maxlength="50" size="20" th:value="${hotel.distance}"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Save"></td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+</div>
+</body>
+</html>

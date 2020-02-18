@@ -47,13 +47,32 @@ public class HotelController {
     }
 
     @PostMapping("/edit")
-    public String changeHotel(Model model, @RequestParam(name = "hotelId")  final int hotelId) {
+    public String changeHotel(Model model,
+                              @RequestParam(name = "hotelId")  final int hotelId) {
         Optional<Hotel> hotel = hotelService.findById(hotelId);
         if (hotel.isPresent()) {
             model.addAttribute("hotel", hotel.get());
         }
+        hotelService.delete(hotelId);
+       // hotelService.save(hotel.get());
         return "hotel_edit";
 
+    }
+
+    @RequestMapping(value = "/hotel2/edit", method = RequestMethod.POST)
+    public String edit(
+            @RequestParam("name") String name,
+            @RequestParam("rate") String rating,
+            @RequestParam(value = "meals", required = false) String meals,
+            @RequestParam("distance") Integer distance
+    ) {
+        final Hotel hotel = new Hotel();
+        hotel.setName(name);
+        hotel.setStarRating(StarRating.valueOf(rating));
+        hotel.setDistance(distance);
+        hotel.setMeals(Meals.valueOf(meals));
+        hotelService.save(hotel);
+        return "hotel_creation";
     }
 
     @Secured("ADMIN_ROLE")

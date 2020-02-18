@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.stream.Stream;
+
 @Controller
 public class UserController {
+    @Autowired
+    public static String pass;
 
     @Autowired
     private UserServiceImpl userService;
@@ -29,6 +33,7 @@ public class UserController {
     ){
         final UserEntity userEntity = new UserEntity();
         userEntity.setName(name);
+        pass = userEntity.getPassword();
         userEntity.setPassword(passwordEncoder.encode(password));
         userEntity.setEmail(email);
         userEntity.setPhone(phone);
