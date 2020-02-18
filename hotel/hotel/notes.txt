@@ -15,8 +15,8 @@ tasks
 - use forgot the password - send email
 - after log in redirect to all hotels page - done!
 - only admin can create hotels - done!
-- make it able to edit hotels by admin
-
+- make it able to edit hotels by admin - done!
+- work on queries!
 issues:
 password can't be decoded
 

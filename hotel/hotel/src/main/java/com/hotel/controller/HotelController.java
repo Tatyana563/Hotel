@@ -82,7 +82,12 @@ public class HotelController {
         return "hotel_creation";
 
     }
+  /*  @GetMapping("/edit")
+    public String newPageEdit(final Model model) {
+        // model.addAttribute("hotels", hotelService.listAll());
+        return "hotel_creation";
 
+    }*/
 /*    @PostMapping("filter")
     public String filter(@RequestParam String filter, Map<String, Object> model) {
         Iterable<Hotel> accomodation;
