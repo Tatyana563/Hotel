@@ -1,0 +1,7 @@
+Plan:
+
+//TODO:
+// 1) mapstruct, return hotelDTO, flyway, Spring Data Specification(dynamic query)
+
+Questions:
+projections with interface

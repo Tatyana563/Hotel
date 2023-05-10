@@ -80,6 +80,16 @@ REFERENCES app_user(user_id));
 
 )
 
+CREATE TABLE room_availabily
+(
+    id      serial PRIMARY KEY,
+    room_id INTEGER,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    CONSTRAINT room_availability_room FOREIGN KEY (room_id)
+        REFERENCES room (id)
+);
+
 alter table hotel
 DROP CONSTRAINT hotel_name_key - is not right
 

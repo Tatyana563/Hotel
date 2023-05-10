@@ -6,7 +6,7 @@ import com.hotel.model.enumeration.StarRating;
 import com.hotel.repository.HotelRepository;
 import com.hotel.service.HotelServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+//import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class HotelController {
     @Autowired
     private HotelRepository hotelRepository;
 
-   // @Secured("ADMIN_ROLE")
+    // @Secured("ADMIN_ROLE")
     @RequestMapping(value = "/hotel2/new", method = RequestMethod.POST)
     public String create(
             @RequestParam("name") String name,
@@ -48,13 +48,13 @@ public class HotelController {
 
     @PostMapping("/edit")
     public String changeHotel(Model model,
-                              @RequestParam(name = "hotelId")  final int hotelId) {
+                              @RequestParam(name = "hotelId") final int hotelId) {
         Optional<Hotel> hotel = hotelService.findById(hotelId);
         if (hotel.isPresent()) {
             model.addAttribute("hotel", hotel.get());
         }
         hotelService.delete(hotelId);
-       // hotelService.save(hotel.get());
+        // hotelService.save(hotel.get());
         return "hotel_edit";
 
     }
@@ -75,7 +75,7 @@ public class HotelController {
         return "hotel_creation";
     }
 
-   // @Secured("ADMIN_ROLE")
+    // @Secured("ADMIN_ROLE")
     @GetMapping("/new")
     public String newPage(final Model model) {
         // model.addAttribute("hotels", hotelService.listAll());

@@ -23,3 +23,5 @@ password can't be decoded
 
 For mail
 https://myaccount.google.com/lesssecureapps
+
+http://localhost:8080/rooms?starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023&=
