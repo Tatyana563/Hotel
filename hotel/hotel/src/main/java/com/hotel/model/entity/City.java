@@ -9,22 +9,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="city")
+@Table(name = "city")
 public class City implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_city")
-    @SequenceGenerator(name="seq_city", sequenceName = "city_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "seq_city", sequenceName = "city_sequence", allocationSize = 1)
     private Integer id;
 
     @Column(name = "NAME", nullable = false)
     private String name;
 
-   @Column(name = "COUNTRY", nullable = false)
-    private String countryName;
+    @Column(name = "COUNTRY", nullable = false)
+    private String country;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
     private List<Hotel> hotelList = new ArrayList<>();
@@ -36,12 +37,12 @@ public class City implements Serializable {
         City that = (City) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(countryName, that.countryName) &&
+                Objects.equals(country, that.country) &&
                 Objects.equals(hotelList, that.hotelList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, countryName, hotelList);
+        return Objects.hash(id, name, country, hotelList);
     }
 }
