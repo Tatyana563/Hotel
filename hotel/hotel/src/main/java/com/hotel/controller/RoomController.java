@@ -1,24 +1,19 @@
 package com.hotel.controller;
 
-import com.hotel.model.dto.HotelCounterDTO;
-import com.hotel.model.dto.SearchRequest;
-import com.hotel.service.RoomServiceImpl;
+import com.hotel.exception_handler.RoomNotFoundException;
+import com.hotel.model.dto.BookingRequest;
+import com.hotel.service.RoomService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(("/rooms"))
 public class RoomController {
-    private final RoomServiceImpl roomService;
+    private final RoomService roomService;
 
-    @GetMapping
-    public List<HotelCounterDTO> roomBooking(@ModelAttribute SearchRequest searchRequest) {
-        return roomService.listHotelsWithAvailableRooms(searchRequest.getCheckIn(), searchRequest.getCheckOut());
+    @GetMapping("/{roomId}")
+    public void bookHotelRoom(@ModelAttribute BookingRequest bookingRequest, @PathVariable int roomId) throws RoomNotFoundException {
+        roomService.bookRoom(roomId, bookingRequest.getCheckIn(), bookingRequest.getCheckOut());
     }
 }

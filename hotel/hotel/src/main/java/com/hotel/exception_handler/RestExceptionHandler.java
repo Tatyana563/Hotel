@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class RestExceptionHandler {
+
     @ExceptionHandler(BindException.class)
     public ResponseEntity<Object> handleBindException(
             BindException ex) {
@@ -32,7 +33,7 @@ public class RestExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         body.put("message", errors);
 
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -48,7 +49,7 @@ public class RestExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         body.put("message", errors);
 
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HotelNotFoundException.class)
@@ -61,4 +62,16 @@ public class RestExceptionHandler {
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(RoomNotFoundException.class)
+    public ResponseEntity<Object> handleHotelNotFoundException(
+            RoomNotFoundException ex, WebRequest request) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex);
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
 }

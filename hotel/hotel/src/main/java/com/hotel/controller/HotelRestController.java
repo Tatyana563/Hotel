@@ -1,17 +1,25 @@
 package com.hotel.controller;
 
 import com.hotel.model.dto.HotelBriefInfo;
+import com.hotel.model.dto.HotelCounterDTO;
+import com.hotel.model.dto.HotelDTO;
+import com.hotel.model.dto.SearchRequest;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.Meals;
 import com.hotel.model.enumeration.StarRating;
 import com.hotel.service.HotelService;
+import com.hotel.validation.hotelId.HotelId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/hotel")
+@Validated
 public class HotelRestController {
     @Autowired
     private HotelService hotelService;
@@ -38,18 +46,24 @@ public class HotelRestController {
         hotel.setDistance(distance);
         hotel.setStarRating(StarRating.valueOf(starRating));
         hotel.setName(name);
-       // hotelService.save(hotel);
+        // hotelService.save(hotel);
         return hotel;
     }
 
     @GetMapping("/delete/{deleteId}")
-    public void deleteById(@PathVariable("deletId") int id) {
+    public void deleteById(@PathVariable("deleteId") int id) {
         hotelService.delete(id);
     }
-}
-/*
-  @PostMapping("/updateHotelRates")
-    public HotelEntity updateHotelrates()
 
+
+    @GetMapping("/search")
+    public List<HotelCounterDTO> searchAvailableHotels(@ModelAttribute SearchRequest searchRequest) {
+        return hotelService.listHotelsWithAvailableRooms(searchRequest.getCheckIn(), searchRequest.getCheckOut());
+    }
+
+    @GetMapping("/{hotelId}/filter")
+    public HotelDTO filterHotelRooms(@ModelAttribute @Valid SearchRequest searchRequest, @Valid @HotelId @PathVariable int hotelId) {
+        return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequest.getCheckIn(), searchRequest.getCheckOut());
+    }
 }
-*/
+
