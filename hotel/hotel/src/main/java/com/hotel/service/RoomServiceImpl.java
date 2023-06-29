@@ -1,8 +1,10 @@
 package com.hotel.service;
 
 import com.hotel.exception_handler.RoomNotFoundException;
+import com.hotel.model.dto.response.BookingResponse;
 import com.hotel.model.entity.Room;
 import com.hotel.model.entity.RoomAvailability;
+import com.hotel.repository.HotelRepository;
 import com.hotel.repository.RoomAvailabilityRepository;
 import com.hotel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +16,13 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
+    private final HotelRepository hotelRepository;
     private final RoomAvailabilityRepository roomAvailabilityRepository;
 
     @Override
     public void save(Room room) {
         roomRepository.save(room);
     }
-
 
     public boolean isRoomAvailableByDates(Integer roomId, Date start, Date end) throws RoomNotFoundException {
 
@@ -35,18 +37,21 @@ public class RoomServiceImpl implements RoomService {
         return roomBookedByDates == 0;
     }
 
-    public void saveBookedRoomToDb(Integer roomId, Date start, Date end) {
+    public RoomAvailability saveBookedRoomToDb(Integer roomId, Date start, Date end) {
         RoomAvailability roomAvailability = new RoomAvailability();
         roomAvailability.setRoomId(roomId);
         roomAvailability.setStart(start);
         roomAvailability.setEnd(end);
-        roomAvailabilityRepository.save(roomAvailability);
+       return roomAvailabilityRepository.save(roomAvailability);
     }
 
-    public void bookRoom(Integer roomId, Date start, Date end) throws RoomNotFoundException {
+    public BookingResponse bookRoom(Integer roomId, Integer hotelId, Date start, Date end) throws RoomNotFoundException {
         boolean roomAvailableByDates = isRoomAvailableByDates(roomId, start, end);
         if (roomAvailableByDates) {
             saveBookedRoomToDb(roomId, start, end);
+            String hotelName = hotelRepository.findHotelNameById(hotelId);
+          return new BookingResponse(start,end,hotelName);
         }
+        return null;
     }
 }

@@ -37,8 +37,9 @@ not-existent ids as PathVariables - >404
 ExceptionHandler ->404 - BEHAVIOUR is different from HotelNotFoundException
 7) room_availability - > booked_rooms (rename+liquibase,flyway)
 
-
-
+QUESTIONS:
+in bookingResponce add name of the Hotel; Text: You have already booked the room in the hotel from...to....
+Tried to use magic JPA hotelRepository.findHotelNameById(hotelId); - doesn't work
 http://localhost:8080/rooms/1?checkIn=05_05_2023&checkOut=08_05_2023&=
 
 

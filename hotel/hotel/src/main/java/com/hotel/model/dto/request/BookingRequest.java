@@ -1,4 +1,4 @@
-package com.hotel.model.dto;
+package com.hotel.model.dto.request;
 
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,4 +11,5 @@ public class BookingRequest {
     private Date checkIn;
     @DateTimeFormat(pattern = "dd_MM_yyyy")
     private Date checkOut;
+    private Integer hotelId;
 }

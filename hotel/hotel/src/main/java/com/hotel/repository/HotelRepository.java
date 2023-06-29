@@ -34,4 +34,8 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
     @Query("select h  from Hotel h  join fetch h.roomList as r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
             "and ra.end>=:start and ra.start<=:end) and h.id=:hotelId")
     Optional<Hotel> hotelWithAvailableRoomsByDates(Integer hotelId, Date start, Date end);
+
+  //  String findNameById(Integer id);
+  @Query("SELECT h.name FROM Hotel h WHERE h.id = :hotelId")
+  String findHotelNameById(Integer hotelId);
 }
