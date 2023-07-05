@@ -28,7 +28,7 @@ hotel_fk_id INTEGER,
 CONSTRAINT room_hotel FOREIGN KEY(hotel_fk_id)
 REFERENCES hotel(id));
 
-CREATE TYPE hotel_stars AS ENUM ('ONE',
+CREATE TYPE hotel_stars  AS ENUM ('ONE',
  'TWO',
  'THREE',
  'FOUR',

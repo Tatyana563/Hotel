@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog logicalFilePath="db.changelog-master.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="v1.0_01_city_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_hotel_stars_schema.xml" relativeToChangelogFile="true" />
+    <include file="v1.0_01_hotel_meals_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_hotel_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_sleeps_type_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_room_type_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_room_schema.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>
+
+

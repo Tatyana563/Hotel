@@ -1,0 +1,25 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="createEnumTypeHotelMeals" author="petrenko">
+        <createProcedure>
+            <![CDATA[
+            DO '
+            BEGIN
+IF
+            NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'hotel_meals') THEN
+            CREATE TYPE hotel_meals AS ENUM (
+    'BREAKFAST',
+    'BREAKFAST_DINNER',
+    'SELF_CATERING',
+    'ALL_INCLUSIVE');
+            END IF;
+--more types here...
+            END ';
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+</databaseChangeLog>

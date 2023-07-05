@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01" author="petrenko">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="hotel"/>
+            </not>
+        </preConditions>
+        <createTable  tableName="hotel">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="city_fk_id" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="hotel_stars">
+            </column>
+            <column name="meals" type="hotel_meals">
+            </column>
+            <column name="distance" type="int">
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="hotel" baseColumnNames="city_fk_id"
+                                 constraintName="city_fk_id"
+                                 referencedTableName="city" referencedColumnNames="id"/>
+
+        <rollback>
+            <dropTable tableName="hotel"/>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

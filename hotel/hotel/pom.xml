@@ -18,6 +18,7 @@
     <properties>
         <java.version>1.8</java.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <liquibase.propertyFile>${project.basedir}/liquibase.properties</liquibase.propertyFile>
     </properties>
 
     <dependencies>
@@ -127,15 +128,24 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.liquibase</groupId>-->
-<!--                <artifactId>liquibase-maven-plugin</artifactId>-->
-<!--                <version>3.6.3</version>-->
-<!--                <configuration>-->
-<!--                    <propertyFile>src/main/resources/liquibase.properties</propertyFile>-->
-<!--                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>4.23.0</version>
+                <configuration>
+                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
+                    <propertyFile>liquibase.properties</propertyFile>
+                    <url>jdbc:postgresql://localhost:5432/postgres</url>
+                    <contexts>development</contexts>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
