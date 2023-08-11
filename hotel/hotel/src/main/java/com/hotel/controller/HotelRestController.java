@@ -3,12 +3,11 @@ package com.hotel.controller;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTO;
-import com.hotel.model.dto.SearchRequest;
+import com.hotel.model.dto.request.SearchRequest;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.Meals;
 import com.hotel.model.enumeration.StarRating;
 import com.hotel.service.HotelService;
-import com.hotel.validation.hotelId.HotelId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -55,10 +54,9 @@ public class HotelRestController {
         hotelService.delete(id);
     }
 
-
     @GetMapping("/search")
     public List<HotelCounterDTO> searchAvailableHotels(@ModelAttribute SearchRequest searchRequest) {
-        return hotelService.listHotelsWithAvailableRooms(searchRequest.getCheckIn(), searchRequest.getCheckOut());
+        return hotelService.listHotelsWithAvailableRoomsAccordingToCityAndStarRating(searchRequest.getCity(), searchRequest.getStarRating(), searchRequest.getCheckIn(), searchRequest.getCheckOut());
     }
 
     @GetMapping("/{hotelId}/filter")

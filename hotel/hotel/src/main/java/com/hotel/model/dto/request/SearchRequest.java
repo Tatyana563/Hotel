@@ -1,4 +1,4 @@
-package com.hotel.model.dto;
+package com.hotel.model.dto.request;
 
 import com.hotel.model.enumeration.RoomType;
 import com.hotel.model.enumeration.StarRating;
@@ -16,6 +16,7 @@ public class SearchRequest implements DateInterval {
 
     private StarRating starRating;
     private RoomType roomType;
+    private String city;
     @DateTimeFormat(pattern = "dd_MM_yyyy")
     private Date checkIn;
     @DateTimeFormat(pattern = "dd_MM_yyyy")

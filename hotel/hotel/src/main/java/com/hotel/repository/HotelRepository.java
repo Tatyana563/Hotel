@@ -31,13 +31,28 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
             "group by r.hotel")
     List<HotelCounter> listAvailableHotelsByDates(Date start, Date end);
 
+    @Query("SELECT NEW com.hotel.repository.HotelCounter(h, COUNT(r.id)) " +
+            "FROM Hotel h " +
+            "JOIN h.roomList r " +
+            "WHERE h.city.name = :city " +
+            "AND h.starRating = :starRating " +
+            "AND NOT EXISTS (" +
+            "   SELECT ra FROM RoomAvailability ra " +
+            "   WHERE ra.roomId = r.id " +
+            "   AND ra.end >= :start " +
+            "   AND ra.start <= :end" +
+            ") " +
+            "GROUP BY h")
+    List<HotelCounter> hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end);
+
+
     @Query("select h  from Hotel h  join fetch h.roomList as r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
             "and ra.end>=:start and ra.start<=:end) and h.id=:hotelId")
     Optional<Hotel> hotelWithAvailableRoomsByDates(Integer hotelId, Date start, Date end);
 
-  //  String findNameById(Integer id);
-  @Query("SELECT h.name FROM Hotel h WHERE h.id = :hotelId")
-  String findHotelNameById(Integer hotelId);
+    //  String findNameById(Integer id);
+    @Query("SELECT h.name FROM Hotel h WHERE h.id = :hotelId")
+    String findHotelNameById(Integer hotelId);
 
     @Query("SELECT r.hotel.name  FROM Room r WHERE r.id = :roomId ")
     String findHotelNameByRoomId(Integer roomId);

@@ -6,6 +6,7 @@ import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTO;
 import com.hotel.model.entity.Hotel;
+import com.hotel.model.enumeration.StarRating;
 import com.hotel.repository.HotelCounter;
 import com.hotel.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,15 @@ public class HotelServiceImpl implements HotelService {
         return hotelRepository.findAll();
     }
 
+    @Override
+    public List<HotelCounterDTO> listHotelsWithAvailableRoomsAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end) {
+        List<HotelCounter> hotels = hotelRepository.hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating(city, starRating, start, end);
+        List<HotelCounterDTO> hotelCounterDTOList = hotels.stream().map(hotelCounter -> hotelMapper.hotelCounterToHotelCounterDTO(hotelCounter)).collect(Collectors.toList());
+
+        return hotelCounterDTOList;
+
+    }
+
     @Transactional
     public Optional<Hotel> findById(int id) {
         Optional<Hotel> hotel = hotelRepository.findById(id);
@@ -60,15 +70,6 @@ public class HotelServiceImpl implements HotelService {
     @Transactional(readOnly = true)
     public List<Hotel> listAllSorted() {
         return hotelRepository.findByOrderByDistanceAsc();
-    }
-
-    @Override
-    public List<HotelCounterDTO> listHotelsWithAvailableRooms(Date start, Date end) {
-
-        List<HotelCounter> hotelCounters = hotelRepository.listAvailableHotelsByDates(start, end);
-
-        return hotelCounters.stream().map(hotelMapper::hotelCounterToHotelCounterDTO
-        ).collect(Collectors.toList());
     }
 
     @Override

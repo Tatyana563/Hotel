@@ -4,6 +4,7 @@ import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTO;
 import com.hotel.model.entity.Hotel;
+import com.hotel.model.enumeration.StarRating;
 
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface HotelService {
 
     List<Hotel> listAll();
 
-    List<HotelCounterDTO> listHotelsWithAvailableRooms(Date start, Date end);
+    List<HotelCounterDTO> listHotelsWithAvailableRoomsAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end);
 
     HotelDTO hotelWithAvailableRoomsByDates(int hotelId, Date start, Date end);
 }

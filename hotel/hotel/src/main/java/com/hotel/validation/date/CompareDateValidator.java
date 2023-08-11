@@ -1,6 +1,6 @@
 package com.hotel.validation.date;
 
-import com.hotel.model.dto.SearchRequest;
+import com.hotel.model.dto.request.SearchRequest;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

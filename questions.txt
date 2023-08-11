@@ -43,8 +43,8 @@ Tried to use magic JPA hotelRepository.findHotelNameById(hotelId); - doesn't wor
 http://localhost:8080/rooms/1?checkIn=05_05_2023&checkOut=08_05_2023&=
 
 TODO:
-liquibase rollback???
-add city to the first request
+liquibase rollback - done;
+add city to the first request - done;
 remove ?starRating from the second request
 use Builder or chain accessor instead of constructor with parameters;
 Enum change in liquibase
@@ -54,4 +54,10 @@ in booking send email and do email notification after booking
 Spring Security, authorisation for booking,
 Endpoints to create hotel, room; (special role, Enum role)
 
+
+**************************
+why is it wrong?
+http://localhost:8080/hotel/search?city=Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023
+but should be
+http://localhost:8080/hotel/search?Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023
 
