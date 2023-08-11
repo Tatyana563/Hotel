@@ -4,6 +4,7 @@ import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTO;
 import com.hotel.model.dto.request.SearchRequest;
+import com.hotel.model.dto.request.SearchRequestDates;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.Meals;
 import com.hotel.model.enumeration.StarRating;
@@ -60,8 +61,8 @@ public class HotelRestController {
     }
 
     @GetMapping("/{hotelId}/filter")
-    public HotelDTO filterHotelRooms(@ModelAttribute @Valid SearchRequest searchRequest,/* @Valid @HotelId*/ @PathVariable int hotelId) {
-        return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequest.getCheckIn(), searchRequest.getCheckOut());
+    public HotelDTO filterHotelRooms(@ModelAttribute @Valid SearchRequestDates searchRequestDates,/* @Valid @HotelId*/ @PathVariable int hotelId) {
+        return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequestDates.getCheckIn(), searchRequestDates.getCheckOut());
     }
 }
 
