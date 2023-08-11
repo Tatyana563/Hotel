@@ -4,22 +4,34 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
     <changeSet id="createEnumTypeHotelMeals" author="petrenko">
-        <createProcedure>
-            <![CDATA[
-            DO '
-            BEGIN
-IF
-            NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'hotel_meals') THEN
+
+        <preConditions onFail="MARK_RAN">
+
+            <sqlCheck expectedResult="0">
+                SELECT count(*)
+                FROM pg_type
+                WHERE typname = 'hotel_meals'
+            </sqlCheck>
+
+        </preConditions>
+        <sql>
+        <![CDATA[
             CREATE TYPE hotel_meals AS ENUM (
     'BREAKFAST',
     'BREAKFAST_DINNER',
     'SELF_CATERING',
     'ALL_INCLUSIVE');
-            END IF;
---more types here...
-            END ';
             ]]>
-        </createProcedure>
-    </changeSet>
+    </sql>
 
+        <rollback>
+            <sql>
+                <![CDATA[
+
+              DROP TYPE IF EXISTS hotel_meals;
+            ]]>
+            </sql>
+        </rollback>
+
+    </changeSet>
 </databaseChangeLog>

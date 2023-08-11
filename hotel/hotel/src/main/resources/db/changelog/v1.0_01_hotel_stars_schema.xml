@@ -7,9 +7,11 @@
     <changeSet id="01" author="petrenko">
         <preConditions onFail="MARK_RAN">
 
-                <sqlCheck expectedResult="0">
-                SELECT count(*) FROM pg_type WHERE typname = 'hotel_stars'
-                </sqlCheck>
+            <sqlCheck expectedResult="0">
+                SELECT count(*)
+                FROM pg_type
+                WHERE typname = 'hotel_stars'
+            </sqlCheck>
 
         </preConditions>
         <sql>
@@ -23,6 +25,16 @@
     'FIVE');
             ]]>
         </sql>
+
+        <rollback>
+            <sql>
+                <![CDATA[
+
+              DROP TYPE IF EXISTS hotel_stars;
+            ]]>
+            </sql>
+        </rollback>
+
     </changeSet>
 
 </databaseChangeLog>

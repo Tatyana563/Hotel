@@ -4,20 +4,30 @@
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
     <changeSet id="createEnumType" author="petrenko">
+        <preConditions onFail="MARK_RAN">
+
+            <sqlCheck expectedResult="0">
+                SELECT count(*)
+                FROM pg_type
+                WHERE typname = 'room_type'
+            </sqlCheck>
+
+        </preConditions>
         <sql>
         <![CDATA[
-            DO '
-        BEGIN
-            IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'room_type') THEN
-                CREATE TYPE room_type AS ENUM (
+            CREATE TYPE room_type AS ENUM (
                     'SINGLE',
                     'DOUBLE',
                     'SUITE'
                 );
-            END IF;
-            -- more types here...
-        END';
             ]]>
     </sql>
+        <rollback>
+            <sql>
+                <![CDATA[
+              DROP TYPE IF EXISTS room_type;
+            ]]>
+            </sql>
+        </rollback>
     </changeSet>
 </databaseChangeLog>
