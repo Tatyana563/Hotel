@@ -11,5 +11,5 @@ public class BookingRequest {
     private Date checkIn;
     @DateTimeFormat(pattern = "dd_MM_yyyy")
     private Date checkOut;
-    private Integer hotelId;
+  //  private Integer hotelId;
 }

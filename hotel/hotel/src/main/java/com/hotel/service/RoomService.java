@@ -9,6 +9,6 @@ import java.util.Date;
 public interface RoomService {
     void save(Room room);
 
-    BookingResponse bookRoom(Integer roomId, Integer hotelId, Date start, Date end) throws RoomNotFoundException;
+    BookingResponse bookRoom(Integer roomId,  Date start, Date end) throws RoomNotFoundException;
 
 }

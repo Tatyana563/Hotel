@@ -38,4 +38,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
   //  String findNameById(Integer id);
   @Query("SELECT h.name FROM Hotel h WHERE h.id = :hotelId")
   String findHotelNameById(Integer hotelId);
+
+    @Query("SELECT r.hotel.name  FROM Room r WHERE r.id = :roomId ")
+    String findHotelNameByRoomId(Integer roomId);
 }

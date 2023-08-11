@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+
 @Data
 @AllArgsConstructor
 public class BookingResponse {
@@ -14,5 +15,6 @@ public class BookingResponse {
     @DateTimeFormat(pattern = "dd_MM_yyyy")
     private Date checkOut;
     private String hotelName;
-
+    private int roomId;
+    private RequestStatus status;
 }

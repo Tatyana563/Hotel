@@ -1,6 +1,7 @@
 package com.hotel.exception_handler;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -52,24 +53,25 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(HotelNotFoundException.class)
+//    @ExceptionHandler(HotelNotFoundException.class)
+//    public ResponseEntity<Object> handleHotelNotFoundException(
+//            HotelNotFoundException ex, WebRequest request) {
+//
+//        Map<String, Object> body = new LinkedHashMap<>();
+//        body.put("timestamp", LocalDateTime.now());
+//        body.put("message", ex);
+//
+//        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+//    }
+
+    @ExceptionHandler({HotelNotFoundException.class,RoomNotFoundException.class})
     public ResponseEntity<Object> handleHotelNotFoundException(
-            HotelNotFoundException ex, WebRequest request) {
+            AbstractNotFoundException ex) {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", ex);
-
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(RoomNotFoundException.class)
-    public ResponseEntity<Object> handleHotelNotFoundException(
-            RoomNotFoundException ex, WebRequest request) {
-
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", ex);
+        body.put("message", ex.getMessage());
+        body.put("resourceId", ex.getResourceId());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }

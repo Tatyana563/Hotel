@@ -1,7 +1,9 @@
 package com.hotel.service;
 
 import com.hotel.exception_handler.RoomNotFoundException;
+import com.hotel.model.dto.request.BookingRequest;
 import com.hotel.model.dto.response.BookingResponse;
+import com.hotel.model.dto.response.RequestStatus;
 import com.hotel.model.entity.Room;
 import com.hotel.model.entity.RoomAvailability;
 import com.hotel.repository.HotelRepository;
@@ -26,18 +28,17 @@ public class RoomServiceImpl implements RoomService {
 
     public boolean isRoomAvailableByDates(Integer roomId, Date start, Date end) throws RoomNotFoundException {
 
-        boolean isRoomPresentInDb = roomRepository.findById(roomId).isPresent();
+        boolean isRoomPresentInDb = roomRepository.existsById(roomId);
         if (!isRoomPresentInDb) {
-            throw new RoomNotFoundException("Room is not present in DB for id: " + roomId);
+            throw new RoomNotFoundException(roomId);
         }
-        int roomBookedByDates = 0;
 
-        roomBookedByDates = roomRepository.isRoomBookedByDates(roomId, start, end);
 
-        return roomBookedByDates == 0;
+      return !roomRepository.isRoomBookedByDates(roomId, start, end);
+
     }
 
-    public RoomAvailability saveBookedRoomToDb(Integer roomId, Date start, Date end) {
+    public RoomAvailability saveBookRequest(Integer roomId, Date start, Date end) {
         RoomAvailability roomAvailability = new RoomAvailability();
         roomAvailability.setRoomId(roomId);
         roomAvailability.setStart(start);
@@ -45,13 +46,14 @@ public class RoomServiceImpl implements RoomService {
        return roomAvailabilityRepository.save(roomAvailability);
     }
 
-    public BookingResponse bookRoom(Integer roomId, Integer hotelId, Date start, Date end) throws RoomNotFoundException {
+    public BookingResponse bookRoom(Integer roomId,  Date start, Date end) throws RoomNotFoundException {
         boolean roomAvailableByDates = isRoomAvailableByDates(roomId, start, end);
+        String hotelName = hotelRepository.findHotelNameByRoomId(roomId);
         if (roomAvailableByDates) {
-            saveBookedRoomToDb(roomId, start, end);
-            String hotelName = hotelRepository.findHotelNameById(hotelId);
-          return new BookingResponse(start,end,hotelName);
+            saveBookRequest(roomId, start, end);
+
+          return new BookingResponse(start,end,hotelName, roomId, RequestStatus.SUCCESSFULLY_BOOKED);
         }
-        return null;
+     return new BookingResponse(start,end,hotelName, roomId, RequestStatus.ALREADY_BOOKED);
     }
 }

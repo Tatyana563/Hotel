@@ -78,7 +78,7 @@ public class HotelServiceImpl implements HotelService {
 
         if (!hotel.isPresent()) {
             log.error("Hotel with id '{}'  has not been found in  database", hotelId);
-            throw new HotelNotFoundException("Hotel was not found for id: " + hotelId);
+            throw new HotelNotFoundException(hotelId);
 
         } else return hotelMapper.hotelToHotelDTO(hotel.get());
     }

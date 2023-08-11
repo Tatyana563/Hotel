@@ -62,7 +62,7 @@ public class HotelRestController {
     }
 
     @GetMapping("/{hotelId}/filter")
-    public HotelDTO filterHotelRooms(@ModelAttribute @Valid SearchRequest searchRequest, @Valid @HotelId @PathVariable int hotelId) {
+    public HotelDTO filterHotelRooms(@ModelAttribute @Valid SearchRequest searchRequest,/* @Valid @HotelId*/ @PathVariable int hotelId) {
         return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequest.getCheckIn(), searchRequest.getCheckOut());
     }
 }

@@ -135,7 +135,6 @@
                 <configuration>
                     <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
                     <propertyFile>liquibase.properties</propertyFile>
-                    <url>jdbc:postgresql://localhost:5432/postgres</url>
                     <contexts>development</contexts>
                 </configuration>
                 <executions>
