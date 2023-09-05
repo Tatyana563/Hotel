@@ -7,9 +7,10 @@ import java.util.Date;
 
 @Data
 public class BookingRequest {
+    String username;
+    String email;
     @DateTimeFormat(pattern = "dd_MM_yyyy")
     private Date checkIn;
     @DateTimeFormat(pattern = "dd_MM_yyyy")
     private Date checkOut;
-  //  private Integer hotelId;
 }

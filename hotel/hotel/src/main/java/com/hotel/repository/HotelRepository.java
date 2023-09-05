@@ -4,6 +4,7 @@ import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.StarRating;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface HotelRepository extends JpaRepository<Hotel, Integer> {
+public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpecificationExecutor<Hotel> {
     @Modifying
     @Query("update Hotel h set h.starRating=:stars where h.name=:hotelName ")
     void updateHotelRating(@Param("stars") StarRating starRating, @Param("hotelName") String name);
@@ -46,8 +47,9 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
     List<HotelCounter> hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end);
 
 
-    @Query("select h  from Hotel h  join fetch h.roomList as r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
-            "and ra.end>=:start and ra.start<=:end) and h.id=:hotelId")
+    //    @Query("select h  from Hotel h  join fetch h.roomList as r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
+//            "and ra.end>=:start and ra.start<=:end) and h.id=:hotelId")
+    @Query("select h  from Hotel h  join fetch h.roomList as r WHERE  function ('check_room_availability', r.id, CAST(:start as date), CAST(:end as date))=false   and h.id=:hotelId")
     Optional<Hotel> hotelWithAvailableRoomsByDates(Integer hotelId, Date start, Date end);
 
     //  String findNameById(Integer id);
@@ -56,4 +58,5 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
 
     @Query("SELECT r.hotel.name  FROM Room r WHERE r.id = :roomId ")
     String findHotelNameByRoomId(Integer roomId);
+
 }

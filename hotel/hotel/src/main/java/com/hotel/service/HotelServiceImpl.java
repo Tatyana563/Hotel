@@ -2,6 +2,7 @@ package com.hotel.service;
 
 import com.hotel.exception_handler.HotelNotFoundException;
 import com.hotel.mapper.HotelMapper;
+import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTO;
@@ -9,8 +10,10 @@ import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.StarRating;
 import com.hotel.repository.HotelCounter;
 import com.hotel.repository.HotelRepository;
+import com.hotel.repository.specifications.HotelSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
+
     private final HotelMapper hotelMapper;
 
     @Transactional
@@ -33,7 +37,7 @@ public class HotelServiceImpl implements HotelService {
         hotelRepository.save(hotel);
 
     }
-
+// TODO or else throw HotelNotFound Exc
     @Transactional
     @Override
     public void delete(int id) {
@@ -82,5 +86,12 @@ public class HotelServiceImpl implements HotelService {
             throw new HotelNotFoundException(hotelId);
 
         } else return hotelMapper.hotelToHotelDTO(hotel.get());
+    }
+
+
+    public List<HotelDTO> findHotelsWithFilters(FilterDTO filters) {
+        Specification<Hotel> spec = new HotelSpecification(filters);
+        List<Hotel> hotels = hotelRepository.findAll(spec);
+        return hotels.stream().map(hotelMapper::hotelToHotelDTO).collect(Collectors.toList());
     }
 }

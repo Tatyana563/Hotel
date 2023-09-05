@@ -1,5 +1,6 @@
 package com.hotel.service;
 
+import com.hotel.events.model.RoomBookedEvent;
 import com.hotel.exception_handler.RoomNotFoundException;
 import com.hotel.model.dto.request.BookingRequest;
 import com.hotel.model.dto.response.BookingResponse;
@@ -10,13 +11,16 @@ import com.hotel.repository.HotelRepository;
 import com.hotel.repository.RoomAvailabilityRepository;
 import com.hotel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
+    private final ApplicationEventPublisher publisher;
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
     private final RoomAvailabilityRepository roomAvailabilityRepository;
@@ -45,15 +49,22 @@ public class RoomServiceImpl implements RoomService {
         roomAvailability.setEnd(end);
        return roomAvailabilityRepository.save(roomAvailability);
     }
-
-    public BookingResponse bookRoom(Integer roomId,  Date start, Date end) throws RoomNotFoundException {
-        boolean roomAvailableByDates = isRoomAvailableByDates(roomId, start, end);
+@Transactional
+@Override
+    public BookingResponse bookRoom(Integer roomId, BookingRequest bookingRequest) throws RoomNotFoundException {
+        boolean roomAvailableByDates = isRoomAvailableByDates(roomId, bookingRequest.getCheckIn(), bookingRequest.getCheckOut());
         String hotelName = hotelRepository.findHotelNameByRoomId(roomId);
         if (roomAvailableByDates) {
-            saveBookRequest(roomId, start, end);
-
-          return new BookingResponse(start,end,hotelName, roomId, RequestStatus.SUCCESSFULLY_BOOKED);
+            saveBookRequest(roomId, bookingRequest.getCheckIn(), bookingRequest.getCheckOut());
+//            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+//                @Override
+//                public void afterCommit() {
+//                   bookingEmailService.sendEmail(start, end,username,email,hotelName);
+//                }
+//            });
+            publisher.publishEvent( new RoomBookedEvent(bookingRequest,hotelName));
+          return new BookingResponse(bookingRequest.getCheckIn(), bookingRequest.getCheckOut(),hotelName, roomId, RequestStatus.SUCCESSFULLY_BOOKED);
         }
-     return new BookingResponse(start,end,hotelName, roomId, RequestStatus.ALREADY_BOOKED);
+     return new BookingResponse(bookingRequest.getCheckIn(), bookingRequest.getCheckOut(),hotelName, roomId, RequestStatus.ALREADY_BOOKED);
     }
 }

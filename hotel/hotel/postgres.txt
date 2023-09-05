@@ -94,3 +94,20 @@ alter table hotel
 DROP CONSTRAINT hotel_name_key - is not right
 
 ALTER TABLE hotel ADD UNIQUE (name);
+
+
+CREATE OR REPLACE FUNCTION check_room_availability(roomId INT, startDate DATE, endDate DATE)
+    RETURNS BOOLEAN AS $$
+DECLARE
+    room_available_result BOOLEAN;
+BEGIN
+
+    SELECT COUNT(*) = 0 INTO room_available_result
+    FROM room_availabily ra
+    WHERE ra.room_id = roomId AND ra.end_date >= startDate AND ra.start_date <= endDate;
+
+    RETURN room_available_result;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP FUNCTION check_room_availability;

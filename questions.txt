@@ -45,15 +45,41 @@ http://localhost:8080/rooms/1?checkIn=05_05_2023&checkOut=08_05_2023&=
 TODO:
 liquibase rollback - done;
 add city to the first request - done;
-remove ?starRating from the second request
-use Builder or chain accessor instead of constructor with parameters;
-Enum change in liquibase
+remove ?starRating from the second request - done;
+use Builder or chain accessor instead of constructor with parameters - partly done;
+Enum change in liquibase - done;
 all changesets in one file
 in booking send email and do email notification after booking
 
 Spring Security, authorisation for booking,
 Endpoints to create hotel, room; (special role, Enum role)
 
+
+
+1) JPA specification, Dynamic query. Paramaters  - list that changes; (parameters from hotel+room)
+2) DB procedure (select ra from RoomAvailability ra where ra.roomId = r.id " +
+                            "and ra.end>=:start and ra.start<=:end) ADD TO LIQUIBASE!!!!
+3) Event Driven model
+Use : Spring events instead of TransactionSynchronizationManager
+EventHandler - send a mail;
+4) (thymeleaf);
+5) DB table  - username, login, password, email , roleId;
+bicrypt hASH PASSWORD
+DB table role;
+6) Advice Controller - add ConversionFailedException:  for ConversionFailedException, say that meal=BREAKFAST2 is wrong, reason, what field is wrong
+create hotel - admin; (correct name landlord)
+book a room - user; (rentee?)
+7) Specification filter filter by price  - http://localhost:8080/hotel/filter?distance=5&starRating=THREE&meal=BREAKFAST&price=40 dont show more expensive rooms;
+Two 2 types of search -
+1) list of hotels with rooms;
+2) list of rooms with hotels;(Specification for the Room: RoomDtoWithHotel-> use HotelDtoWithoutRooms; or use HotelDto and roomList=null;)
+
+registration.
+
+registration,
+
+FUTURE:
+DB locking/synchronisation while a few microservices work (lock on DB, table with locks)
 
 **************************
 why is it wrong?

@@ -1,5 +1,6 @@
 package com.hotel.service;
 
+import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTO;
@@ -21,4 +22,6 @@ public interface HotelService {
     List<HotelCounterDTO> listHotelsWithAvailableRoomsAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end);
 
     HotelDTO hotelWithAvailableRoomsByDates(int hotelId, Date start, Date end);
+
+    List<HotelDTO> findHotelsWithFilters(FilterDTO filters);
 }

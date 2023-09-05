@@ -1,5 +1,6 @@
 package com.hotel.controller;
 
+import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTO;
@@ -64,5 +65,12 @@ public class HotelRestController {
     public HotelDTO filterHotelRooms(@ModelAttribute @Valid SearchRequestDates searchRequestDates,/* @Valid @HotelId*/ @PathVariable int hotelId) {
         return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequestDates.getCheckIn(), searchRequestDates.getCheckOut());
     }
-}
+
+    @GetMapping("/filter")
+    public List<HotelDTO>getHotelsWithFilters(@ModelAttribute FilterDTO filters) {
+       return  hotelService.findHotelsWithFilters(filters);
+
+        }
+    }
+
 
