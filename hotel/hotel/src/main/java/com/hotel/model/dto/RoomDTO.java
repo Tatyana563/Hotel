@@ -13,15 +13,11 @@ public class RoomDTO {
 
     private Sleeps sleeps;
 
-
     private Integer price;
-
 
     private Double square;
 
-
     private Boolean parking;
-
 
     private Boolean pets;
 

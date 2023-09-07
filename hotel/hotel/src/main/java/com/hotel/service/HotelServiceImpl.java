@@ -5,7 +5,7 @@ import com.hotel.mapper.HotelMapper;
 import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
-import com.hotel.model.dto.HotelDTO;
+import com.hotel.model.dto.HotelDTOWithRooms;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.StarRating;
 import com.hotel.repository.HotelCounter;
@@ -77,7 +77,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public HotelDTO hotelWithAvailableRoomsByDates(int hotelId, Date start, Date end) {
+    public HotelDTOWithRooms hotelWithAvailableRoomsByDates(int hotelId, Date start, Date end) {
 
         Optional<Hotel> hotel = hotelRepository.hotelWithAvailableRoomsByDates(hotelId, start, end);
 
@@ -89,7 +89,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
 
-    public List<HotelDTO> findHotelsWithFilters(FilterDTO filters) {
+    public List<HotelDTOWithRooms> findHotelsWithFilters(FilterDTO filters) {
         Specification<Hotel> spec = new HotelSpecification(filters);
         List<Hotel> hotels = hotelRepository.findAll(spec);
         return hotels.stream().map(hotelMapper::hotelToHotelDTO).collect(Collectors.toList());

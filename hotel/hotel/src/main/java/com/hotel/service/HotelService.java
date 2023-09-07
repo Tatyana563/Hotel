@@ -3,7 +3,7 @@ package com.hotel.service;
 import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
-import com.hotel.model.dto.HotelDTO;
+import com.hotel.model.dto.HotelDTOWithRooms;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.StarRating;
 
@@ -21,7 +21,7 @@ public interface HotelService {
 
     List<HotelCounterDTO> listHotelsWithAvailableRoomsAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end);
 
-    HotelDTO hotelWithAvailableRoomsByDates(int hotelId, Date start, Date end);
+    HotelDTOWithRooms hotelWithAvailableRoomsByDates(int hotelId, Date start, Date end);
 
-    List<HotelDTO> findHotelsWithFilters(FilterDTO filters);
+    List<HotelDTOWithRooms> findHotelsWithFilters(FilterDTO filters);
 }

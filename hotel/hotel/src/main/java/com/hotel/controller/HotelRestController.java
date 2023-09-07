@@ -3,7 +3,7 @@ package com.hotel.controller;
 import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
-import com.hotel.model.dto.HotelDTO;
+import com.hotel.model.dto.HotelDTOWithRooms;
 import com.hotel.model.dto.request.SearchRequest;
 import com.hotel.model.dto.request.SearchRequestDates;
 import com.hotel.model.entity.Hotel;
@@ -62,12 +62,12 @@ public class HotelRestController {
     }
 
     @GetMapping("/{hotelId}/filter")
-    public HotelDTO filterHotelRooms(@ModelAttribute @Valid SearchRequestDates searchRequestDates,/* @Valid @HotelId*/ @PathVariable int hotelId) {
+    public HotelDTOWithRooms filterHotelRooms(@ModelAttribute @Valid SearchRequestDates searchRequestDates,/* @Valid @HotelId*/ @PathVariable int hotelId) {
         return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequestDates.getCheckIn(), searchRequestDates.getCheckOut());
     }
 
     @GetMapping("/filter")
-    public List<HotelDTO>getHotelsWithFilters(@ModelAttribute FilterDTO filters) {
+    public List<HotelDTOWithRooms>getHotelsWithFilters(@ModelAttribute FilterDTO filters) {
        return  hotelService.findHotelsWithFilters(filters);
 
         }

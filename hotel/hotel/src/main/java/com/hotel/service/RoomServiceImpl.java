@@ -2,6 +2,9 @@ package com.hotel.service;
 
 import com.hotel.events.model.RoomBookedEvent;
 import com.hotel.exception_handler.RoomNotFoundException;
+import com.hotel.mapper.RoomMapper;
+import com.hotel.model.FilterDTO;
+import com.hotel.model.dto.RoomDTOWithHotelDTO;
 import com.hotel.model.dto.request.BookingRequest;
 import com.hotel.model.dto.response.BookingResponse;
 import com.hotel.model.dto.response.RequestStatus;
@@ -10,12 +13,16 @@ import com.hotel.model.entity.RoomAvailability;
 import com.hotel.repository.HotelRepository;
 import com.hotel.repository.RoomAvailabilityRepository;
 import com.hotel.repository.RoomRepository;
+import com.hotel.repository.specifications.RoomSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +31,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
     private final RoomAvailabilityRepository roomAvailabilityRepository;
+    private final RoomMapper roomMapper;
 
     @Override
     public void save(Room room) {
@@ -38,7 +46,7 @@ public class RoomServiceImpl implements RoomService {
         }
 
 
-      return !roomRepository.isRoomBookedByDates(roomId, start, end);
+        return !roomRepository.isRoomBookedByDates(roomId, start, end);
 
     }
 
@@ -47,10 +55,11 @@ public class RoomServiceImpl implements RoomService {
         roomAvailability.setRoomId(roomId);
         roomAvailability.setStart(start);
         roomAvailability.setEnd(end);
-       return roomAvailabilityRepository.save(roomAvailability);
+        return roomAvailabilityRepository.save(roomAvailability);
     }
-@Transactional
-@Override
+
+    @Transactional
+    @Override
     public BookingResponse bookRoom(Integer roomId, BookingRequest bookingRequest) throws RoomNotFoundException {
         boolean roomAvailableByDates = isRoomAvailableByDates(roomId, bookingRequest.getCheckIn(), bookingRequest.getCheckOut());
         String hotelName = hotelRepository.findHotelNameByRoomId(roomId);
@@ -62,9 +71,19 @@ public class RoomServiceImpl implements RoomService {
 //                   bookingEmailService.sendEmail(start, end,username,email,hotelName);
 //                }
 //            });
-            publisher.publishEvent( new RoomBookedEvent(bookingRequest,hotelName));
-          return new BookingResponse(bookingRequest.getCheckIn(), bookingRequest.getCheckOut(),hotelName, roomId, RequestStatus.SUCCESSFULLY_BOOKED);
+            publisher.publishEvent(new RoomBookedEvent(bookingRequest, hotelName));
+            return new BookingResponse(bookingRequest.getCheckIn(), bookingRequest.getCheckOut(), hotelName, roomId, RequestStatus.SUCCESSFULLY_BOOKED);
         }
-     return new BookingResponse(bookingRequest.getCheckIn(), bookingRequest.getCheckOut(),hotelName, roomId, RequestStatus.ALREADY_BOOKED);
+        return new BookingResponse(bookingRequest.getCheckIn(), bookingRequest.getCheckOut(), hotelName, roomId, RequestStatus.ALREADY_BOOKED);
+    }
+
+    @Override
+    public List<RoomDTOWithHotelDTO> findRoomsWithFilters(FilterDTO filters) {
+
+        Specification<Room> spec = new RoomSpecification(filters);
+        List<Room> rooms = roomRepository.findAll(spec);
+
+        return rooms.stream().map(roomMapper::roomToRoomDTOWithHotelDTO).collect(Collectors.toList());
+
     }
 }

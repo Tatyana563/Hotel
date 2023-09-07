@@ -12,7 +12,7 @@ http://localhost:8080/rooms/2?username=Gabriella&email=nikolaev.english@gmail.co
 Filter hotels with specification:
 http://localhost:8080/hotel/filter?distance=5&starRating=THREE&meal=BREAKFAST
 
-
+http://localhost:8080/rooms/filter?distance=5&starRating=THREE&meal=BREAKFAST&price=45
 Liquibase:
 mvn liquibase:rollback -Dliquibase.rollbackCount=1
 mvn liquibase:update
