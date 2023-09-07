@@ -1,20 +1,18 @@
 package com.hotel.exception_handler;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -29,12 +27,8 @@ public class RestExceptionHandler {
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
-
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", errors);
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        ErrorMessage errorMessage = new ErrorMessage(601, LocalDateTime.now(), errors);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -46,34 +40,31 @@ public class RestExceptionHandler {
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
 //TODO: ErrorMessage instead of body
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", errors);
+        ErrorMessage errorMessage = new ErrorMessage(602, LocalDateTime.now(), errors);
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(HotelNotFoundException.class)
-//    public ResponseEntity<Object> handleHotelNotFoundException(
-//            HotelNotFoundException ex, WebRequest request) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", ex);
-//
-//        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-//    }
-
-    @ExceptionHandler({HotelNotFoundException.class,RoomNotFoundException.class})
+    @ExceptionHandler({HotelNotFoundException.class, RoomNotFoundException.class})
     public ResponseEntity<Object> handleHotelNotFoundException(
             AbstractNotFoundException ex) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", ex.getMessage());
-        body.put("resourceId", ex.getResourceId());
 
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        ErrorMessage errorMessage = new ErrorMessage(603, LocalDateTime.now(), errors);
+
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ConversionFailedException.class)
+    public ResponseEntity<Object> handleConversionFailedException(
+            ConversionFailedException ex) {
+
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        ErrorMessage errorMessage = new ErrorMessage(604, LocalDateTime.now(), errors);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -3,13 +3,14 @@ package com.hotel.exception_handler;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 public class ErrorMessage {
     private int statusCode;
-    private Date timestamp;
-    private String message;
-    private String description;
+    private LocalDateTime localDateTime;
+    private List<String> errors;
 }

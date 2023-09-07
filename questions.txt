@@ -87,3 +87,5 @@ http://localhost:8080/hotel/search?city=Barcelona&starRating=THREE&roomType=DOUB
 but should be
 http://localhost:8080/hotel/search?Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023
 
+TOGETHER OR SEPARATELY:
+    @ExceptionHandler({HotelNotFoundException.class, RoomNotFoundException.class})
