@@ -111,3 +111,20 @@ END;
 $$ LANGUAGE plpgsql;
 
 DROP FUNCTION check_room_availability;
+
+
+
+CREATE TABLE role(
+                     id serial PRIMARY KEY,
+                     role VARCHAR (64)  NOT NULL);
+
+CREATE TABLE users(
+                     id serial PRIMARY KEY,
+                     role_fk_id INTEGER NOT NULL ,
+                     name VARCHAR (64)  NOT NULL ,
+                     surname VARCHAR (64)  NOT NULL ,
+                     login VARCHAR (64)  NOT NULL ,
+                     password VARCHAR (64)  NOT NULL ,
+                     CONSTRAINT user_role FOREIGN KEY (role_fk_id)
+                         REFERENCES role(id));
+
