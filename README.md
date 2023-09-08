@@ -13,6 +13,12 @@ Filter hotels with specification:
 http://localhost:8080/hotel/filter?distance=5&starRating=THREE&meal=BREAKFAST
 
 http://localhost:8080/rooms/filter?distance=5&starRating=THREE&meal=BREAKFAST&price=45
+
+
+REGISTER NEW USER:
+
+http://localhost:8080/user/register?name=Tom&surname=Smith&username=tom_smith&login=Tomas&password=123&phone=+380682674545&email=tomas@gmail.com
+
 Liquibase:
 mvn liquibase:rollback -Dliquibase.rollbackCount=1
 mvn liquibase:update

@@ -49,7 +49,6 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handleHotelNotFoundException(
             AbstractNotFoundException ex) {
 
-
         List<String> errors = Collections.singletonList(ex.getMessage());
 
         ErrorMessage errorMessage = new ErrorMessage(603, LocalDateTime.now(), errors);

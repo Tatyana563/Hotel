@@ -1,7 +1,8 @@
 package com.hotel.service;
 
-import com.hotel.model.entity.UserEntity;
+import com.hotel.model.dto.request.RegistrationRequest;
+import com.hotel.model.entity.User;
 
 public interface UserService {
-    void save(UserEntity userEntity);
+    User register(RegistrationRequest request);
 }

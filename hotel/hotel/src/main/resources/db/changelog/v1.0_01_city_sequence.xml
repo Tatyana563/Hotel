@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01" author="petrenko">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="city_sequence"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="city_sequence" startValue="1" incrementBy="1"/>
+
+        <rollback>
+            <dropSequence sequenceName="city_sequence"/>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

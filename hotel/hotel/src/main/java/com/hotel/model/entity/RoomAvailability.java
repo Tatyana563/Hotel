@@ -11,7 +11,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="roomAvailabily")
+@Table(name="room_availability")
 public class RoomAvailability {
     @JsonIgnore
     @Id
