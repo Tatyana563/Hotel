@@ -39,6 +39,8 @@
             <column name="email" type="varchar(64)">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="enabled" type="boolean">
+            </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="users" baseColumnNames="role_fk_id"
                                  constraintName="role_fk_id"
