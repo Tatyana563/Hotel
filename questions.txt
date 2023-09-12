@@ -75,7 +75,7 @@ Two 2 types of search -
 2) list of rooms with hotels;(Specification for the Room: RoomDtoWithHotel-> use HotelDtoWithoutRooms; or use HotelDto and roomList=null;)
 8) Change GET for POST in registration!!!
 9)  make login unique, not null
-10) custom validation for login uniqueness
+10) custom validation for login/email uniqueness
 11)  //TODO: email notification confirm email
 registration.
 
