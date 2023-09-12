@@ -20,20 +20,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User register(RegistrationRequest request) {
-        User userByLogin = userRepository.findUserByEmail(request.getEmail());
         User savedUser = null;
-        if (userByLogin == null) {
-            User user = new User();
-            user.setName(request.getName());
-            user.setEmail(request.getEmail());
-            user.setLogin(request.getLogin());
-            user.setSurname(request.getSurname());
-            user.setUsername(request.getUsername());
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
-            user.setPhone(request.getPhone());
+        if ( userRepository.existsByEmail(request.getEmail())) {
+            throw new UserAlreadyCreated(request.getEmail());
+        }
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setLogin(request.getLogin());
+        user.setSurname(request.getSurname());
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPhone(request.getPhone());
+        savedUser = userRepository.save(user);
 
-            savedUser = userRepository.save(user);
-            return savedUser;
-        } else throw new UserAlreadyCreated(request.getEmail());
+        return savedUser;
     }
 }

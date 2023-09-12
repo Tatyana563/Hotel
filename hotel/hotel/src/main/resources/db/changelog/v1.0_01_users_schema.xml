@@ -28,16 +28,16 @@
                 <constraints nullable="false"/>
             </column>
             <column name="login" type="varchar(64)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="password" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
             <column name="phone" type="varchar(64)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="email" type="varchar(64)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="users" baseColumnNames="role_fk_id"

@@ -20,5 +20,5 @@ public class RoomDTO {
     private Boolean parking;
 
     private Boolean pets;
-
+    private HotelDTO hotel;
 }

@@ -3,7 +3,6 @@ package com.hotel.model.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 @Data
@@ -14,22 +13,24 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty
+    @Column(nullable = false)
     private String name;
 
-    @NotEmpty
+    @Column(nullable = false)
     private String surname;
 
-    @NotEmpty
+    @Column(nullable = false)
     private String username;
 
-    @NotEmpty
+    @Column(nullable = false)
     private String password;
 
-    @NotEmpty
+    @Column(nullable = false, unique = true)
     private String login;
 
+    @Column(nullable = false)
     private String phone;
 
+    @Column(nullable = false,unique = true)
     private String email;
 }

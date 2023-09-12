@@ -67,13 +67,16 @@ EventHandler - send a mail;
 bicrypt hASH PASSWORD
 DB table role;
 6) Advice Controller - add ConversionFailedException:  for ConversionFailedException, say that meal=BREAKFAST2 is wrong, reason, what field is wrong
-create hotel - admin; (correct name landlord)
+create hotel - admin; (correct name landlord) ok
 book a room - user; (rentee?)
 7) Specification filter filter by price  - http://localhost:8080/hotel/filter?distance=5&starRating=THREE&meal=BREAKFAST&price=40 dont show more expensive rooms;
 Two 2 types of search -
 1) list of hotels with rooms;
 2) list of rooms with hotels;(Specification for the Room: RoomDtoWithHotel-> use HotelDtoWithoutRooms; or use HotelDto and roomList=null;)
-
+8) Change GET for POST in registration!!!
+9)  make login unique, not null
+10) custom validation for login uniqueness
+11)  //TODO: email notification confirm email
 registration.
 
 registration,

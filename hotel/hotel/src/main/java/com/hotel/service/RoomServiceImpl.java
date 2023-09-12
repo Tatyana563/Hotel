@@ -4,7 +4,7 @@ import com.hotel.events.model.RoomBookedEvent;
 import com.hotel.exception_handler.RoomNotFoundException;
 import com.hotel.mapper.RoomMapper;
 import com.hotel.model.FilterDTO;
-import com.hotel.model.dto.RoomDTOWithHotelDTO;
+import com.hotel.model.dto.RoomDTO;
 import com.hotel.model.dto.request.BookingRequest;
 import com.hotel.model.dto.response.BookingResponse;
 import com.hotel.model.dto.response.RequestStatus;
@@ -78,12 +78,12 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomDTOWithHotelDTO> findRoomsWithFilters(FilterDTO filters) {
+    public List<RoomDTO> findRoomsWithFilters(FilterDTO filters) {
 
         Specification<Room> spec = new RoomSpecification(filters);
         List<Room> rooms = roomRepository.findAll(spec);
 
-        return rooms.stream().map(roomMapper::roomToRoomDTOWithHotelDTO).collect(Collectors.toList());
+        return rooms.stream().map(roomMapper::roomToRoomDTO).collect(Collectors.toList());
 
     }
 }
