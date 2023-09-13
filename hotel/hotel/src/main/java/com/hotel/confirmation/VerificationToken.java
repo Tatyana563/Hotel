@@ -24,18 +24,18 @@ public class VerificationToken {
     private Integer id;
     private String token;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_fk_id", referencedColumnName = "id")
+    @JsonIgnore
     private User user;
 
     @Column(name = "expiration_date", nullable = false)
     private Date expiryDate;
 
-    private Date calculateExpiryDate(int expiryTimeInMinutes) {
+    public Date calculateExpiryDate(int expiryTimeInMinutes) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Timestamp(cal.getTime().getTime()));
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(cal.getTime().getTime());
     }
-
 }

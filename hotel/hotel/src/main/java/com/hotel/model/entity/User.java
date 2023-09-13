@@ -1,5 +1,7 @@
 package com.hotel.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hotel.confirmation.VerificationToken;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -31,9 +33,13 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private VerificationToken verificationToken;
 }

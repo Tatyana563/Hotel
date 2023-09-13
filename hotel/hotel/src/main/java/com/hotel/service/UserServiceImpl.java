@@ -1,5 +1,6 @@
 package com.hotel.service;
 
+import com.hotel.confirmation.VerificationToken;
 import com.hotel.exception_handler.UserAlreadyCreated;
 import com.hotel.model.dto.request.RegistrationRequest;
 import com.hotel.model.entity.User;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(RegistrationRequest request) {
         User savedUser = null;
-        if ( userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyCreated(request.getEmail());
         }
         User user = new User();
@@ -32,8 +34,22 @@ public class UserServiceImpl implements UserService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhone(request.getPhone());
+
+        VerificationToken verificationToken = createVerificationToken();
+
+        user.setVerificationToken(verificationToken);
+        verificationToken.setUser(user);
+
         savedUser = userRepository.save(user);
 
         return savedUser;
+    }
+
+    private VerificationToken createVerificationToken() {
+        VerificationToken verificationToken = new VerificationToken();
+        String token = UUID.randomUUID().toString();
+        verificationToken.setToken(token);
+        verificationToken.setExpiryDate(verificationToken.calculateExpiryDate(5));
+        return verificationToken;
     }
 }
