@@ -1,11 +1,13 @@
 package com.hotel.service;
 
 import com.hotel.confirmation.VerificationToken;
+import com.hotel.events.model.UserRegistrationEvent;
 import com.hotel.exception_handler.UserAlreadyCreated;
 import com.hotel.model.dto.request.RegistrationRequest;
 import com.hotel.model.entity.User;
 import com.hotel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,10 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
+    private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final String userVerificationUrl = "https://";
 
     @Transactional
     @Override
@@ -41,7 +44,8 @@ public class UserServiceImpl implements UserService {
         verificationToken.setUser(user);
 
         savedUser = userRepository.save(user);
-
+        UserRegistrationEvent registrationEvent = new UserRegistrationEvent(request, verificationToken, userVerificationUrl);
+        publisher.publishEvent(registrationEvent);
         return savedUser;
     }
 

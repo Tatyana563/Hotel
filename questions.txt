@@ -79,6 +79,7 @@ Two 2 types of search -
 11)  //TODO: email notification confirm email
 registration.
 
+12) Shall I add verification URL to configuration????
 registration,
 
 FUTURE:
