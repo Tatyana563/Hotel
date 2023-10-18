@@ -1,4 +1,4 @@
-package com.hotel.service;
+package com.hotel.service.api;
 
 import com.hotel.exception_handler.RoomNotFoundException;
 import com.hotel.model.FilterDTO;

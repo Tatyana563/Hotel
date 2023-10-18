@@ -14,6 +14,7 @@ import com.hotel.repository.HotelRepository;
 import com.hotel.repository.RoomAvailabilityRepository;
 import com.hotel.repository.RoomRepository;
 import com.hotel.repository.specifications.RoomSpecification;
+import com.hotel.service.api.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;

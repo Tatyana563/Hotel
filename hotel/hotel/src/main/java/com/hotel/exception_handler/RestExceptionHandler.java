@@ -66,4 +66,14 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({TokenExpirationException.class, RegistrationNotFoundException.class})
+    public ResponseEntity<Object> handleRegistrationException(
+            AbstractNotFoundException ex) {
+
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        ErrorMessage errorMessage = new ErrorMessage(605, LocalDateTime.now(), errors);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
 }

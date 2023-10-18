@@ -11,6 +11,7 @@ import com.hotel.model.enumeration.StarRating;
 import com.hotel.repository.HotelCounter;
 import com.hotel.repository.HotelRepository;
 import com.hotel.repository.specifications.HotelSpecification;
+import com.hotel.service.api.HotelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,7 +26,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class HotelServiceImpl implements HotelService {
+public class
+HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
 

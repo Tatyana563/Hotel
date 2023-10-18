@@ -5,8 +5,9 @@ import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.RoomDTO;
 import com.hotel.model.dto.request.BookingRequest;
 import com.hotel.model.dto.response.BookingResponse;
-import com.hotel.service.BookingEmailService;
-import com.hotel.service.RoomService;
+import com.hotel.service.api.notification.BookingEmailService;
+import com.hotel.service.notification.BookingEmailServiceImpl;
+import com.hotel.service.api.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

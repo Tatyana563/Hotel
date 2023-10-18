@@ -1,6 +1,7 @@
-package com.hotel.service;
+package com.hotel.service.notification;
 
 import com.hotel.events.model.RoomBookedEvent;
+import com.hotel.service.api.notification.BookingEmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,10 +11,10 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class BookingEmailService {
+public class BookingEmailServiceImpl implements BookingEmailService {
     private final JavaMailSender mailSender;
-
-    public void sendEmail(RoomBookedEvent roomBookedEvent) {
+@Override
+    public void sendRoomBookedEmail(RoomBookedEvent roomBookedEvent) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(roomBookedEvent.getBookingRequest().getEmail());
         message.setSubject("Booking");

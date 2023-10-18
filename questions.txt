@@ -93,3 +93,12 @@ http://localhost:8080/hotel/search?Barcelona&starRating=THREE&roomType=DOUBLE&ch
 
 TOGETHER OR SEPARATELY:
     @ExceptionHandler({HotelNotFoundException.class, RoomNotFoundException.class})
+    *************************************************************************************************
+
+
+1) Spring update to latest; (3.1.4)
+    Java 17
+2)  // TODO: move into service, use mapper!!!!
+3) login: we get email password authorisation, get token as a return (access and refresh or at least JWT for a start), don't keep JWT in DB;
+JWT token in header for other requests;
+4) rest endpoint to create room;

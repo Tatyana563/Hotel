@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="dropOldId" author="petrenko">
+        <dropColumn tableName="token" columnName="id"/>
+    </changeSet>
+
+    <changeSet id="addNewIdColumn" author="petrenko">
+        <!-- Add a new UUID column named "id" -->
+        <addColumn tableName="token">
+            <column name="id" type="uuid">
+            </column>
+        </addColumn>
+
+        <!-- Update the new "id" column with converted values from the "token" column -->
+        <sql>
+            UPDATE token
+            SET id = CAST(token AS uuid);
+        </sql>
+        <addPrimaryKey tableName="token" columnNames="id" constraintName="PK_TOKEN" />
+    </changeSet>
+
+    <changeSet id="dropToken" author="petrenko">
+        <dropColumn tableName="token" columnName="token"/>
+    </changeSet>
+
+</databaseChangeLog>

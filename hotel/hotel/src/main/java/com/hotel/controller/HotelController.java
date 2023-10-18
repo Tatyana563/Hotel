@@ -1,106 +1,76 @@
 package com.hotel.controller;
 
+import com.hotel.model.FilterDTO;
+import com.hotel.model.dto.HotelBriefInfo;
+import com.hotel.model.dto.HotelCounterDTO;
+import com.hotel.model.dto.HotelDTOWithRooms;
+import com.hotel.model.dto.request.HotelRequest;
+import com.hotel.model.dto.request.SearchRequest;
+import com.hotel.model.dto.request.SearchRequestDates;
 import com.hotel.model.entity.Hotel;
-import com.hotel.model.enumeration.Meals;
-import com.hotel.model.enumeration.StarRating;
-import com.hotel.repository.HotelRepository;
-import com.hotel.service.HotelServiceImpl;
+import com.hotel.service.api.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import javax.validation.Valid;
+import java.util.Collection;
+import java.util.List;
 
-
-@Controller
+@RestController
+@RequestMapping("/hotel")
+@Validated
 public class HotelController {
     @Autowired
-    private HotelServiceImpl hotelService;
-    @Autowired
-    private HotelRepository hotelRepository;
+    private HotelService hotelService;
 
-    // @Secured("ADMIN_ROLE")
-    @RequestMapping(value = "/hotel2/new", method = RequestMethod.POST)
-    public String create(
-            @RequestParam("name") String name,
-            @RequestParam("rate") String rating,
-            @RequestParam(value = "meals", required = false) String meals,
-            @RequestParam("distance") Integer distance
-    ) {
+    @GetMapping("/all_hotels_brief")
+    public Collection<HotelBriefInfo> allHotelsBriefInfo() {
+        return hotelService.listAllHotelsBriefInfo();
+    }
+
+
+///http://localhost:8080/hotel/add
+//    {
+//        "name": "Example Hotel",
+//            "starRating": "FOUR",
+//            "meals": "ALL_INCLUSIVE",
+//            "distance": 1.5,
+//            "cityId": 1
+//    }
+    @PostMapping("/add")
+    // TODO: move into service, use mapper!!!!
+    public Hotel create(@RequestBody HotelRequest hotelRequest) {
         final Hotel hotel = new Hotel();
-        hotel.setName(name);
-        hotel.setStarRating(StarRating.valueOf(rating));
-        hotel.setDistance(distance);
-        hotel.setMeals(Meals.valueOf(meals));
+        hotel.setCityId(hotelRequest.getCityId());
+        hotel.setMeals(hotelRequest.getMeals());
+        hotel.setDistance(hotelRequest.getDistance());
+        hotel.setStarRating(hotelRequest.getStarRating());
+        hotel.setName(hotelRequest.getName());
         hotelService.save(hotel);
-        return "hotel_creation";
+        return hotel;
     }
 
-    @GetMapping("/")
-    public String mainPage(final Model model) {
-        // model.addAttribute("hotels", hotelService.listAll());
-        model.addAttribute("hotels", hotelService.listAllSorted());
-        return "all_hotels";
-
+    @GetMapping("/delete/{deleteId}")
+    public void deleteById(@PathVariable("deleteId") int id) {
+        hotelService.delete(id);
     }
 
-    @PostMapping("/edit")
-    public String changeHotel(Model model,
-                              @RequestParam(name = "hotelId") final int hotelId) {
-        Optional<Hotel> hotel = hotelService.findById(hotelId);
-        if (hotel.isPresent()) {
-            model.addAttribute("hotel", hotel.get());
-        }
-        hotelService.delete(hotelId);
-        // hotelService.save(hotel.get());
-        return "hotel_edit";
-
+    @GetMapping("/search")
+    public List<HotelCounterDTO> searchAvailableHotels(@ModelAttribute SearchRequest searchRequest) {
+        return hotelService.listHotelsWithAvailableRoomsAccordingToCityAndStarRating(searchRequest.getCity(), searchRequest.getStarRating(), searchRequest.getCheckIn(), searchRequest.getCheckOut());
     }
 
-    @RequestMapping(value = "/hotel2/edit", method = RequestMethod.POST)
-    public String edit(
-            @RequestParam("name") String name,
-            @RequestParam("rate") String rating,
-            @RequestParam(value = "meals", required = false) String meals,
-            @RequestParam("distance") Integer distance
-    ) {
-        final Hotel hotel = new Hotel();
-        hotel.setName(name);
-        hotel.setStarRating(StarRating.valueOf(rating));
-        hotel.setDistance(distance);
-        hotel.setMeals(Meals.valueOf(meals));
-        hotelService.save(hotel);
-        return "hotel_creation";
+    @GetMapping("/{hotelId}/filter")
+    public HotelDTOWithRooms filterHotelRooms(@ModelAttribute @Valid SearchRequestDates searchRequestDates,/* @Valid @HotelId*/ @PathVariable int hotelId) {
+        return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequestDates.getCheckIn(), searchRequestDates.getCheckOut());
     }
 
-    // @Secured("ADMIN_ROLE")
-    @GetMapping("/new")
-    public String newPage(final Model model) {
-        // model.addAttribute("hotels", hotelService.listAll());
-        return "hotel_creation";
+    @GetMapping("/filter")
+    public List<HotelDTOWithRooms> getHotelsWithFilters(@ModelAttribute FilterDTO filters) {
+        return hotelService.findHotelsWithFilters(filters);
 
     }
-  /*  @GetMapping("/edit")
-    public String newPageEdit(final Model model) {
-        // model.addAttribute("hotels", hotelService.listAll());
-        return "hotel_creation";
-
-    }*/
-/*    @PostMapping("filter")
-    public String filter(@RequestParam String filter, Map<String, Object> model) {
-        Iterable<Hotel> accomodation;
-
-        if (filter != null && !filter.isEmpty()) {
-            accomodation= hotelRepository.findByName(filter);
-        } else {
-            accomodation = hotelRepository.findAll();
-        }
-
-        model.put("accomodation",accomodation );
-
-        return "all_hotels";
-    }*/
-
 }
+
+

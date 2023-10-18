@@ -1,4 +1,4 @@
-package com.hotel.service;
+package com.hotel.service.api;
 
 import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.HotelBriefInfo;

@@ -2,13 +2,17 @@ package com.hotel.repository;
 
 import com.hotel.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
+
 @Repository
-public interface UserRepository extends JpaRepository <User, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(" select u from User u where u.name=:p_name ")
     User loadUserByUserName(@Param("p_name") String name);
 
@@ -22,4 +26,5 @@ public interface UserRepository extends JpaRepository <User, Integer> {
 
     boolean existsByEmail(String email);
 
+    boolean existsByLogin(String login);
 }
