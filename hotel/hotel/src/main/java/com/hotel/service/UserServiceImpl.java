@@ -11,7 +11,7 @@ import com.hotel.model.entity.User;
 import com.hotel.model.entity.VerificationToken;
 import com.hotel.repository.TokenRepository;
 import com.hotel.repository.UserRepository;
-import com.hotel.service.api.UserRegistrationService;
+import com.hotel.service.api.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserRegistrationServiceImpl implements UserRegistrationService {
+public class UserServiceImpl implements UserService {
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;

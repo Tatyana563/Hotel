@@ -37,7 +37,8 @@ public class User implements Serializable {
     @Column(name = "enabled")
     private boolean enabled;
 
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JsonIgnore
-//    private VerificationToken verificationToken;
+    @ManyToOne
+    @JoinColumn(name = "role_fk_id")
+    private Role role;
+    ;
 }
