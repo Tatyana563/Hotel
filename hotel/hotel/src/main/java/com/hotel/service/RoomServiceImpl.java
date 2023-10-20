@@ -15,12 +15,12 @@ import com.hotel.repository.RoomAvailabilityRepository;
 import com.hotel.repository.RoomRepository;
 import com.hotel.repository.specifications.RoomSpecification;
 import com.hotel.service.api.RoomService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;

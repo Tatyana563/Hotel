@@ -4,11 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <include file="v1.0_01_city_schema.xml" relativeToChangelogFile="true"/>
-    <include file="v1.0_01_hotel_stars_schema.xml" relativeToChangelogFile="true" />
-    <include file="v1.0_01_hotel_meals_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_hotel_schema.xml" relativeToChangelogFile="true"/>
-    <include file="v1.0_01_sleeps_type_schema.xml" relativeToChangelogFile="true"/>
-    <include file="v1.0_01_room_type_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_room_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_room_availability_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_role_schema.xml" relativeToChangelogFile="true"/>

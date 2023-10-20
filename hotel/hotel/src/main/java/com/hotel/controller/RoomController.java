@@ -18,13 +18,11 @@ import java.util.List;
 @RequestMapping(("/rooms"))
 public class RoomController {
     private final RoomService roomService;
-    private final BookingEmailService bookingEmailService;
 
     @GetMapping("/{roomId}")
     public BookingResponse bookHotelRoom(@ModelAttribute BookingRequest bookingRequest, @PathVariable int roomId) throws RoomNotFoundException {
         return roomService.bookRoom(roomId, bookingRequest);
     }
-
 
     @GetMapping("/filter")
     public List<RoomDTO> bookHotelRoomWithFilters(@ModelAttribute FilterDTO filters) throws RoomNotFoundException {

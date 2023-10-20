@@ -3,6 +3,7 @@ package com.hotel.mapper;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTOWithRooms;
+import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.entity.Hotel;
 import com.hotel.repository.HotelCounter;
 import org.mapstruct.Mapper;
@@ -20,4 +21,6 @@ public interface HotelMapper {
 
     @Mapping(target = "rooms", source = "roomList")
     HotelDTOWithRooms hotelToHotelDTO(Hotel hotel);
+
+    Hotel hotelRequestToHotel(HotelRequest hotelRequest);
 }

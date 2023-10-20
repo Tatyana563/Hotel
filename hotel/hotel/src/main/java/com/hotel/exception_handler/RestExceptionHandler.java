@@ -1,6 +1,5 @@
 package com.hotel.exception_handler;
 
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +18,11 @@ import java.util.stream.Collectors;
 public class RestExceptionHandler {
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<Object> handleBindException(
-            BindException ex) {
-
-        List<String> errors = ex.getBindingResult()
-                .getAllErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+    public ResponseEntity<Object> handleBindException(BindException ex) {
+        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + " " + error.getDefaultMessage())
                 .collect(Collectors.toList());
+
         ErrorMessage errorMessage = new ErrorMessage(601, LocalDateTime.now(), errors);
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }

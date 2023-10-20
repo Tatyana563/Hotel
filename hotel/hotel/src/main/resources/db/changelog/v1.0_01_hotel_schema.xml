@@ -22,9 +22,9 @@
             <column name="name" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="hotel_stars">
+            <column name="type" type="varchar(64)">
             </column>
-            <column name="meals" type="hotel_meals">
+            <column name="meals" type="varchar(64)">
             </column>
             <column name="distance" type="int">
             </column>

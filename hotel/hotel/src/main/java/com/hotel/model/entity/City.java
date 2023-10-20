@@ -1,17 +1,14 @@
 package com.hotel.model.entity;
 
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "city")
@@ -29,20 +26,4 @@ public class City implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
     private List<Hotel> hotelList = new ArrayList<>();
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        City that = (City) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(country, that.country) &&
-                Objects.equals(hotelList, that.hotelList);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, country, hotelList);
-    }
 }

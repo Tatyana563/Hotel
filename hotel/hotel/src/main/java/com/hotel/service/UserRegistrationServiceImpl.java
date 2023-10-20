@@ -12,12 +12,12 @@ import com.hotel.model.entity.VerificationToken;
 import com.hotel.repository.TokenRepository;
 import com.hotel.repository.UserRepository;
 import com.hotel.service.api.UserRegistrationService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -37,10 +37,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     public User register(RegistrationRequest request) {
         User savedUser = null;
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new UserAlreadyCreated(request.getEmail(),null);
+            throw new UserAlreadyCreated(request.getEmail(), null);
         }
         if (userRepository.existsByLogin(request.getLogin())) {
-            throw new UserAlreadyCreated(null,request.getLogin());
+            throw new UserAlreadyCreated(null, request.getLogin());
         }
         User user = new User();
         user.setName(request.getName());
@@ -80,8 +80,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     @Override
     public void confirmRegistration(UUID token) {
-        VerificationToken verificationToken = tokenRepository.findById(token)
-                .orElseThrow(() -> new RegistrationNotFoundException(token));
+        VerificationToken verificationToken = tokenRepository.findById(token).orElseThrow(() -> new RegistrationNotFoundException(token));
 
         Date expiryDate = verificationToken.getExpiryDate();
 
@@ -95,8 +94,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             tokenRepository.delete(verificationToken);
             UserConfirmedRegistrationEvent event = new UserConfirmedRegistrationEvent(user.getUsername(), user.getEmail());
             publisher.publishEvent(event);
-        }
-        else throw new TokenExpirationException(token);
+        } else throw new TokenExpirationException(token);
 
 //TODO: user gets email about confirmation;
     }

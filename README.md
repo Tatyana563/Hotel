@@ -26,4 +26,14 @@ mvn liquibase:update
 REGISTRATION CONFIRMATION:
 http://localhost:8080/user/registration/confirmation?token=74df4d14-885d-46b6-90e0-ab305aa8d754
 
+ADD NEW HOTEL:
+http://localhost:8080/hotel/add
+    {
+        "name": "Example Hotel4",
+           "starRating": "FOUR",
+           "meals": "ALL_INCLUSIVE",
+            "distance": 1.8,
+            "cityId": 1
+    }
+
 

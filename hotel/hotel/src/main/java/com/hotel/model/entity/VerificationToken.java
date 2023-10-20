@@ -1,11 +1,11 @@
-refactoringpackage com.hotel.model.entity;
+package com.hotel.model.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 

@@ -10,6 +10,8 @@ import com.hotel.model.dto.request.SearchRequestDates;
 import com.hotel.model.entity.Hotel;
 import com.hotel.service.api.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,25 +32,15 @@ public class HotelController {
     }
 
 
-///http://localhost:8080/hotel/add
-//    {
-//        "name": "Example Hotel",
-//            "starRating": "FOUR",
-//            "meals": "ALL_INCLUSIVE",
-//            "distance": 1.5,
-//            "cityId": 1
-//    }
     @PostMapping("/add")
     // TODO: move into service, use mapper!!!!
-    public Hotel create(@RequestBody HotelRequest hotelRequest) {
-        final Hotel hotel = new Hotel();
-        hotel.setCityId(hotelRequest.getCityId());
-        hotel.setMeals(hotelRequest.getMeals());
-        hotel.setDistance(hotelRequest.getDistance());
-        hotel.setStarRating(hotelRequest.getStarRating());
-        hotel.setName(hotelRequest.getName());
-        hotelService.save(hotel);
-        return hotel;
+    public ResponseEntity<String> create(@RequestBody @Valid HotelRequest hotelRequest) {
+        try {
+            Hotel hotel = hotelService.save(hotelRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Hotel created successfully with id:" + hotel.getId());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Hotel was not created");
+        }
     }
 
     @GetMapping("/delete/{deleteId}")

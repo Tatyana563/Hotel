@@ -1,17 +1,18 @@
 package com.hotel.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.Date;
+
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="room_availability")
+@Table(name = "room_availability")
 public class RoomAvailability {
     @JsonIgnore
     @Id
@@ -22,6 +23,6 @@ public class RoomAvailability {
     @Column(name = "start_date")
     private Date start;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="end_date")
+    @Column(name = "end_date")
     private Date end;
 }

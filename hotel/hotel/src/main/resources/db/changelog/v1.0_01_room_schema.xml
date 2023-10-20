@@ -22,9 +22,9 @@
             <column name="number" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="room_type">
+            <column name="type" type="varchar(64)">
             </column>
-            <column name="sleeps" type="sleeps_type">
+            <column name="sleeps" type="varchar(64)">
             </column>
             <column name="price" type="int">
             </column>

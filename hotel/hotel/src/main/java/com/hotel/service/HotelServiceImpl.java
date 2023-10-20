@@ -6,6 +6,7 @@ import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTOWithRooms;
+import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.StarRating;
 import com.hotel.repository.HotelCounter;
@@ -35,8 +36,9 @@ HotelServiceImpl implements HotelService {
 
     @Transactional
     @Override
-    public void save(Hotel hotel) {
-        hotelRepository.save(hotel);
+    public Hotel save(HotelRequest hotelRequest) {
+        Hotel hotel = hotelMapper.hotelRequestToHotel(hotelRequest);
+        return hotelRepository.save(hotel);
 
     }
 // TODO or else throw HotelNotFound Exc
@@ -50,12 +52,6 @@ HotelServiceImpl implements HotelService {
     @Override
     public List<HotelBriefInfo> listAllHotelsBriefInfo() {
         return null;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Hotel> listAll() {
-        return hotelRepository.findAll();
     }
 
     @Override
