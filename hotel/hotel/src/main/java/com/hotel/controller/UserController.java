@@ -4,8 +4,8 @@ package com.hotel.controller;
 import com.hotel.model.dto.request.AuthRequest;
 import com.hotel.model.dto.request.RegistrationRequest;
 import com.hotel.model.entity.User;
-import com.hotel.service.JwtService;
 import com.hotel.service.api.UserService;
+import com.hotel.service.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +22,7 @@ public class UserController {
     private final UserService userRegistrationService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+
     @PostMapping
     public User register(@RequestBody RegistrationRequest request) {
         return userRegistrationService.register(request);
