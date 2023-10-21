@@ -14,8 +14,7 @@ import java.util.List;
 @Table(name = "city")
 public class City implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_city")
-    @SequenceGenerator(name = "seq_city", sequenceName = "city_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "NAME", nullable = false)

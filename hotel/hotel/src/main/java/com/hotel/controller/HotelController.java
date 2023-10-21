@@ -9,22 +9,25 @@ import com.hotel.model.dto.request.SearchRequest;
 import com.hotel.model.dto.request.SearchRequestDates;
 import com.hotel.model.entity.Hotel;
 import com.hotel.service.api.HotelService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 
 @RestController
 @RequestMapping("/hotel")
 @Validated
+@RequiredArgsConstructor
 public class HotelController {
-    @Autowired
-    private HotelService hotelService;
+
+    private final HotelService hotelService;
 
     @GetMapping("/all_hotels_brief")
     public Collection<HotelBriefInfo> allHotelsBriefInfo() {
@@ -34,13 +37,12 @@ public class HotelController {
 
     @PostMapping("/add")
     // TODO: move into service, use mapper!!!!
-    public ResponseEntity<String> create(@RequestBody @Valid HotelRequest hotelRequest) {
-        try {
-            Hotel hotel = hotelService.save(hotelRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Hotel created successfully with id:" + hotel.getId());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Hotel was not created");
-        }
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<Hotel> create(@RequestBody @Valid HotelRequest hotelRequest) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //TODO: return hotelDTO
+        return ResponseEntity.ok(hotelService.save(hotelRequest));
+
     }
 
     @GetMapping("/delete/{deleteId}")

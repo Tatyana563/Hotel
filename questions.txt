@@ -102,3 +102,16 @@ TOGETHER OR SEPARATELY:
 3) login: we get email password authorisation, get token as a return (access and refresh or at least JWT for a start), don't keep JWT in DB;
 JWT token in header for other requests;
 4) rest endpoint to create room;
+
+TODO:
+1) when register user register with a particular role (USER, OWNER)
+2) add new OwnerPropertyController:
+-add hotel, remove, update, getAll his/her own;@PreAuthorize("hasRole('OWNER')")
+do sth in PreAuthorize - not now,
+check that current user's id equals with hotel's owner's id (in SecurityContext add user with id)
+
+PROBLEM: ExceptionHandler doesn't work with security, 403 for everything
+
+3) rest endpoint to create room;
+4) booking allowed only for users;
+See only booked by me.

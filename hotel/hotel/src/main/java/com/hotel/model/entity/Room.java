@@ -5,6 +5,7 @@ import com.hotel.model.enumeration.Sleeps;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -14,8 +15,8 @@ import java.io.Serializable;
 @Table(name = "room")
 public class Room implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_city")
-    @SequenceGenerator(name = "seq_city", sequenceName = "city_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//, generator = "seq_city")
+  //  @SequenceGenerator(name = "seq_city", sequenceName = "city_sequence", allocationSize = 1)
     private Integer id;
     @Column(name = "NUMBER", nullable = false)
     private Integer number;
@@ -45,6 +46,7 @@ public class Room implements Serializable {
 
     @ManyToOne(/*cascade = CascadeType.ALL*/)
     @JoinColumn(name = "HOTEL_FK_ID")
+    @ToString.Exclude
     private Hotel hotel;
 
 }

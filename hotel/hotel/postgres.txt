@@ -128,3 +128,8 @@ CREATE TABLE users(
                      CONSTRAINT user_role FOREIGN KEY (role_fk_id)
                          REFERENCES role(id));
 
+Changed type of id generation:
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_hotel")
+//    @SequenceGenerator(name = "seq_hotel", sequenceName = "hotel_sequence", allocationSize = 1)
+SELECT setval('hotel_id_seq',2) - set current value of sequence

@@ -2,8 +2,8 @@ package com.hotel.validation.date;
 
 import com.hotel.model.dto.request.SearchRequest;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class CompareDateValidator implements ConstraintValidator<CompareDate, SearchRequest> {
 

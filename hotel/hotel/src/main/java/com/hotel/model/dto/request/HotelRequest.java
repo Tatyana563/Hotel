@@ -2,10 +2,10 @@ package com.hotel.model.dto.request;
 
 import com.hotel.model.enumeration.Meals;
 import com.hotel.model.enumeration.StarRating;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Data
 public class HotelRequest {

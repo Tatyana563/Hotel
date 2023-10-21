@@ -33,9 +33,10 @@ public class UserController {
         userRegistrationService.confirmRegistration(token);
     }
 
-    @PostMapping("/generateToken")
+    @PostMapping("/login")
     public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
+                authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
             return jwtService.generateToken(authRequest.getUsername());
         } else {
@@ -43,3 +44,4 @@ public class UserController {
         }
     }
 }
+// TODO: 2 controllers - 1 for log in 2 for registration

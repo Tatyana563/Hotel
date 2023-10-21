@@ -2,11 +2,11 @@ package com.hotel.validation.login;
 
 import com.hotel.model.dto.request.RegistrationRequest;
 import com.hotel.repository.UserRepository;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 @Component
 @RequiredArgsConstructor
