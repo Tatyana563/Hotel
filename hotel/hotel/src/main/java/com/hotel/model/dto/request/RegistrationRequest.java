@@ -1,5 +1,6 @@
 package com.hotel.model.dto.request;
 
+import com.hotel.model.entity.Role;
 import com.hotel.validation.login.RegistrationEmail;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -23,4 +24,6 @@ public class RegistrationRequest {
     private String phone;
     @NotEmpty
     private String email;
+    @NotEmpty
+    private String role;
 }

@@ -1,5 +1,6 @@
 package com.hotel.config;
 
+import com.hotel.exception_handler.ExceptionHandlerFilter;
 import com.hotel.repository.UserRepository;
 import com.hotel.service.security.JwtAuthFilter;
 import com.hotel.service.security.JwtService;
@@ -45,11 +46,16 @@ public class WebSecurityConfig {
                                                    JwtAuthFilter authFilter) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(exceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/registration/**").permitAll()
+                                .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/hotel/add").authenticated()
+                                .anyRequest().permitAll()
+
                 )
+
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -73,6 +79,11 @@ public class WebSecurityConfig {
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
+    }
+
+    @Bean
+    public ExceptionHandlerFilter exceptionHandlerFilter() {
+        return new ExceptionHandlerFilter();
     }
 
 }

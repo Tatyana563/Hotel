@@ -37,7 +37,7 @@ public class User implements Serializable {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "role_fk_id")
     private Role role;
 

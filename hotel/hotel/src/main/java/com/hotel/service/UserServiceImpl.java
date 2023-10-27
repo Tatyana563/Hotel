@@ -4,11 +4,14 @@ import com.hotel.config.properties.RegistrationProperties;
 import com.hotel.events.model.UserConfirmedRegistrationEvent;
 import com.hotel.events.model.UserRegisteredEvent;
 import com.hotel.exception_handler.RegistrationNotFoundException;
+import com.hotel.exception_handler.RoleNotFoundException;
 import com.hotel.exception_handler.TokenExpirationException;
 import com.hotel.exception_handler.UserAlreadyCreated;
 import com.hotel.model.dto.request.RegistrationRequest;
+import com.hotel.model.entity.Role;
 import com.hotel.model.entity.User;
 import com.hotel.model.entity.VerificationToken;
+import com.hotel.repository.RoleRepository;
 import com.hotel.repository.TokenRepository;
 import com.hotel.repository.UserRepository;
 import com.hotel.service.api.UserService;
@@ -30,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final RoleRepository roleRepository;
     private final RegistrationProperties registrationProperties;
 
     @Transactional
@@ -50,7 +54,13 @@ public class UserServiceImpl implements UserService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhone(request.getPhone());
-
+        String requestRole = request.getRole();
+        Role role = roleRepository.findByName(requestRole);
+        if (role == null) {
+            throw new RoleNotFoundException(requestRole);
+        }
+        role.setName(requestRole);
+        user.setRole(role);
         VerificationToken verificationToken = createVerificationToken();
 
         user = userRepository.save(user);
