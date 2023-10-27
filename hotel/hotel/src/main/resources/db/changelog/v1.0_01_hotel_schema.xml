@@ -19,6 +19,9 @@
             <column name="city_fk_id" type="int">
                 <constraints nullable="false" />
             </column>
+            <column name="user_fk_id" type="int">
+                <constraints nullable="false" />
+            </column>
             <column name="name" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>

@@ -3,8 +3,10 @@ package com.hotel.service;
 import com.hotel.exception_handler.HotelNotFoundException;
 import com.hotel.mapper.HotelMapper;
 import com.hotel.model.FilterDTO;
+import com.hotel.model.UserInfoDetails;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
+import com.hotel.model.dto.HotelDTO;
 import com.hotel.model.dto.HotelDTOWithRooms;
 import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.entity.Hotel;
@@ -16,6 +18,7 @@ import com.hotel.service.api.HotelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,17 +39,24 @@ HotelServiceImpl implements HotelService {
 
     @Transactional
     @Override
-    public Hotel save(HotelRequest hotelRequest) {
+    public HotelDTO save(HotelRequest hotelRequest) {
         Hotel hotel = hotelMapper.hotelRequestToHotel(hotelRequest);
-        return hotelRepository.save(hotel);
-
+        Hotel savedHotel = hotelRepository.save(hotel);
+        return hotelMapper.hotelToHotelDTOWithoutRooms(savedHotel);
     }
-// TODO or else throw HotelNotFound Exc
+
+    // TODO or else throw HotelNotFound Exc
     @Transactional
     @Override
-    public void delete(int id) {
-        Hotel hotel = findById(id).get();
-        hotelRepository.delete(hotel);
+    public void delete(int id, Authentication authentication) {
+        Optional<Hotel> hotel = findById(id);
+        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
+        if(!hotel.isPresent()){
+            throw new HotelNotFoundException(id);
+        }
+        if (hotel.get().getUserId() != null && userDetails.getUserId().equals(hotel.get().getUserId().toString())) {
+            hotelRepository.delete(hotel.get());
+        }
     }
 
     @Override

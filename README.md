@@ -17,7 +17,20 @@ http://localhost:8080/rooms/filter?distance=5&starRating=THREE&meal=BREAKFAST&pr
 
 REGISTER NEW USER:
 
-http://localhost:8080/user/register?name=Tom&surname=Smith&username=tom_smith&login=Tomas&password=123&phone=+380682674545&email=nikolaev.english@gmail.com
+POST http://localhost:8080/registration
+
+{
+"name": "Tom",
+"surname": "Smith",
+"username": "tomas",
+"password": "mysecretpasswordtomaspassword",
+"login": "tomas",
+"phone": "1234567890",
+"email": "tomase.doe@example.com",
+"role": "USER"
+}
+
+
 
 Liquibase:
 mvn liquibase:rollback -Dliquibase.rollbackCount=1

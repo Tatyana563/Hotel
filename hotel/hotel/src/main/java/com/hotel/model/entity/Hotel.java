@@ -36,6 +36,9 @@ public class Hotel implements Serializable {
     @Column(name = "CITY_FK_ID")
     private Integer cityId;
 
+    @Column(name = "USER_FK_ID")
+    private Integer userId;
+
     @ManyToOne()
     @JoinColumn(name = "CITY_FK_ID", insertable = false, updatable = false)
     private City city;

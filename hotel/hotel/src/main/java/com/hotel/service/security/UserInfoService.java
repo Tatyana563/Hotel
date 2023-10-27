@@ -3,6 +3,7 @@ package com.hotel.service.security;
 import com.hotel.model.UserInfoDetails;
 import com.hotel.model.entity.User;
 import com.hotel.repository.UserRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 
 @RequiredArgsConstructor
+@Getter
 public class UserInfoService implements UserDetailsService {
     private final UserRepository repository;
 
