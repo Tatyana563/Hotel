@@ -1,7 +1,7 @@
 package com.hotel.service;
 
 import com.hotel.events.model.RoomBookedEvent;
-import com.hotel.exception_handler.RoomNotFoundException;
+import com.hotel.exception_handler.exception.RoomNotFoundException;
 import com.hotel.mapper.RoomMapper;
 import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.RoomDTO;

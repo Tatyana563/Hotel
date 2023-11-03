@@ -1,6 +1,6 @@
 package com.hotel.service.api;
 
-import com.hotel.exception_handler.RoomNotFoundException;
+import com.hotel.exception_handler.exception.RoomNotFoundException;
 import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.RoomDTO;
 import com.hotel.model.dto.request.BookingRequest;

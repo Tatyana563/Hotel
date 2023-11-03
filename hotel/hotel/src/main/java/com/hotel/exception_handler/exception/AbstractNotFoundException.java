@@ -1,4 +1,4 @@
-package com.hotel.exception_handler;
+package com.hotel.exception_handler.exception;
 
 import lombok.Getter;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;

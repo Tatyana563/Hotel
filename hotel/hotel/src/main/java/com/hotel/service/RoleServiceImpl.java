@@ -1,9 +1,8 @@
 package com.hotel.service;
 
-import com.hotel.exception_handler.RoleNotFoundException;
+import com.hotel.exception_handler.exception.RoleNotFoundException;
 import com.hotel.mapper.RoleMapper;
 import com.hotel.model.dto.request.RoleRequest;
-import com.hotel.model.entity.Hotel;
 import com.hotel.model.entity.Role;
 import com.hotel.repository.RoleRepository;
 import com.hotel.service.api.RoleService;

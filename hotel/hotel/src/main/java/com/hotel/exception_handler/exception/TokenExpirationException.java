@@ -1,4 +1,6 @@
-package com.hotel.exception_handler;
+package com.hotel.exception_handler.exception;
+
+import com.hotel.exception_handler.exception.AbstractNotFoundException;
 
 import java.util.UUID;
 

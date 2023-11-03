@@ -118,8 +118,8 @@ See only booked by me.
 
 ***************************
 PROBLEM:
- - When call add/hotel city is not returned (service and mapper)
- - redo ExceptionHandlerFilter , article required
+ - When call add/hotel city is not returned (service and mapper) done;
+ - redo ExceptionHandlerFilter , article required - can't do it
  - https://stackoverflow.com/questions/56871229/spring-security-ownership-based-access
 
 

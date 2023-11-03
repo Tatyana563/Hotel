@@ -1,13 +1,16 @@
 package com.hotel.service;
 
-import com.hotel.exception_handler.HotelNotFoundException;
+import com.hotel.exception_handler.exception.CityNotFoundException;
+import com.hotel.exception_handler.exception.HotelNotFoundException;
 import com.hotel.mapper.HotelMapper;
 import com.hotel.model.FilterDTO;
 import com.hotel.model.UserInfoDetails;
 import com.hotel.model.dto.*;
 import com.hotel.model.dto.request.HotelRequest;
+import com.hotel.model.entity.City;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.StarRating;
+import com.hotel.repository.CityRepository;
 import com.hotel.repository.HotelCounter;
 import com.hotel.repository.HotelRepository;
 import com.hotel.repository.specifications.HotelSpecification;
@@ -31,15 +34,18 @@ public class
 HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
-
+    private final CityRepository cityRepository;
     private final HotelMapper hotelMapper;
 
     @Transactional
     @Override
     public HotelDTO save(HotelRequest hotelRequest, Authentication authentication) {
         Hotel hotel = hotelMapper.hotelRequestToHotel(hotelRequest);
-        ClaimsDto claimsDto = (ClaimsDto)authentication.getPrincipal();
+        ClaimsDto claimsDto = (ClaimsDto) authentication.getPrincipal();
         hotel.setUserId(claimsDto.getId());
+        Integer cityId = hotelRequest.getCityId();
+        City city = cityRepository.findById(cityId).orElseThrow(() -> new CityNotFoundException(cityId));
+        hotel.setCity(city);
         Hotel savedHotel = hotelRepository.save(hotel);
 
         return hotelMapper.hotelToHotelDTOWithoutRooms(savedHotel);
@@ -51,7 +57,7 @@ HotelServiceImpl implements HotelService {
     public void delete(int id, Authentication authentication) {
         Optional<Hotel> hotel = findById(id);
         UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
-        if(!hotel.isPresent()){
+        if (!hotel.isPresent()) {
             throw new HotelNotFoundException(id);
         }
         if (hotel.get().getUserId() != null && userDetails.getUserId().equals(hotel.get().getUserId().toString())) {

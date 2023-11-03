@@ -1,5 +1,7 @@
 package com.hotel.exception_handler;
 
+import com.hotel.exception_handler.exception.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,12 +11,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class RestExceptionHandler {
 
     @ExceptionHandler(BindException.class)
@@ -71,5 +75,13 @@ public class RestExceptionHandler {
         ErrorMessage errorMessage = new ErrorMessage(605, LocalDateTime.now(), errors);
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<Object> handleExpiredJwtException(
+            ExpiredJwtException ex) {
 
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        ErrorMessage errorMessage = new ErrorMessage(606, LocalDateTime.now(), errors);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
 }

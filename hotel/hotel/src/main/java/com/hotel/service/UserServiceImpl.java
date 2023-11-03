@@ -3,10 +3,10 @@ package com.hotel.service;
 import com.hotel.config.properties.RegistrationProperties;
 import com.hotel.events.model.UserConfirmedRegistrationEvent;
 import com.hotel.events.model.UserRegisteredEvent;
-import com.hotel.exception_handler.RegistrationNotFoundException;
-import com.hotel.exception_handler.RoleNotFoundException;
-import com.hotel.exception_handler.TokenExpirationException;
-import com.hotel.exception_handler.UserAlreadyCreated;
+import com.hotel.exception_handler.exception.RegistrationNotFoundException;
+import com.hotel.exception_handler.exception.RoleNotFoundException;
+import com.hotel.exception_handler.exception.TokenExpirationException;
+import com.hotel.exception_handler.exception.UserAlreadyCreatedException;
 import com.hotel.model.dto.request.RegistrationRequest;
 import com.hotel.model.entity.Role;
 import com.hotel.model.entity.User;
@@ -41,10 +41,10 @@ public class UserServiceImpl implements UserService {
     public User register(RegistrationRequest request) {
         User savedUser = null;
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new UserAlreadyCreated(request.getEmail(), null);
+            throw new UserAlreadyCreatedException(request.getEmail(), null);
         }
         if (userRepository.existsByLogin(request.getLogin())) {
-            throw new UserAlreadyCreated(null, request.getLogin());
+            throw new UserAlreadyCreatedException(null, request.getLogin());
         }
         User user = new User();
         user.setName(request.getName());

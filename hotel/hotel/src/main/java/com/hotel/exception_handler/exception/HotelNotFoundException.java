@@ -1,6 +1,6 @@
-package com.hotel.exception_handler;
+package com.hotel.exception_handler.exception;
 
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import com.hotel.exception_handler.exception.AbstractNotFoundException;
 
 public class HotelNotFoundException extends AbstractNotFoundException {
     public HotelNotFoundException(Integer hotelId) {
