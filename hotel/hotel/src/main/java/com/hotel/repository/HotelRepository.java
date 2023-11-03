@@ -20,7 +20,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
     @Query("update Hotel h set h.starRating=:stars where h.name=:hotelName ")
     void updateHotelRating(@Param("stars") StarRating starRating, @Param("hotelName") String name);
 
-    List<Hotel> findByName(String hotelName);
+    Optional<Hotel> findById(int id);
 
     List<Hotel> findByOrderByDistanceAsc();
 

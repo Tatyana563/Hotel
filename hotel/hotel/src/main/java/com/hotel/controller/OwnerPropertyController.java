@@ -43,7 +43,7 @@ public class OwnerPropertyController {
     }
 
     @GetMapping("/delete/{deleteId}")
-    @PreAuthorize("hasRole('OWNER')")
+    @PreAuthorize("hasRole('OWNER') and @ownershipCheck.check(#id,authentication)")
     public void deleteById(@PathVariable("deleteId") int id, Authentication authentication) {
         // Authentication authentication contains Principal, principal=ClaimsDto
         hotelService.delete(id, authentication);

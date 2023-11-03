@@ -52,19 +52,24 @@ HotelServiceImpl implements HotelService {
     }
 
     // TODO or else throw HotelNotFound Exc
+//    @Transactional
+//    @Override
+//    public void delete(int id, Authentication authentication) {
+//        Optional<Hotel> hotel = findById(id);
+//        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
+//        if (!hotel.isPresent()) {
+//            throw new HotelNotFoundException(id);
+//        }
+//        if (hotel.get().getUserId() != null && userDetails.getUserId().equals(hotel.get().getUserId().toString())) {
+//            hotelRepository.delete(hotel.get());
+//        }
+//    }
     @Transactional
     @Override
     public void delete(int id, Authentication authentication) {
-        Optional<Hotel> hotel = findById(id);
-        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
-        if (!hotel.isPresent()) {
-            throw new HotelNotFoundException(id);
-        }
-        if (hotel.get().getUserId() != null && userDetails.getUserId().equals(hotel.get().getUserId().toString())) {
-            hotelRepository.delete(hotel.get());
-        }
+        Optional<Hotel> hotel = hotelRepository.findById(id);
+        hotel.ifPresent(hotelRepository::delete);
     }
-
     @Override
     public List<HotelBriefInfo> listAllHotelsBriefInfo() {
         return null;
@@ -82,7 +87,7 @@ HotelServiceImpl implements HotelService {
     @Transactional
     public Optional<Hotel> findById(int id) {
         Optional<Hotel> hotel = hotelRepository.findById(id);
-        return Optional.ofNullable(hotel).orElse(null);
+        return hotel;
     }
 
     @Transactional(readOnly = true)
