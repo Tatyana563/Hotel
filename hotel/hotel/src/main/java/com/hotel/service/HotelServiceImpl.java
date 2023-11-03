@@ -4,10 +4,7 @@ import com.hotel.exception_handler.HotelNotFoundException;
 import com.hotel.mapper.HotelMapper;
 import com.hotel.model.FilterDTO;
 import com.hotel.model.UserInfoDetails;
-import com.hotel.model.dto.HotelBriefInfo;
-import com.hotel.model.dto.HotelCounterDTO;
-import com.hotel.model.dto.HotelDTO;
-import com.hotel.model.dto.HotelDTOWithRooms;
+import com.hotel.model.dto.*;
 import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.StarRating;
@@ -39,9 +36,12 @@ HotelServiceImpl implements HotelService {
 
     @Transactional
     @Override
-    public HotelDTO save(HotelRequest hotelRequest) {
+    public HotelDTO save(HotelRequest hotelRequest, Authentication authentication) {
         Hotel hotel = hotelMapper.hotelRequestToHotel(hotelRequest);
+        ClaimsDto claimsDto = (ClaimsDto)authentication.getPrincipal();
+        hotel.setUserId(claimsDto.getId());
         Hotel savedHotel = hotelRepository.save(hotel);
+
         return hotelMapper.hotelToHotelDTOWithoutRooms(savedHotel);
     }
 

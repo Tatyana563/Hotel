@@ -1,11 +1,15 @@
 package com.hotel.service.security;
 
-import com.hotel.model.UserInfoDetails;
+import com.hotel.model.dto.ClaimsDto;
+import com.hotel.model.entity.User;
+import com.hotel.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -15,12 +19,21 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
+    private final UserRepository userRepository;
 
     public String generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
+        User user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User was not found"));
+        ClaimsDto claimsDto = new ClaimsDto(user.getUsername(),user.getId(),user.getRole().getName());
+        String username = claimsDto.getUsername();
+        claims.put("username", username);
+        claims.put("id", claimsDto.getId());
+        claims.put("role", claimsDto.getRole());
+
         return createToken(claims, userName);
     }
 
@@ -60,13 +73,14 @@ public class JwtService {
                 .getBody();
     }
 
-    private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
 
-    public Boolean validateToken(String token, UserInfoDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public ClaimsDto parseToken(String token) {
+
+        Claims claims = extractAllClaims(token);
+        String username = claims.get("username", String.class);
+        Integer id = claims.get("id", Integer.class);
+        String role = claims.get("role", String.class);
+      return new ClaimsDto(username,id,role);
     }
 
 

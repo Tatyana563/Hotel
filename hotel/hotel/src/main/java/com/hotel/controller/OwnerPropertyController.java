@@ -36,15 +36,16 @@ public class OwnerPropertyController {
     @PostMapping("/add")
     // TODO: move into service, use mapper!!!!
    @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<HotelDTO> create(@RequestBody @Valid HotelRequest hotelRequest) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<HotelDTO> create(@RequestBody @Valid HotelRequest hotelRequest,Authentication authentication) {
+
         //TODO: return hotelDTO
-        return ResponseEntity.ok(hotelService.save(hotelRequest));
+        return ResponseEntity.ok(hotelService.save(hotelRequest, authentication));
     }
 
     @GetMapping("/delete/{deleteId}")
     @PreAuthorize("hasRole('OWNER')")
     public void deleteById(@PathVariable("deleteId") int id, Authentication authentication) {
+        // Authentication authentication contains Principal, principal=ClaimsDto
         hotelService.delete(id, authentication);
     }
 }

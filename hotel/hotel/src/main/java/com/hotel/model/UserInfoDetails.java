@@ -29,6 +29,7 @@ public class UserInfoDetails implements UserDetails {
         authorities = Arrays.stream(new Role[]{userInfo.getRole()})
                 .map((Role role) -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
+        userId=userInfo.getId();
     }
 
     @Override

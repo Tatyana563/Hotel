@@ -115,3 +115,12 @@ PROBLEM: ExceptionHandler doesn't work with security, 403 for everything
 3) rest endpoint to create room;
 4) booking allowed only for users;
 See only booked by me.
+
+***************************
+PROBLEM:
+ - When call add/hotel city is not returned (service and mapper)
+ - redo ExceptionHandlerFilter , article required
+ - https://stackoverflow.com/questions/56871229/spring-security-ownership-based-access
+
+
+ - confirmation token strategy;

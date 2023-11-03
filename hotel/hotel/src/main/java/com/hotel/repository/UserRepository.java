@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -28,5 +29,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByLogin(String login);
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 }

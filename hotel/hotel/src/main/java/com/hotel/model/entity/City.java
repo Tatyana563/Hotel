@@ -23,6 +23,4 @@ public class City implements Serializable {
     @Column(name = "COUNTRY", nullable = false)
     private String country;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
-    private List<Hotel> hotelList = new ArrayList<>();
 }

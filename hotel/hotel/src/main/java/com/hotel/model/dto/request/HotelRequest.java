@@ -19,6 +19,5 @@ public class HotelRequest {
     private Integer distance;
     @NotNull
     private Integer cityId;
-    @NotNull
-    private Integer userId;
+
 }

@@ -3,6 +3,7 @@ package com.hotel.exception_handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,10 +22,11 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             List<String> errors = Collections.singletonList(e.getMessage());
             ErrorMessage errorMessage = new ErrorMessage(606, LocalDateTime.now(), errors);
             response.getWriter().write(convertObjectToJson(errorMessage));
+            response.setStatus(401);
         } catch (ServletException | IOException e) {
             throw new RuntimeException(e);
         }
