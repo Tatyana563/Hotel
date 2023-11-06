@@ -5,6 +5,7 @@ import com.hotel.model.enumeration.StarRating;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "hotel")
+@Where(clause="isDeleted is not true")// works for all JPA queries apart from links @OneToMany(hotel) and so on
 public class Hotel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,14 +35,11 @@ public class Hotel implements Serializable {
     @Column(name = "DISTANCE")
     private Integer distance;
 
-    @Column(name = "CITY_FK_ID")
-    private Integer cityId;
-
     @Column(name = "USER_FK_ID")
     private Integer userId;
 
     @ManyToOne()
-    @JoinColumn(name = "CITY_FK_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "CITY_FK_ID")
     private City city;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "hotel")

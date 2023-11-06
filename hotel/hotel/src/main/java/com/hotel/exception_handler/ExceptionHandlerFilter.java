@@ -1,47 +1,40 @@
 package com.hotel.exception_handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
-private final RestExceptionHandler restExceptionHandler;
+    private final List<HandlerExceptionResolver> resolvers;
 
     @Override
-    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (ExpiredJwtException e) {
-            log.error("Spring Security Filter Chain Exception:", e);
-            restExceptionHandler.handleExpiredJwtException(e);
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
+        } catch (ServletException | IOException e) {
+            throw e;
+        } catch (Exception e) {
+            boolean exceptionHandled = false;
+            for (HandlerExceptionResolver resolver : resolvers) {
+
+                if (resolver.resolveException(request, response, null, e) != null) {
+                    exceptionHandled = true;
+                    break;
+                }
+            }
+            if (!exceptionHandled) {
+                throw new ServletException(e);
+            }
         }
     }
-
-    private String convertObjectToJson(Object object) throws JsonProcessingException {
-        if (object == null) {
-            return null;
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        return mapper.writeValueAsString(object);
-    }
-
 }

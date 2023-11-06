@@ -12,7 +12,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/registration")
 @RequiredArgsConstructor
-public class UserController {
+public class RegistrationController {
     private final UserService userRegistrationService;
 
     @PostMapping

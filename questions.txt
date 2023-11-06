@@ -124,3 +124,35 @@ PROBLEM:
 
 
  - confirmation token strategy;
+
+ TO DO:
+1) soft delete for the hotel(flag in DB - deleted for hotel and room)
+in room service get rooms and set flag deleted;
+2) abstract class BaseEntity fileds: id, isDeleted, and fields for audit (createdBy)
+OwnedEntity for OwnershipCheckService
+3) Update specification of rooms and hotels to not show deleted - abstraction
+4) delete all users with tokens regularly who are not "enabled or activated"
+
+5) user wants to register, token in DB. Try to register again. Token is valid.
+a) if user is not enabled: "Please complete registration" Do you need new token? (Token notification date).
+When generate new token check that last one was not generated less than 5 min;
+b) user is enabled: User exists, please login. Om login page - Forget password button;
+
+Create endpoint resendConfirmationToken  - limit rate for a single user 1 request/minute
+(check time is service)
+
+ TO DO:
+1) soft delete for the hotel(flag in DB - deleted for hotel and room)
+in room service get rooms and set flag deleted;
+2) abstract class BaseEntity fileds: id, isDeleted, and fields for audit (createdBy)
+OwnedEntity for OwnershipCheckService
+3) Update specification of rooms and hotels to not show deleted - abstraction
+4) delete all users with tokens regularly who are not "enabled or activated"
+
+5) user wants to register, token in DB. Try to register again. Token is valid.
+a) if user is not enabled: "Please complete registration" Do you need new token? (Token notification date).
+When generate new token check that last one was not generated less than 5 min;
+b) user is enabled: User exists, please login. Om login page - Forget password button;
+
+Create endpoint resendConfirmationToken  - limit rate for a single user 1 request/minute
+(check time is service)

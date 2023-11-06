@@ -59,4 +59,6 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
     @Query("SELECT r.hotel.name  FROM Room r WHERE r.id = :roomId ")
     String findHotelNameByRoomId(Integer roomId);
 
+    boolean existsByIdAndUserId(int id,int userId);
+
 }

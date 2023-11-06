@@ -7,6 +7,7 @@ import com.hotel.service.security.JwtAuthFilter;
 import com.hotel.service.security.JwtService;
 import com.hotel.service.security.UserInfoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+
+import java.util.List;
 
 
 @Configuration
@@ -47,10 +51,10 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider,
-                                                   JwtAuthFilter authFilter,RestExceptionHandler restExceptionHandler) throws Exception {
+                                                   JwtAuthFilter authFilter, ExceptionHandlerFilter exceptionHandlerFilter) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(exceptionHandlerFilter(restExceptionHandler), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/registration/**").permitAll()
@@ -87,8 +91,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public ExceptionHandlerFilter exceptionHandlerFilter(RestExceptionHandler restExceptionHandler) {
-        return new ExceptionHandlerFilter(restExceptionHandler);
+    public ExceptionHandlerFilter exceptionHandlerFilter(List<HandlerExceptionResolver> resolvers) {
+        return new ExceptionHandlerFilter(resolvers);
     }
 
     @Bean
