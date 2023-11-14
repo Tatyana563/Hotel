@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void confirmRegistration(UUID token) {
-        VerificationToken verificationToken = tokenRepository.findById(token).orElseThrow(() -> new RegistrationNotFoundException(token));
+        VerificationToken verificationToken = tokenRepository.findById(token).orElseThrow(() -> new RegistrationNotFoundException("Token was not found: " + token.toString(), token.toString()));
 
         Date expiryDate = verificationToken.getExpiryDate();
 
