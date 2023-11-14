@@ -34,6 +34,8 @@
             </column>
             <column name="animals" type="boolean">
             </column>
+            <column name="is_deleted" type="boolean">
+            </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="room" baseColumnNames="hotel_fk_id"
                                  constraintName="hotel_fk_id"

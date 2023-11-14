@@ -21,9 +21,8 @@ public class VerificationToken {
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_fk_id", referencedColumnName = "id")
-
     private User user;
 
     @Column(name = "expiration_date", nullable = false)

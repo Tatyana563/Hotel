@@ -15,7 +15,7 @@ import java.util.List;
 public interface HotelService {
     HotelDTO save(HotelRequest hotelRequest, Authentication authentication);
 
-    void delete(int id, Authentication authentication);
+    void delete(int id);
 
     List<HotelBriefInfo> listAllHotelsBriefInfo();
 

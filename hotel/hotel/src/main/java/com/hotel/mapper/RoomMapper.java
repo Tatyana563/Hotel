@@ -2,6 +2,7 @@ package com.hotel.mapper;
 
 import com.hotel.model.dto.RoomDTO;
 import com.hotel.model.dto.RoomDTOWithHotelDTO;
+import com.hotel.model.dto.request.RoomRequest;
 import com.hotel.model.entity.Room;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,4 +15,6 @@ public interface RoomMapper {
     @Mapping(target = "roomDTO", source = "room")
     @Mapping(target = "hotelDTO", source = "room.hotel")
     RoomDTOWithHotelDTO roomToRoomDTOWithHotelDTO(Room room);
+
+    Room roomRequestToRoom(RoomRequest roomRequest);
 }

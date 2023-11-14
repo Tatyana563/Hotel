@@ -44,7 +44,10 @@ public class Room implements Serializable {
     @Column(name = "HOTEL_FK_ID", insertable = false, updatable = false)
     private Integer hotelId;
 
-    @ManyToOne(/*cascade = CascadeType.ALL*/)
+    @Column(name = "IS_DELETED")
+    private Boolean isDeleted=false;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "HOTEL_FK_ID")
     @ToString.Exclude
     private Hotel hotel;

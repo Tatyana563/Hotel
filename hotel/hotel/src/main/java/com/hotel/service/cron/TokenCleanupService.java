@@ -19,5 +19,6 @@ public class TokenCleanupService {
     public void cleanExpiredTokens() {
         Date currentDate = new Date();
         tokenRepository.deleteByExpiryDateBefore(currentDate);
+        System.out.println(System.currentTimeMillis());
     }
 }

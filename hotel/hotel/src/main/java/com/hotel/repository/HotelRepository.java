@@ -61,4 +61,13 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
 
     boolean existsByIdAndUserId(int id,int userId);
 
+    @Modifying
+    @Query("UPDATE Hotel h SET h.isDeleted = true WHERE h.id = :hotelId")
+    int markHotelAsDeleted(int  hotelId);
+
+    @Query("SELECT h FROM Hotel h WHERE h.id = :hotelId AND h.isDeleted = false")
+    Optional<Hotel> findByIdAndIsNotDeleted(int hotelId);
+
+
+
 }

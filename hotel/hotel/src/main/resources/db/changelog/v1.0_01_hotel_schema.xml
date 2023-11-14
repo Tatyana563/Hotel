@@ -31,6 +31,8 @@
             </column>
             <column name="distance" type="int">
             </column>
+            <column name="is_deleted" type="boolean">
+            </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="hotel" baseColumnNames="city_fk_id"
                                  constraintName="city_fk_id"

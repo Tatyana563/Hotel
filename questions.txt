@@ -142,17 +142,26 @@ Create endpoint resendConfirmationToken  - limit rate for a single user 1 reques
 (check time is service)
 
  TO DO:
-1) soft delete for the hotel(flag in DB - deleted for hotel and room)
+1) soft delete for the hotel(flag in DB - deleted for hotel and room) ok
 in room service get rooms and set flag deleted;
-2) abstract class BaseEntity fileds: id, isDeleted, and fields for audit (createdBy)
+2) abstract class BaseEntity fileds: id, isDeleted, and fields for audit (createdBy) author, operation(data,author,duration Spring AOP?, fail/success, error code, separate ENUM (update hotel, delete hotel)
+separate table (column: data before, data after - )
 OwnedEntity for OwnershipCheckService
 3) Update specification of rooms and hotels to not show deleted - abstraction
-4) delete all users with tokens regularly who are not "enabled or activated"
+4) delete all users with tokens regularly who are not "enabled or activated" ok
 
-5) user wants to register, token in DB. Try to register again. Token is valid.
+5) user wants to register, token in DB. Try to register again. Token is valid. ok
 a) if user is not enabled: "Please complete registration" Do you need new token? (Token notification date).
 When generate new token check that last one was not generated less than 5 min;
 b) user is enabled: User exists, please login. Om login page - Forget password button;
 
-Create endpoint resendConfirmationToken  - limit rate for a single user 1 request/minute
-(check time is service)
+Create endpoint resendConfirmationToken  - limit rate for a single token 1 request/minute
+(check time in service)
+-DB token notificationTime;
+
+
+
+THINK:
+db script to add roles to the table
+
+in POSTMAN set env, variable authToken, host

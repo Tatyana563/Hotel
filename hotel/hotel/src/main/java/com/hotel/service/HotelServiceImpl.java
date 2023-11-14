@@ -4,7 +4,6 @@ import com.hotel.exception_handler.exception.CityNotFoundException;
 import com.hotel.exception_handler.exception.HotelNotFoundException;
 import com.hotel.mapper.HotelMapper;
 import com.hotel.model.FilterDTO;
-import com.hotel.model.UserInfoDetails;
 import com.hotel.model.dto.*;
 import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.entity.City;
@@ -13,6 +12,7 @@ import com.hotel.model.enumeration.StarRating;
 import com.hotel.repository.CityRepository;
 import com.hotel.repository.HotelCounter;
 import com.hotel.repository.HotelRepository;
+import com.hotel.repository.RoomRepository;
 import com.hotel.repository.specifications.HotelSpecification;
 import com.hotel.service.api.HotelService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +34,7 @@ public class
 HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
+    private final RoomRepository roomRepository;
     private final CityRepository cityRepository;
     private final HotelMapper hotelMapper;
 
@@ -66,10 +67,14 @@ HotelServiceImpl implements HotelService {
 //    }
     @Transactional
     @Override
-    public void delete(int id, Authentication authentication) {
+    public void delete(int id) {
         Optional<Hotel> hotel = hotelRepository.findById(id);
-        hotel.ifPresent(hotelRepository::delete);
+        if (hotel.isPresent()) {
+            hotelRepository.markHotelAsDeleted(id);
+            roomRepository.markRoomsAsDeleted(id);
+        }
     }
+
     @Override
     public List<HotelBriefInfo> listAllHotelsBriefInfo() {
         return null;

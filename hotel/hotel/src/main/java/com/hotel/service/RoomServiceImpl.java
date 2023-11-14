@@ -1,13 +1,17 @@
 package com.hotel.service;
 
 import com.hotel.events.model.RoomBookedEvent;
+import com.hotel.exception_handler.exception.HotelNotFoundException;
 import com.hotel.exception_handler.exception.RoomNotFoundException;
 import com.hotel.mapper.RoomMapper;
 import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.RoomDTO;
+import com.hotel.model.dto.RoomDTOWithHotelDTO;
 import com.hotel.model.dto.request.BookingRequest;
+import com.hotel.model.dto.request.RoomRequest;
 import com.hotel.model.dto.response.BookingResponse;
 import com.hotel.model.dto.response.RequestStatus;
+import com.hotel.model.entity.Hotel;
 import com.hotel.model.entity.Room;
 import com.hotel.model.entity.RoomAvailability;
 import com.hotel.repository.HotelRepository;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,8 +40,16 @@ public class RoomServiceImpl implements RoomService {
     private final RoomMapper roomMapper;
 
     @Override
-    public void save(Room room) {
-        roomRepository.save(room);
+    public RoomDTOWithHotelDTO save(int hotelId,RoomRequest roomRequest) {
+
+        Room room = roomMapper.roomRequestToRoom(roomRequest);
+        Optional<Hotel> hotel = hotelRepository.findByIdAndIsNotDeleted(hotelId);
+        if (hotel.isPresent()) {
+            room.setHotel(hotel.get());
+            Room savedRoom = roomRepository.save(room);
+            return roomMapper.roomToRoomDTOWithHotelDTO(savedRoom);
+        }
+        else throw new HotelNotFoundException(hotelId);
     }
 
     public boolean isRoomAvailableByDates(Integer roomId, Date start, Date end) throws RoomNotFoundException {
@@ -45,7 +58,6 @@ public class RoomServiceImpl implements RoomService {
         if (!isRoomPresentInDb) {
             throw new RoomNotFoundException(roomId);
         }
-
 
         return !roomRepository.isRoomBookedByDates(roomId, start, end);
 
