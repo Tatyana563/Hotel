@@ -8,6 +8,7 @@
     <include file="v1.0_01_room_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_room_availability_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_role_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_role_values_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_users_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_city_sequence.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_hotel_sequence.xml" relativeToChangelogFile="true"/>
