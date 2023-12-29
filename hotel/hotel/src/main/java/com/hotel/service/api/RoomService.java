@@ -11,6 +11,7 @@ import com.hotel.model.dto.response.BookingResponse;
 import java.util.List;
 
 public interface RoomService {
+    void deleteSeparateRoom(int hotelId, int roomId);
     RoomDTOWithHotelDTO save(int hotelId, RoomRequest roomRequest);
 
     BookingResponse bookRoom(Integer roomId, BookingRequest bookingRequest) throws RoomNotFoundException;

@@ -49,4 +49,57 @@ http://localhost:8080/hotel/add
             "cityId": 1
     }
 
+************************************************************************************
+FLOW:
+1) mvn liquibase:update
+2) Create user:
+   POST http://localhost:8080/registration
+   {
+   "name": "Tomas",
+   "surname": "Green",
+   "username": "tomas",
+   "password": "123",
+   "login": "tomas",
+   "phone": "1234567859023",
+   "email": "tomase.doe@exa2mple.com",
+   "role": "OWNER"
+   }
+3) Activate user:
+   POST http://localhost:8080/registration/8aeed4f5-5253-418b-a949-601823702615/confirm
+4) Login
+   POST http://localhost:8080/login
+   {
+   "username": "tomas",
+   "password":  "123"
+   }
+
+5) add hotel
+   http://{{host}}/hotels
+   POST
+   {
+   "name": "Example Hotel_3",
+   "starRating": "FIVE",
+   "meals": "ALL_INCLUSIVE",
+   "distance": 1.8,
+   "cityId": 1
+
+   }
+6) get all hotels owned by  a particular person
+   GET
+   http://{{host}}/hotels/all_hotels_brief
+
+7) From the previous request we can get id and add rooms
+   POST
+   http://localhost:8080/hotels/1/room
+   {"number":35,
+   "type":"DOUBLE",
+   "sleeps":"TWO",
+   "price":10,
+   "square":25,
+   "parking":true,
+   "pets":true}
+8) We can delete a room
+   DELETE
+   http://{{host}}/hotels/1/room/1
+
 

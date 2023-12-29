@@ -19,4 +19,8 @@ public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecifi
     @Modifying
     @Query("UPDATE Room r SET r.isDeleted = true WHERE r.hotel.id = :hotelId")
     int markRoomsAsDeleted(int hotelId);
+
+    @Modifying
+    @Query("UPDATE Room r SET r.isDeleted = true WHERE r.hotel.id = :hotelId and r.id=:roomId")
+    int markSeparateRoomAsDeleted(int hotelId, int roomId);
 }

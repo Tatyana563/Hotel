@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 public class HotelOwnershipCheckService {
     private final HotelRepository hotelRepository;
 
-    public boolean check(int id, Authentication authentication) {
+    public boolean checkOwnershipForDelete(int id, Authentication authentication) {
         ClaimsDto principal = (ClaimsDto) authentication.getPrincipal();
         int userId = principal.getId();
-        return hotelRepository.existsByIdAndUserId(id, userId);
+        return hotelRepository.existsByIdAndOwnerId(id, userId);
 
     }
 }
+

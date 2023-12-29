@@ -1,17 +1,15 @@
 package com.hotel.service.security;
 
 import com.hotel.model.dto.ClaimsDto;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.hibernate.mapping.Collection;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,12 +29,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-            ClaimsDto claimsDto = jwtService.parseToken(token);
+            token = authHeader.substring(7).trim();
+            if (!token.isEmpty()) {
 
-            PreAuthenticatedAuthenticationToken authToken = new PreAuthenticatedAuthenticationToken(claimsDto, null, Collections.singleton(new SimpleGrantedAuthority(claimsDto.getRole())));
+                try {
+                    ClaimsDto claimsDto = jwtService.parseToken(token);
+                    PreAuthenticatedAuthenticationToken authToken = new PreAuthenticatedAuthenticationToken(claimsDto, null, Collections.singleton(new SimpleGrantedAuthority(claimsDto.getRole())));
 
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                } catch (JwtException e) {
+                    logger.warn("Invalid token");
+                }
+            }
+
         }
         filterChain.doFilter(request, response);
     }

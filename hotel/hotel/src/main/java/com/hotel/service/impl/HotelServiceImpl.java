@@ -1,4 +1,4 @@
-package com.hotel.service;
+package com.hotel.service.impl;
 
 import com.hotel.exception_handler.exception.CityNotFoundException;
 import com.hotel.exception_handler.exception.HotelNotFoundException;
@@ -15,6 +15,8 @@ import com.hotel.repository.HotelRepository;
 import com.hotel.repository.RoomRepository;
 import com.hotel.repository.specifications.HotelSpecification;
 import com.hotel.service.api.HotelService;
+import com.hotel.service.auditable.AuditAnnotation;
+import com.hotel.service.auditable.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,10 +42,11 @@ HotelServiceImpl implements HotelService {
 
     @Transactional
     @Override
+    @AuditAnnotation(operation = Operation.HOTEL_CREATE)
     public HotelDTO save(HotelRequest hotelRequest, Authentication authentication) {
         Hotel hotel = hotelMapper.hotelRequestToHotel(hotelRequest);
         ClaimsDto claimsDto = (ClaimsDto) authentication.getPrincipal();
-        hotel.setUserId(claimsDto.getId());
+        hotel.setOwnerId(claimsDto.getId());
         Integer cityId = hotelRequest.getCityId();
         City city = cityRepository.findById(cityId).orElseThrow(() -> new CityNotFoundException(cityId));
         hotel.setCity(city);
@@ -77,7 +80,15 @@ HotelServiceImpl implements HotelService {
 
     @Override
     public List<HotelBriefInfo> listAllHotelsBriefInfo() {
-        return null;
+        List<Hotel> hotelList = hotelRepository.findAll(new HotelSpecification(new FilterDTO()));
+        return hotelList.stream().map(hotel -> hotelMapper.hotelToHotelBriefInfo(hotel)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HotelBriefInfo> listAllHotelsBriefInfoForOwner(Authentication authentication) {
+        ClaimsDto principal = (ClaimsDto) authentication.getPrincipal();
+        int userId =  principal.getId();
+        return hotelRepository.listHotelsBriefInfoForOwner(userId);
     }
 
     @Override

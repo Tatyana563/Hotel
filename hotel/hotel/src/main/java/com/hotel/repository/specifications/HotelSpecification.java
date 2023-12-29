@@ -21,12 +21,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HotelSpecification implements Specification<Hotel> {
     private final FilterDTO filterDTO;
-
+//TODO: hotel specifi with builder, extract filterDTO fields on hotelSpecification level; (instead of   private final FilterDTO filterDTO add all fields L23)
     @Override
     public Predicate toPredicate(Root<Hotel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicateList = new ArrayList<>();
-
-
+        // Add condition to exclude deleted hotels
+        predicateList.add(criteriaBuilder.equal(root.get(Hotel_.IS_DELETED), Boolean.FALSE));
+        if (filterDTO == null) {
+            return criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
+        }
         if (filterDTO.getDistance() != null) {
             predicateList.add(criteriaBuilder.lessThanOrEqualTo(root.get(Hotel_.DISTANCE), filterDTO.getDistance()));
         }

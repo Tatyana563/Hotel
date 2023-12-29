@@ -28,8 +28,8 @@ public class OwnerPropertyController {
 
     @GetMapping("/all_hotels_brief")
     @PreAuthorize("hasRole('OWNER')")
-    public Collection<HotelBriefInfo> allHotelsBriefInfo() {
-        return hotelService.listAllHotelsBriefInfo();
+    public Collection<HotelBriefInfo> allHotelsBriefInfo(Authentication authentication) {
+        return hotelService.listAllHotelsBriefInfoForOwner(authentication);
     }
 
 
@@ -42,15 +42,19 @@ public class OwnerPropertyController {
     }
 
     @PostMapping("/{hotelId}/room")
-    @PreAuthorize("hasRole('OWNER') and @hotelOwnershipCheckService.check(#hotelId,authentication)")
+    @PreAuthorize("hasRole('OWNER') and @hotelOwnershipCheckService.checkOwnershipForDelete(#hotelId,authentication)")
     public ResponseEntity<RoomDTOWithHotelDTO> createRoom(@PathVariable int hotelId, @RequestBody @Valid RoomRequest roomRequest, Authentication authentication) {
 
         return ResponseEntity.ok(roomService.save(hotelId, roomRequest));
     }
-
+    @DeleteMapping("/{hotelId}/room/{deleteId}")
+    @PreAuthorize("hasRole('OWNER') and @hotelOwnershipCheckService.checkOwnershipForDelete(#hotelId,authentication)")
+    public void deleteRoom(@PathVariable int hotelId, @PathVariable int deleteId, Authentication authentication) {
+     roomService.deleteSeparateRoom(hotelId, deleteId);
+    }
 
     @DeleteMapping("/{deleteId}")
-    @PreAuthorize("hasRole('OWNER') and @hotelOwnershipCheckService.check(#id,authentication)")
+    @PreAuthorize("hasRole('OWNER') and @hotelOwnershipCheckService.checkOwnershipForDelete(#id,authentication)")
     public void deleteById(@PathVariable("deleteId") int id, Authentication authentication) {
         // Authentication authentication contains Principal, principal=ClaimsDto
         hotelService.delete(id);

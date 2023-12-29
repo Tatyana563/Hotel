@@ -18,7 +18,7 @@ public interface HotelService {
     void delete(int id);
 
     List<HotelBriefInfo> listAllHotelsBriefInfo();
-
+    List<HotelBriefInfo> listAllHotelsBriefInfoForOwner(Authentication authentication);
     List<HotelCounterDTO> listHotelsWithAvailableRoomsAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end);
 
     HotelDTOWithRooms hotelWithAvailableRoomsByDates(int hotelId, Date start, Date end);

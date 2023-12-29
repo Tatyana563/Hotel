@@ -1,0 +1,36 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="createEnumAuditOperation" author="petrenko">
+        <preConditions onFail="MARK_RAN">
+
+            <sqlCheck expectedResult="0">
+                SELECT count(*)
+                FROM pg_type
+                WHERE typname = 'audit_operation'
+            </sqlCheck>
+
+        </preConditions>
+        <sql>
+        <![CDATA[
+            CREATE TYPE audit_operation AS ENUM (
+    'HOTEL_CREATE',
+    'HOTEL_UPDATE',
+    'HOTEL_DELETE',
+    'ROOM_CREATE',
+    'ROOM_UPDATE',
+    'ROOM_DELETE'
+                );
+            ]]>
+    </sql>
+        <rollback>
+            <sql>
+                <![CDATA[
+              DROP TYPE IF EXISTS audit_operation;
+            ]]>
+            </sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

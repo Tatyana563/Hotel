@@ -1,4 +1,4 @@
-package com.hotel.service;
+package com.hotel.service.impl;
 
 import com.hotel.exception_handler.exception.RoleNotFoundException;
 import com.hotel.mapper.RoleMapper;

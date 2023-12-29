@@ -3,6 +3,8 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
+    <include file="v1.0_01_audit_operation_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_audit_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_city_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_hotel_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_room_schema.xml" relativeToChangelogFile="true"/>
@@ -15,6 +17,7 @@
     <include file="v1.0_01_token_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_token_modified_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_check_room_availability_function_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_city_values_schema.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
 
 

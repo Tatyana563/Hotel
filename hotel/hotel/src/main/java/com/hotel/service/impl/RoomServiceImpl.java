@@ -1,4 +1,4 @@
-package com.hotel.service;
+package com.hotel.service.impl;
 
 import com.hotel.events.model.RoomBookedEvent;
 import com.hotel.exception_handler.exception.HotelNotFoundException;
@@ -38,6 +38,12 @@ public class RoomServiceImpl implements RoomService {
     private final HotelRepository hotelRepository;
     private final RoomAvailabilityRepository roomAvailabilityRepository;
     private final RoomMapper roomMapper;
+
+    @Override
+    @Transactional
+    public void deleteSeparateRoom(int hotelId, int roomId) {
+        roomRepository.markSeparateRoomAsDeleted(hotelId,roomId);
+    }
 
     @Override
     public RoomDTOWithHotelDTO save(int hotelId,RoomRequest roomRequest) {

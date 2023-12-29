@@ -146,9 +146,12 @@ Create endpoint resendConfirmationToken  - limit rate for a single user 1 reques
 in room service get rooms and set flag deleted;
 2) abstract class BaseEntity fileds: id, isDeleted, and fields for audit (createdBy) author, operation(data,author,duration Spring AOP?, fail/success, error code, separate ENUM (update hotel, delete hotel)
 separate table (column: data before, data after - )
-OwnedEntity for OwnershipCheckService
-3) Update specification of rooms and hotels to not show deleted - abstraction
-4) delete all users with tokens regularly who are not "enabled or activated" ok
+PROBLEM:
+https://turkogluc.com/spring-data-jpa-auditing/
+DeletableEntity extends BaseEntity! to do
+OwnedEntity extends DeletableEntity (field ownerId)
+3) Update specification of rooms and hotels to not show deleted - abstraction - doest work
+4) delete all users with tokens regularly who are not "enabled or activated" ok issue with cascade
 
 5) user wants to register, token in DB. Try to register again. Token is valid. ok
 a) if user is not enabled: "Please complete registration" Do you need new token? (Token notification date).
@@ -165,3 +168,21 @@ THINK:
 db script to add roles to the table
 
 in POSTMAN set env, variable authToken, host
+
+1) liquebase add not null constraint isDeleted default false;
+
+PROBLEM: 401 from Spring security??? now have 403
+**********************************************
+Task:
+owner can see only his property - one controller
+admin can see and filter for all ownerIds - another controller
+filter by  (dataCreated, dataModified) hotels and rooms
+showMyPropertyOnly - for owner
+SEt<ownerId> - for admin
+in Spring security for endpoints isolate by roles not by annotation hasRole
+
+Task:
+ The user has already been created with email: tomase.doe@exa2mple.com - 400, now 500, fix
+ com.hotel.exception_handler.exception.RoleNotFoundException: Generic resource not found
+ Task
+ audit_fk_id remove

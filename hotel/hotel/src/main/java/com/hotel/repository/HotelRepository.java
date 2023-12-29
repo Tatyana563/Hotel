@@ -27,6 +27,8 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
     @Query("select new com.hotel.model.dto.HotelBriefInfo(h.id,h.name, hc.name) from Hotel h inner join h.city hc")
     List<HotelBriefInfo> listHotelsBriefInfo();
 
+    @Query("select new com.hotel.model.dto.HotelBriefInfo(h.id,h.name, hc.name) from Hotel h inner join h.city hc where h.ownerId=:ownerId")
+    List<HotelBriefInfo> listHotelsBriefInfoForOwner(int ownerId);
     @Query("select new com.hotel.repository.HotelCounter(r.hotel, count(r.id)) from Room r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
             "and ra.end>=:start and ra.start<=:end)" +
             "group by r.hotel")
@@ -59,15 +61,13 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
     @Query("SELECT r.hotel.name  FROM Room r WHERE r.id = :roomId ")
     String findHotelNameByRoomId(Integer roomId);
 
-    boolean existsByIdAndUserId(int id,int userId);
+    boolean existsByIdAndOwnerId(int id, int userId);
 
     @Modifying
     @Query("UPDATE Hotel h SET h.isDeleted = true WHERE h.id = :hotelId")
-    int markHotelAsDeleted(int  hotelId);
+    int markHotelAsDeleted(int hotelId);
 
     @Query("SELECT h FROM Hotel h WHERE h.id = :hotelId AND h.isDeleted = false")
     Optional<Hotel> findByIdAndIsNotDeleted(int hotelId);
-
-
 
 }
