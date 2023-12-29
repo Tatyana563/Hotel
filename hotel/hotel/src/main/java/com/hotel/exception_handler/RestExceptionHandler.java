@@ -84,4 +84,24 @@ public class RestExceptionHandler {
         ErrorMessage errorMessage = new ErrorMessage(606, LocalDateTime.now(), errors);
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserAlreadyCreatedException.class)
+    public ResponseEntity<Object> handleUserAlreadyCreatedException(
+            UserAlreadyCreatedException ex) {
+
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        ErrorMessage errorMessage = new ErrorMessage(607, LocalDateTime.now(), errors);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<Object> RoleNotFoundException(
+            RoleNotFoundException ex) {
+
+        List<String> errors = Collections.singletonList(ex.getResourceId());
+
+        ErrorMessage errorMessage = new ErrorMessage(608, LocalDateTime.now(), errors);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
 }
