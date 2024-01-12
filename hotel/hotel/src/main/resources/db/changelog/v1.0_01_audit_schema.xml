@@ -18,7 +18,7 @@
             </column>
             <column name="operation" type="varchar(64)">
             </column>
-            <column name="modified_by" type="varchar(64)">
+            <column name="modified_by" type="int">
             </column>
             <column name="creation_date" type="timestamp">
             </column>
@@ -26,7 +26,9 @@
             </column>
             <column name="success" type="boolean">
             </column>
-            <column name="error_code" type="varchar(64)">
+            <column name="stack_trace" type="text">
+            </column>
+            <column name="message" type="text">
             </column>
         </createTable>
         <rollback>

@@ -28,4 +28,7 @@ public class VerificationToken {
     @Column(name = "expiration_date", nullable = false)
     private Date expiryDate;
 
+    @Column(name = "last_notification_date", nullable = false)
+    private Date lastNotificationDate;
+
 }

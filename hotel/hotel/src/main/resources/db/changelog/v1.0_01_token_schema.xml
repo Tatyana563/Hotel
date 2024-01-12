@@ -25,6 +25,9 @@
             <column name="expiration_date" type="timestamp">
                 <constraints nullable="false"/>
             </column>
+            <column name="last_notification_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="token" baseColumnNames="user_fk_id"
                                  constraintName="user_fk_id"

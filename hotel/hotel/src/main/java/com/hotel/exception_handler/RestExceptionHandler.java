@@ -1,6 +1,8 @@
 package com.hotel.exception_handler;
 
 import com.hotel.exception_handler.exception.*;
+import com.hotel.model.dto.response.error.registration.RegistrationErrorPayload;
+import com.hotel.model.dto.response.error.registration.RegistrationErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
@@ -85,23 +87,21 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserAlreadyCreatedException.class)
-    public ResponseEntity<Object> handleUserAlreadyCreatedException(
-            UserAlreadyCreatedException ex) {
-
-        List<String> errors = Collections.singletonList(ex.getMessage());
-
-        ErrorMessage errorMessage = new ErrorMessage(607, LocalDateTime.now(), errors);
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(RoleNotFoundException.class)
-    public ResponseEntity<Object> RoleNotFoundException(
+    public ResponseEntity<Object> roleNotFoundException(
             RoleNotFoundException ex) {
 
         List<String> errors = Collections.singletonList(ex.getResourceId());
 
         ErrorMessage errorMessage = new ErrorMessage(608, LocalDateTime.now(), errors);
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserAlreadyCreatedException.class)
+    public ResponseEntity<RegistrationErrorResponse> userAlreadyCreatedExceptionException(
+            UserAlreadyCreatedException ex) {
+        RegistrationErrorResponse response = RegistrationErrorResponse.of(ex.isEnabled());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

@@ -2,6 +2,8 @@ package com.hotel.controller;
 
 
 import com.hotel.model.dto.request.RegistrationRequest;
+import com.hotel.model.dto.request.ShortRegistrationRequest;
+import com.hotel.model.dto.response.NotifyAgainResponse;
 import com.hotel.model.entity.User;
 import com.hotel.service.api.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,11 @@ public class RegistrationController {
     @PostMapping
     public User register(@RequestBody RegistrationRequest request) {
         return userRegistrationService.register(request);
+    }
+
+    @PostMapping(value = "/{token}/confirm")
+    public void confirm(@PathVariable UUID token) {
+        userRegistrationService.confirmRegistration(token);
     }
 
     @PostMapping(value = "/{token}/confirm")

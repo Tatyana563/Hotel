@@ -17,4 +17,7 @@ public class RegistrationProperties {
     private String baseUrl;
     @NotNull
     private Duration tokenExpiration;
+    @NotNull
+    private Duration tokenOperationTime;
+    private Duration requestInterval;
 }

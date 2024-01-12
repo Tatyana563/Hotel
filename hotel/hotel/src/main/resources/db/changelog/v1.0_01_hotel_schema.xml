@@ -22,9 +22,6 @@
             <column name="user_fk_id" type="int">
                 <constraints nullable="false" />
             </column>
-            <column name="audit_fk_id" type="int">
-
-            </column>
             <column name="name" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
@@ -40,11 +37,6 @@
         <addForeignKeyConstraint baseTableName="hotel" baseColumnNames="city_fk_id"
                                  constraintName="city_fk_id"
                                  referencedTableName="city" referencedColumnNames="id"/>
-
-        <addForeignKeyConstraint baseTableName="hotel" baseColumnNames="audit_fk_id"
-                                 constraintName="audit_fk_id"
-                                 referencedTableName="audit" referencedColumnNames="id"/>
-
         <rollback>
             <dropTable tableName="hotel"/>
         </rollback>

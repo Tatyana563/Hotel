@@ -34,7 +34,6 @@ public class OwnerPropertyController {
 
 
     @PostMapping
-
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<HotelDTO> createHotel(@RequestBody @Valid HotelRequest hotelRequest, Authentication authentication) {
 
