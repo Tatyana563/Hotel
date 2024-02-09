@@ -30,6 +30,8 @@
             <column name="password" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
+password reset            <column name="token_reset" type="varchar(64)">
+            </column>
             <column name="phone" type="varchar(64)">
                 <constraints nullable="false" />
             </column>

@@ -29,4 +29,3 @@ public class LoginController {
         }
     }
 }
-// TODO: 2 controllers - 1 for log in 2 for registration

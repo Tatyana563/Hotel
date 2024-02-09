@@ -18,6 +18,6 @@ public class RegistrationProperties {
     @NotNull
     private Duration tokenExpiration;
     @NotNull
-    private Duration tokenOperationTime;
-    private Duration requestInterval;
+    private Duration tokenTimeLeftToRenew;
+    private Duration requestRetryDuration;
 }

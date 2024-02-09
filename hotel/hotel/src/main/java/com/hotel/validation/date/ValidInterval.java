@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ElementType.PARAMETER, TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 @Documented
-public @interface ValidateInterval {
+public @interface ValidInterval {
     String message() default "The date interval is not valid";//local, Front fills value according to language
 
     Class<?>[] groups() default {};//group by different level of validation, imediately (date is not valid) or look at the DB

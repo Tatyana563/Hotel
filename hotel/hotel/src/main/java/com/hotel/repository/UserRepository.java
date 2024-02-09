@@ -22,9 +22,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findUserByEmail(String email);
 
+    User findByTokenReset(String token);
+
     boolean existsByEmail(String email);
+
     @Query(" select u.enabled from User u where u.email=:email")
     boolean isEnabled(String email);
+
     Optional<User> findByUsername(String username);
 
 }

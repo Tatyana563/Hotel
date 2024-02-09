@@ -1,10 +1,10 @@
 package com.hotel.service.impl;
 
 import com.hotel.config.properties.RegistrationProperties;
+import com.hotel.events.model.PasswordResetEvent;
 import com.hotel.events.model.UserConfirmedRegistrationEvent;
 import com.hotel.events.model.UserRegisteredEvent;
 import com.hotel.exception_handler.exception.*;
-import com.hotel.model.dto.request.AllowRequestDTO;
 import com.hotel.model.dto.request.RegistrationRequest;
 import com.hotel.model.dto.request.ShortRegistrationRequest;
 import com.hotel.model.dto.response.NotifyAgainResponse;
@@ -22,15 +22,18 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     // private final Map<String, Long> userLastRequestTime = new ConcurrentHashMap<>();
@@ -43,7 +46,7 @@ public class UserServiceImpl implements UserService {
     private final RegistrationProperties registrationProperties;
     private final UserRegistrationEmailService userRegistrationEmailService;
 
-    @Transactional
+    //   @Transactional
     @Override
     public User register(RegistrationRequest request) {
         User savedUser = null;
@@ -81,89 +84,67 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public NotifyAgainResponse resendRegistrationTokenRequest(ShortRegistrationRequest request) {
-        //TODO:
-        //check if userExistsByEmail
-        //check that user is not enabled
-        // find token by user with such email : a) no token, allowRequest, regenerate
-        //b) token exists not expired - > resend, check lastNotifyDate, if 10 min passed change
-        // lastNotifyDate and resend if not send precise time when can call again
-        //c) token exists but expired - >checkNotifyDate and regenerate
-
-        Duration requestInterval = registrationProperties.getRequestInterval();
-        LocalDateTime currentTime = LocalDateTime.now();
+//TODO: all Instant, also in Entity
+        //TODO:  Check serialization of time NotifyAgainResponse
+        // unit test
+        Duration requestRetryDuration = registrationProperties.getRequestRetryDuration();
+        LocalDateTime now = LocalDateTime.now();
         VerificationToken dbVerificationToken = tokenRepository.findByUserEmail(request.getEmail());
-        if (dbVerificationToken != null) {
-            // user was previously created but not activated
-            // Check if there are at least 5 minutes before expiration
-            // TODO: use JAva time (instant, .isAfter)
-            //TODO: move to app.properties,
 
-            LocalDateTime lastNotificationTime = dbVerificationToken.getLastNotificationDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
-            LocalDateTime expectedNotificationTime = currentTime.minus(requestInterval);
-            boolean isRequestAllowed = lastNotificationTime.isBefore(expectedNotificationTime);
-
-            if (isRequestAllowed) {
-                LocalDateTime tokenExpirationTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(dbVerificationToken.getExpiryDate().getTime()),
-                        TimeZone.getDefault().toZoneId());
-                boolean isNotAboutToBeExpired = false;
-                if (!tokenExpirationTime.isAfter(currentTime)) {
-                    long timeBeforeExpiration = Duration.between(currentTime, tokenExpirationTime).toMillis();
-                    Duration tokenOperationTime = registrationProperties.getTokenOperationTime();
-                    isNotAboutToBeExpired = tokenOperationTime.minusMillis(timeBeforeExpiration).isNegative();
-
-                    if (isNotAboutToBeExpired) {
-                        //TODO: token, lastNotifDate compare to now, RequestInterval to appl.properties
-                        UserRegisteredEvent registrationEvent = new UserRegisteredEvent(dbVerificationToken);
-                        publisher.publishEvent(registrationEvent);
-                        //TODO: not new DAte,
-                        dbVerificationToken.setLastNotificationDate(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()));
-                        tokenRepository.save(dbVerificationToken);
-                        return new NotifyAgainResponse(true, currentTime.plus(requestInterval).atZone(ZoneId.systemDefault()).toInstant());
-
-                    } else {
-                        dbVerificationToken.setExpiryDate(calculateExpiryDate());
-                        //TODO: check if allowed
-                        dbVerificationToken.setLastNotificationDate(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()));
-                        tokenRepository.save(dbVerificationToken);
-                        UserRegisteredEvent registrationEvent = new UserRegisteredEvent(dbVerificationToken);
-                        publisher.publishEvent(registrationEvent);
-                        return new NotifyAgainResponse(true, currentTime.plus(requestInterval).atZone(ZoneId.systemDefault()).toInstant());
-                    }
-                } else {
-                    VerificationToken verificationToken = createVerificationToken();
-                    User dbUser = userRepository.findUserByEmail(request.getEmail());
-                    //User was manually deleted from DB by mistake, a rare case
-                    if (dbUser == null) {
-                        throw new UserNotFoundException((request.getEmail()));
-                    }
-                    verificationToken.setUser(dbUser);
-                    tokenRepository.save(verificationToken);
-                    //TODO: simplify dbUser.getUsername(), dbUser.getEmail(), verificationToken - redundant username, is in token
-                    UserRegisteredEvent registrationEvent = new UserRegisteredEvent(verificationToken);
-                    publisher.publishEvent(registrationEvent);
-                    return new NotifyAgainResponse(true, currentTime.plus(requestInterval).atZone(ZoneId.systemDefault()).toInstant());
-
-                }
-            } else {
-                return new NotifyAgainResponse(false, currentTime.plus(requestInterval).atZone(ZoneId.systemDefault()).toInstant());
-            }
-        }
-        // token in DB was expired and deleted by cron job;
-        else {
-            VerificationToken verificationToken = createVerificationToken();
-            User dbUser = userRepository.findUserByEmail(request.getEmail());
-            //User was manually deleted from DB by mistake, a rare case
-            if (dbUser == null) {
-                throw new UserNotFoundException((request.getEmail()));
-            }
-            verificationToken.setUser(dbUser);
-            tokenRepository.save(verificationToken);
-            //TODO: simplify dbUser.getUsername(), dbUser.getEmail(), verificationToken - redundant username, is in token
-            UserRegisteredEvent registrationEvent = new UserRegisteredEvent(verificationToken);
-            publisher.publishEvent(registrationEvent);
-            return new NotifyAgainResponse(true, currentTime.plus(requestInterval).atZone(ZoneId.systemDefault()).toInstant());
+        if (dbVerificationToken == null) {
+            return createNewTokenAndNotify(request, requestRetryDuration, now);
         }
 
+        LocalDateTime lastNotificationTime = dbVerificationToken.getLastNotificationDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime expectedNotificationTime = now.minus(requestRetryDuration);
+        boolean isRequestAllowed = lastNotificationTime.isBefore(expectedNotificationTime);
+
+        if (!isRequestAllowed) {
+            return new NotifyAgainResponse(false, lastNotificationTime.plus(requestRetryDuration).atZone(ZoneId.systemDefault()).toInstant());
+        }
+
+        LocalDateTime tokenExpirationTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(dbVerificationToken.getExpiryDate().getTime()),
+                TimeZone.getDefault().toZoneId());
+
+        boolean tokenExpired = tokenExpirationTime.isBefore(now);
+
+        if (tokenExpired) {
+            return createNewTokenAndNotify(request, requestRetryDuration, now);
+        }
+
+//                    Duration timeBeforeExpiration = Duration.between(now, tokenExpirationTime);
+//                    Duration tokenTimeLeftToRenew = registrationProperties.getTokenTimeLeftToRenew();
+//                    isNotAboutToBeExpired = tokenTimeLeftToRenew.minusMillis(timeBeforeExpiration).isNegative();
+
+        LocalDateTime timeToRenew = tokenExpirationTime.minus(registrationProperties.getTokenTimeLeftToRenew());
+        boolean isAboutToBeExpired = now.isAfter(timeToRenew);
+
+        if (isAboutToBeExpired) {
+            dbVerificationToken.setExpiryDate(calculateExpiryDate());
+        }
+
+        UserRegisteredEvent registrationEvent = new UserRegisteredEvent(dbVerificationToken);
+        publisher.publishEvent(registrationEvent);
+
+        dbVerificationToken.setLastNotificationDate(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+        tokenRepository.save(dbVerificationToken);
+        return new NotifyAgainResponse(true, now.plus(requestRetryDuration).atZone(ZoneId.systemDefault()).toInstant());
+
+    }
+
+    private NotifyAgainResponse createNewTokenAndNotify(ShortRegistrationRequest request, Duration requestRetryDuration, LocalDateTime now) {
+        User dbUser = userRepository.findUserByEmail(request.getEmail());
+        //User was manually deleted from DB by mistake, a rare case
+        if (dbUser == null) {
+            throw new UserNotFoundException((request.getEmail()));
+        }
+        VerificationToken verificationToken = createVerificationToken();
+        verificationToken.setUser(dbUser);
+        tokenRepository.save(verificationToken);
+
+        UserRegisteredEvent registrationEvent = new UserRegisteredEvent(verificationToken);
+        publisher.publishEvent(registrationEvent);
+        return new NotifyAgainResponse(true, now.plus(requestRetryDuration).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     private VerificationToken createVerificationToken() {
@@ -228,4 +209,42 @@ public class UserServiceImpl implements UserService {
 //        long timeToWait = REQUEST_INTERVAL - (currentTime - verificationToken.getLastNotificationDate().getTime());
 //        return new AllowRequestDTO(false, timeToWait);
 //    }
+
+    @Override
+    public void reset(String email) {
+        String resetToken = generateToken();
+        PasswordResetEvent event = new PasswordResetEvent(resetToken, email);
+        User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException(email);
+        }
+        user.setTokenReset(resetToken);
+        userRepository.save(user);
+        publisher.publishEvent(event);
+    }
+
+    @Override
+    public void createNewPassword(String token, String password) {
+        //TODO: use JWT token to check that it is valid;
+        User user = userRepository.findByTokenReset(token);
+        if (user == null) {
+            throw new InvalidTokenResetPasswordException();
+        }
+        user.setPassword(passwordEncoder.encode(password));
+        user.setTokenReset(null);
+        userRepository.save(user);
+        //TODO: notification(don't send password)
+    }
+
+
+    public static String generateToken() {
+        // Generate a secure random byte array
+        byte[] randomBytes = new byte[32];
+        new SecureRandom().nextBytes(randomBytes);
+
+        // Encode the byte array to Base64 to get a string representation
+        String token = Base64.getEncoder().encodeToString(randomBytes);
+
+        return token;
+    }
 }

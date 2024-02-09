@@ -33,4 +33,3 @@ public class RegistrationController {
     }
 
 }
-// TODO: 2 controllers - 1 for log in 2 for registration
