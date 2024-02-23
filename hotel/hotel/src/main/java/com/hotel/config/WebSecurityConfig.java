@@ -1,13 +1,11 @@
 package com.hotel.config;
 
 import com.hotel.exception_handler.ExceptionHandlerFilter;
-import com.hotel.exception_handler.RestExceptionHandler;
 import com.hotel.repository.UserRepository;
 import com.hotel.service.security.JwtAuthFilter;
 import com.hotel.service.security.JwtService;
 import com.hotel.service.security.UserInfoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 

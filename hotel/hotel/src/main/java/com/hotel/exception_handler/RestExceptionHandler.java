@@ -104,4 +104,16 @@ public class RestExceptionHandler {
         RegistrationErrorResponse response = RegistrationErrorResponse.of(ex.isEnabled());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidTokenResetPasswordException.class)
+    public ResponseEntity<Object> handleInvalidTokenResetPasswordException(
+            InvalidTokenResetPasswordException ex) {
+
+        ErrorMessage errorMessage = new ErrorMessage(609, LocalDateTime.now(), Collections.singletonList(ex.getResourceId()));
+
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+    }
+
+
+
 }

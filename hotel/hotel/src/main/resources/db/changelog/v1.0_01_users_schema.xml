@@ -12,7 +12,7 @@
                 <tableExists tableName="users"/>
             </not>
         </preConditions>
-        <createTable  tableName="users">
+        <createTable tableName="users">
             <column name="id" type="int" autoIncrement="true">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
@@ -30,10 +30,10 @@
             <column name="password" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
-password reset            <column name="token_reset" type="varchar(64)">
+            <column name="token_reset" type="varchar(64)">
             </column>
             <column name="phone" type="varchar(64)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="email" type="varchar(64)">
                 <constraints nullable="false" unique="true"/>

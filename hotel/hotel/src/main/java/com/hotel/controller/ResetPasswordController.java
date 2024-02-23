@@ -1,7 +1,10 @@
 package com.hotel.controller;
 
 
+import com.hotel.model.dto.request.ResetPasswordDTO;
 import com.hotel.service.api.UserService;
+import com.hotel.validation.password.ValidPassword;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +18,10 @@ public class ResetPasswordController {
     public void reset(@RequestBody String email) {
         userRegistrationService.reset(email);
     }
-
-    //TODO: validate password complexity, @Min, @Max, @Pattern (if 3 of them -> dto) or custom annotation here
-    @PostMapping(value = "/reset/{token}")
-    public void createNewPassword(@PathVariable String token, @RequestBody String password) {
-        userRegistrationService.createNewPassword(token, password);
+    @PostMapping(value = "/reset")
+    public void createNewPassword(@RequestBody @Valid ResetPasswordDTO resetPasswordDTO) {
+        userRegistrationService.createNewPassword(resetPasswordDTO.getToken(), resetPasswordDTO.getToken());
     }
 
 }
+//TODO: check

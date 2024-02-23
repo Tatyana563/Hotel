@@ -1,5 +1,6 @@
 package com.hotel.model.entity;
 
+import com.hotel.validation.password.ValidPassword;
 import jakarta.persistence.*;
 import lombok.Data;
 
