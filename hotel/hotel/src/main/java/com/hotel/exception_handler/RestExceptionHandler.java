@@ -7,6 +7,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -114,6 +116,13 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Object> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException ex) {
 
+        ErrorMessage errorMessage = new ErrorMessage(609, LocalDateTime.now(), Collections.singletonList(ex.getMessage()));
+
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+    }
 
 }

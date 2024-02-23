@@ -1,6 +1,5 @@
 package com.hotel.controller;
 
-import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTOWithRooms;
@@ -29,10 +28,10 @@ public class HotelController {
 
     @GetMapping("/all_hotels_brief")
     @PreAuthorize("hasRole('USER')")
-    public Collection<HotelBriefInfo> allHotelsBriefInfo( @RequestParam(required = false) Meals meal,
-                                                          @RequestParam(required = false) Integer distance,
-                                                          @RequestParam(required = false) Integer price,
-                                                          @RequestParam(required = false) StarRating starRating) {
+    public Collection<HotelBriefInfo> allHotelsBriefInfo(@RequestParam(required = false) Meals meal,
+                                                         @RequestParam(required = false) Integer distance,
+                                                         @RequestParam(required = false) Integer price,
+                                                         @RequestParam(required = false) StarRating starRating) {
         HotelSpecification hotelSpecification = new HotelSpecification.HotelSpecificationBuilder()
                 .meal(meal)
                 .distance(distance)
@@ -56,10 +55,10 @@ public class HotelController {
 
     @GetMapping("/filter")
     @PreAuthorize("hasRole('USER')")
-    public List<HotelDTOWithRooms> getHotelsWithFilters( @RequestParam(required = false) Meals meal,
-                                                          @RequestParam(required = false) Integer distance,
-                                                          @RequestParam(required = false) Integer price,
-                                                          @RequestParam(required = false) StarRating starRating) {
+    public List<HotelDTOWithRooms> getHotelsWithFilters(@RequestParam(required = false) Meals meal,
+                                                        @RequestParam(required = false) Integer distance,
+                                                        @RequestParam(required = false) Integer price,
+                                                        @RequestParam(required = false) StarRating starRating) {
         HotelSpecification hotelSpecification = new HotelSpecification.HotelSpecificationBuilder()
                 .meal(meal)
                 .distance(distance)

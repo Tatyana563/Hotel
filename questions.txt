@@ -1,188 +1,51 @@
-Plan:
-Required to be done:
-1) mapstruct, return hotelDTO
-2) flyway
-
-Questions:
+TODO:
 1) projections with interface
 2) return hotels with rooms
 3) Optimise jpa model, remove redundant ids (Room-hotelId)
-
-Future plans:
-Dynamic query?
-
-TODO:
-1) @Mapper(componentModel = "spring", uses=RoomMapper.class)
-public interface HotelMapper
-
-    @Mapping(target = "cityName", source = "city.name")
-    HotelBriefInfo hotelToHotelBriefInfo(Hotel hotel);
-
-
-Create separate RoomMapper, CityMapper: rename cityName to city to avoid @Mapping
-
-2) RestController ExceptionHandler, Custom Exc , HotelNotFoundExc extends ResourceNotFoundExc. (in browser how it looks like)
-
-
-3) Data validation start date < end date; booking?
-
-see https://blog.tericcabrel.com/write-custom-validator-for-body-request-in-spring-boot/
-TODO:
-4) ExceptionHandler for HotelId (not found in DB, ConstraintViolationException) - ok;
-notes:
-errors in body request  - >400 (some fields are absent, not valid)
-not-existent ids as PathVariables - >404
-5) roomcontroller, room_availabiliy check that absent in the table, update table;
-6) throw RoomNotFoundException if case room doesn't exist in DB
-ExceptionHandler ->404 - BEHAVIOUR is different from HotelNotFoundException
-7) room_availability - > booked_rooms (rename+liquibase,flyway)
-
-QUESTIONS:
-in bookingResponce add name of the Hotel; Text: You have already booked the room in the hotel from...to....
-Tried to use magic JPA hotelRepository.findHotelNameById(hotelId); - doesn't work
-http://localhost:8080/rooms/1?checkIn=05_05_2023&checkOut=08_05_2023&=
-
-TODO:
-liquibase rollback - done;
-add city to the first request - done;
-remove ?starRating from the second request - done;
-use Builder or chain accessor instead of constructor with parameters - partly done;
-Enum change in liquibase - done;
-all changesets in one file
-in booking send email and do email notification after booking
-
-Spring Security, authorisation for booking,
-Endpoints to create hotel, room; (special role, Enum role)
-
-
-
-1) JPA specification, Dynamic query. Paramaters  - list that changes; (parameters from hotel+room)
-2) DB procedure (select ra from RoomAvailability ra where ra.roomId = r.id " +
+4) Dynamic query?
+5) Tried to use magic JPA hotelRepository.findHotelNameById(hotelId);!!!!!!!!!!!!!!!!!!!!!
+6) use Builder or chain accessor instead of constructor with parameters - partly done;
+7) all changesets in one file
+8) DB procedure (select ra from RoomAvailability ra where ra.roomId = r.id " +
                             "and ra.end>=:start and ra.start<=:end) ADD TO LIQUIBASE!!!!
-3) Event Driven model
+9) Event Driven model
 Use : Spring events instead of TransactionSynchronizationManager
 EventHandler - send a mail;
-4) (thymeleaf);
-5) DB table  - username, login, password, email , roleId;
-bicrypt hASH PASSWORD
-DB table role;
-6) Advice Controller - add ConversionFailedException:  for ConversionFailedException, say that meal=BREAKFAST2 is wrong, reason, what field is wrong
-create hotel - admin; (correct name landlord) ok
-book a room - user; (rentee?)
-7) Specification filter filter by price  - http://localhost:8080/hotel/filter?distance=5&starRating=THREE&meal=BREAKFAST&price=40 dont show more expensive rooms;
-Two 2 types of search -
-1) list of hotels with rooms;
-2) list of rooms with hotels;(Specification for the Room: RoomDtoWithHotel-> use HotelDtoWithoutRooms; or use HotelDto and roomList=null;)
-8) Change GET for POST in registration!!!
-9)  make login unique, not null
-10) custom validation for login/email uniqueness
-11)  //TODO: email notification confirm email
-registration.
-
-12) Shall I add verification URL to configuration????
-registration,
-
-FUTURE:
+10) (thymeleaf);
+11) FUTURE:
 DB locking/synchronisation while a few microservices work (lock on DB, table with locks)
-
-**************************
-why is it wrong?
-http://localhost:8080/hotel/search?city=Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023
-but should be
-http://localhost:8080/hotel/search?Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023
-
-TOGETHER OR SEPARATELY:
+12) TOGETHER OR SEPARATELY:
     @ExceptionHandler({HotelNotFoundException.class, RoomNotFoundException.class})
-    *************************************************************************************************
-
-
-1) Spring update to latest; (3.1.4)
-    Java 17
-2)  // TODO: move into service, use mapper!!!!
-3) login: we get email password authorisation, get token as a return (access and refresh or at least JWT for a start), don't keep JWT in DB;
+ 13) Spring update to latest; (3.1.4), Java 17
+14) login: we get email password authorisation, get token as a return (access and refresh or at least JWT for a start), don't keep JWT in DB;
 JWT token in header for other requests;
-4) rest endpoint to create room;
 
-TODO:
-1) when register user register with a particular role (USER, OWNER)
-2) add new OwnerPropertyController:
--add hotel, remove, update, getAll his/her own;@PreAuthorize("hasRole('OWNER')")
-do sth in PreAuthorize - not now,
-check that current user's id equals with hotel's owner's id (in SecurityContext add user with id)
 
 PROBLEM: ExceptionHandler doesn't work with security, 403 for everything
 
-3) rest endpoint to create room;
-4) booking allowed only for users;
-See only booked by me.
+15) See only booked by me.
 
-***************************
-PROBLEM:
- - When call add/hotel city is not returned (service and mapper) done;
- - redo ExceptionHandlerFilter , article required - can't do it
- - https://stackoverflow.com/questions/56871229/spring-security-ownership-based-access - done for property/delete/{hotelId}
-
-
- - confirmation token strategy;
-
- TO DO:
-1) soft delete for the hotel(flag in DB - deleted for hotel and room)
-in room service get rooms and set flag deleted;
-2) abstract class BaseEntity fileds: id, isDeleted, and fields for audit (createdBy)
-OwnedEntity for OwnershipCheckService
-3) Update specification of rooms and hotels to not show deleted - abstraction
-4) delete all users with tokens regularly who are not "enabled or activated"
-
-5) user wants to register, token in DB. Try to register again. Token is valid.
-a) if user is not enabled: "Please complete registration" Do you need new token? (Token notification date).
-When generate new token check that last one was not generated less than 5 min;
-b) user is enabled: User exists, please login. Om login page - Forget password button;
-
-Create endpoint resendConfirmationToken  - limit rate for a single user 1 request/minute
-(check time is service)
-
- TO DO:
-1) soft delete for the hotel(flag in DB - deleted for hotel and room) ok
-in room service get rooms and set flag deleted;
-2) abstract class BaseEntity fileds: id, isDeleted, and fields for audit (createdBy) author, operation(data,author,duration Spring AOP?, fail/success, error code, separate ENUM (update hotel, delete hotel)
-separate table (column: data before, data after - )
-PROBLEM:
-https://turkogluc.com/spring-data-jpa-auditing/
-DeletableEntity extends BaseEntity! to do
-OwnedEntity extends DeletableEntity (field ownerId)
-3) Update specification of rooms and hotels to not show deleted - abstraction - doest work
-4) delete all users with tokens regularly who are not "enabled or activated" ok issue with cascade
-
-5) user wants to register, token in DB. Try to register again. Token is valid. ok
-a) if user is not enabled: "Please complete registration" Do you need new token? (Token notification date).
-When generate new token check that last one was not generated less than 5 min;
-b) user is enabled: User exists, please login. Om login page - Forget password button;
-
-Create endpoint resendConfirmationToken  - limit rate for a single token 1 request/minute
-(check time in service)
--DB token notificationTime;
-
-
-
-THINK:
-db script to add roles to the table
-
-in POSTMAN set env, variable authToken, host
-
-1) liquebase add not null constraint isDeleted default false;
 
 PROBLEM: 401 from Spring security??? now have 403
 **********************************************
-Task:
+16)
 owner can see only his property - one controller
 admin can see and filter for all ownerIds - another controller
 filter by  (dataCreated, dataModified) hotels and rooms
 showMyPropertyOnly - for owner
 SEt<ownerId> - for admin
 in Spring security for endpoints isolate by roles not by annotation hasRole
+17) exc look strange
 
-Task:
- The user has already been created with email: tomase.doe@exa2mple.com - 400, now 500, fix
- com.hotel.exception_handler.exception.RoleNotFoundException: Generic resource not found
- Task
- audit_fk_id remove
+Useful links:
+1)see https://blog.tericcabrel.com/write-custom-validator-for-body-request-in-spring-boot/
+
+Notes:
+errors in body request  - >400 (some fields are absent, not valid)
+not-existent ids as PathVariables - >404
+
+Double check:
+1) why is it wrong?
+http://localhost:8080/hotel/search?city=Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023
+but should be
+http://localhost:8080/hotel/search?Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023
