@@ -23,21 +23,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.UUID;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    // private final Map<String, Long> userLastRequestTime = new ConcurrentHashMap<>();
-//    private static final long REQUEST_INTERVAL = 15*60*1000;
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -45,6 +42,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final RegistrationProperties registrationProperties;
     private final UserRegistrationEmailService userRegistrationEmailService;
+    private final Clock clock;
 
     //   @Transactional
     @Override
@@ -88,23 +86,23 @@ public class UserServiceImpl implements UserService {
         //TODO:  Check serialization of time NotifyAgainResponse
         // unit test
         Duration requestRetryDuration = registrationProperties.getRequestRetryDuration();
-        LocalDateTime now = LocalDateTime.now();
+        // LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now(clock);
         VerificationToken dbVerificationToken = tokenRepository.findByUserEmail(request.getEmail());
 
         if (dbVerificationToken == null) {
             return createNewTokenAndNotify(request, requestRetryDuration, now);
         }
 
-        LocalDateTime lastNotificationTime = dbVerificationToken.getLastNotificationDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
-        LocalDateTime expectedNotificationTime = now.minus(requestRetryDuration);
+        Instant lastNotificationTime = dbVerificationToken.getLastNotificationDate();
+        Instant expectedNotificationTime = now.minus(requestRetryDuration);
         boolean isRequestAllowed = lastNotificationTime.isBefore(expectedNotificationTime);
 
         if (!isRequestAllowed) {
             return new NotifyAgainResponse(false, lastNotificationTime.plus(requestRetryDuration).atZone(ZoneId.systemDefault()).toInstant());
         }
 
-        LocalDateTime tokenExpirationTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(dbVerificationToken.getExpiryDate().getTime()),
-                TimeZone.getDefault().toZoneId());
+        Instant tokenExpirationTime = dbVerificationToken.getExpiryDate();
 
         boolean tokenExpired = tokenExpirationTime.isBefore(now);
 
@@ -112,11 +110,7 @@ public class UserServiceImpl implements UserService {
             return createNewTokenAndNotify(request, requestRetryDuration, now);
         }
 
-//                    Duration timeBeforeExpiration = Duration.between(now, tokenExpirationTime);
-//                    Duration tokenTimeLeftToRenew = registrationProperties.getTokenTimeLeftToRenew();
-//                    isNotAboutToBeExpired = tokenTimeLeftToRenew.minusMillis(timeBeforeExpiration).isNegative();
-
-        LocalDateTime timeToRenew = tokenExpirationTime.minus(registrationProperties.getTokenTimeLeftToRenew());
+        Instant timeToRenew = tokenExpirationTime.minus(registrationProperties.getTokenTimeLeftToRenew());
         boolean isAboutToBeExpired = now.isAfter(timeToRenew);
 
         if (isAboutToBeExpired) {
@@ -126,13 +120,13 @@ public class UserServiceImpl implements UserService {
         UserRegisteredEvent registrationEvent = new UserRegisteredEvent(dbVerificationToken);
         publisher.publishEvent(registrationEvent);
 
-        dbVerificationToken.setLastNotificationDate(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+        dbVerificationToken.setLastNotificationDate(now);
         tokenRepository.save(dbVerificationToken);
         return new NotifyAgainResponse(true, now.plus(requestRetryDuration).atZone(ZoneId.systemDefault()).toInstant());
 
     }
 
-    private NotifyAgainResponse createNewTokenAndNotify(ShortRegistrationRequest request, Duration requestRetryDuration, LocalDateTime now) {
+    private NotifyAgainResponse createNewTokenAndNotify(ShortRegistrationRequest request, Duration requestRetryDuration, Instant now) {
         User dbUser = userRepository.findUserByEmail(request.getEmail());
         //User was manually deleted from DB by mistake, a rare case
         if (dbUser == null) {
@@ -144,24 +138,21 @@ public class UserServiceImpl implements UserService {
 
         UserRegisteredEvent registrationEvent = new UserRegisteredEvent(verificationToken);
         publisher.publishEvent(registrationEvent);
-        return new NotifyAgainResponse(true, now.plus(requestRetryDuration).atZone(ZoneId.systemDefault()).toInstant());
+        return new NotifyAgainResponse(true, now.plus(requestRetryDuration));
     }
 
     private VerificationToken createVerificationToken() {
         VerificationToken verificationToken = new VerificationToken();
-        Date expiryDate = calculateExpiryDate();
+        Instant expiryDate = calculateExpiryDate();
         verificationToken.setExpiryDate(expiryDate);
         verificationToken.setLastNotificationDate(expiryDate);
         return verificationToken;
     }
 
-    private Date calculateExpiryDate() {
+    private Instant calculateExpiryDate() {
         Duration tokenExpiration = registrationProperties.getTokenExpiration();
-        return Date.from(Instant.now().plus(tokenExpiration));
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(new Timestamp(cal.getTime().getTime()));
-//        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-//        return new Date(cal.getTime().getTime());
+        Instant now = Instant.now(clock);
+        return now.plus(tokenExpiration);
 
     }
 
@@ -169,7 +160,7 @@ public class UserServiceImpl implements UserService {
     public void confirmRegistration(UUID token) {
         VerificationToken verificationToken = tokenRepository.findById(token).orElseThrow(() -> new RegistrationNotFoundException("Token was not found: " + token.toString(), token.toString()));
 
-        Date expiryDate = verificationToken.getExpiryDate();
+        Date expiryDate = Date.from(verificationToken.getExpiryDate());
 
         Date currentDate = new Date();
 
@@ -188,27 +179,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //TODO: add to DB table token lastNotificationTime, send user precise time when it is allowed to come again
-//    private boolean allowRequest(String login) {
-//        long currentTime = System.currentTimeMillis();
-//
-//        // If the user is making the first request or the last request was more than 1 minute ago
-//        if (!userLastRequestTime.containsKey(login) || currentTime - userLastRequestTime.get(login) > REQUEST_INTERVAL) {
-//            userLastRequestTime.put(login, currentTime);
-//            return true;
-//        }
-//
-//        return false;
-//    }
-//
-//    private AllowRequestDTO allowRequest(String email) {
-//        VerificationToken verificationToken = tokenRepository.findByUserEmail(email);
-//        long currentTime = System.currentTimeMillis();
-//        if (currentTime - verificationToken.getLastNotificationDate().getTime() > REQUEST_INTERVAL) {
-//            return new AllowRequestDTO(true, 0);
-//        }
-//        long timeToWait = REQUEST_INTERVAL - (currentTime - verificationToken.getLastNotificationDate().getTime());
-//        return new AllowRequestDTO(false, timeToWait);
-//    }
+
 
     @Override
     public void reset(String email) {

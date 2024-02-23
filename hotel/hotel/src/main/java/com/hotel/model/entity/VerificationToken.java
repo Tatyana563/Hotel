@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.UUID;
 
 @Setter
@@ -24,11 +24,11 @@ public class VerificationToken {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_fk_id", referencedColumnName = "id")
     private User user;
-//TODO: INSTANT
+    //TODO: INSTANT
     @Column(name = "expiration_date", nullable = false)
-    private Date expiryDate;
+    private Instant expiryDate;
 
     @Column(name = "last_notification_date", nullable = false)
-    private Date lastNotificationDate;
+    private Instant lastNotificationDate;
 
 }
