@@ -24,7 +24,7 @@ public class VerificationToken {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_fk_id", referencedColumnName = "id")
     private User user;
-    //TODO: INSTANT
+
     @Column(name = "expiration_date", nullable = false)
     private Instant expiryDate;
 

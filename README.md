@@ -20,14 +20,13 @@ REGISTER NEW USER:
 POST http://localhost:8080/registration
 
 {
-"name": "Tom",
-"surname": "Smith",
+"name": "Tomas",
+"surname": "Green",
 "username": "tomas",
-"password": "mysecretpasswordtomaspassword",
-"login": "tomas",
-"phone": "1234567890",
-"email": "tomase.doe@example.com",
-"role": "USER"
+"password": "123",
+"phone": "1234567859023",
+"email": "nikolaev.english@gmail.com",
+"role": "OWNER"
 }
 
 

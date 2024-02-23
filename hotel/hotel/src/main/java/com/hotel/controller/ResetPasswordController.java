@@ -22,6 +22,4 @@ public class ResetPasswordController {
     public void createNewPassword(@RequestBody @Valid ResetPasswordDTO resetPasswordDTO) {
         userRegistrationService.createNewPassword(resetPasswordDTO.getToken(), resetPasswordDTO.getToken());
     }
-
 }
-//TODO: check

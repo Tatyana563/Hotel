@@ -7,6 +7,7 @@ import com.hotel.model.dto.HotelDTO;
 import com.hotel.model.dto.HotelDTOWithRooms;
 import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.enumeration.StarRating;
+import com.hotel.repository.specifications.HotelSpecification;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
@@ -17,11 +18,11 @@ public interface HotelService {
 
     void delete(int id);
 
-    List<HotelBriefInfo> listAllHotelsBriefInfo();
+    List<HotelBriefInfo> listAllHotelsBriefInfo(HotelSpecification hotelSpecification);
     List<HotelBriefInfo> listAllHotelsBriefInfoForOwner(Authentication authentication);
     List<HotelCounterDTO> listHotelsWithAvailableRoomsAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end);
 
     HotelDTOWithRooms hotelWithAvailableRoomsByDates(int hotelId, Date start, Date end);
 
-    List<HotelDTOWithRooms> findHotelsWithFilters(FilterDTO filters);
+    List<HotelDTOWithRooms> findHotelsWithFilters(HotelSpecification hotelSpecification);
 }

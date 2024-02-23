@@ -15,6 +15,8 @@ import java.time.Duration;
 public class RegistrationProperties {
     @NotEmpty
     private String baseUrl;
+    @NotEmpty
+    private String secret;
     @NotNull
     private Duration tokenExpiration;
     @NotNull

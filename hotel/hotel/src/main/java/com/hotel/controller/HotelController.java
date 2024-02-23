@@ -6,6 +6,9 @@ import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTOWithRooms;
 import com.hotel.model.dto.request.SearchRequest;
 import com.hotel.model.dto.request.SearchRequestDates;
+import com.hotel.model.enumeration.Meals;
+import com.hotel.model.enumeration.StarRating;
+import com.hotel.repository.specifications.HotelSpecification;
 import com.hotel.service.api.HotelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +29,17 @@ public class HotelController {
 
     @GetMapping("/all_hotels_brief")
     @PreAuthorize("hasRole('USER')")
-    public Collection<HotelBriefInfo> allHotelsBriefInfo() {
-        return hotelService.listAllHotelsBriefInfo();
+    public Collection<HotelBriefInfo> allHotelsBriefInfo( @RequestParam(required = false) Meals meal,
+                                                          @RequestParam(required = false) Integer distance,
+                                                          @RequestParam(required = false) Integer price,
+                                                          @RequestParam(required = false) StarRating starRating) {
+        HotelSpecification hotelSpecification = new HotelSpecification.HotelSpecificationBuilder()
+                .meal(meal)
+                .distance(distance)
+                .price(price)
+                .starRating(starRating)
+                .build();
+        return hotelService.listAllHotelsBriefInfo(hotelSpecification);
     }
 
     @GetMapping("/search")
@@ -44,8 +56,17 @@ public class HotelController {
 
     @GetMapping("/filter")
     @PreAuthorize("hasRole('USER')")
-    public List<HotelDTOWithRooms> getHotelsWithFilters(@ModelAttribute FilterDTO filters) {
-        return hotelService.findHotelsWithFilters(filters);
+    public List<HotelDTOWithRooms> getHotelsWithFilters( @RequestParam(required = false) Meals meal,
+                                                          @RequestParam(required = false) Integer distance,
+                                                          @RequestParam(required = false) Integer price,
+                                                          @RequestParam(required = false) StarRating starRating) {
+        HotelSpecification hotelSpecification = new HotelSpecification.HotelSpecificationBuilder()
+                .meal(meal)
+                .distance(distance)
+                .price(price)
+                .starRating(starRating)
+                .build();
+        return hotelService.findHotelsWithFilters(hotelSpecification);
 
     }
 }

@@ -1,5 +1,6 @@
 package com.hotel.service.security;
 
+import com.hotel.config.properties.RegistrationProperties;
 import com.hotel.model.dto.ClaimsDto;
 import com.hotel.model.entity.User;
 import com.hotel.repository.UserRepository;
@@ -21,14 +22,14 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
-//TODO: SECRET to application.properties (NOWDAYS-KEYSTORAGE)
-    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
+    //TODO: SECRET to application.properties (NOWDAYS-KEYSTORAGE)
+    private final RegistrationProperties registrationProperties;
     private final UserRepository userRepository;
 
     public String generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
         User user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User was not found"));
-        ClaimsDto claimsDto = new ClaimsDto(user.getUsername(),user.getId(),user.getRole().getName());
+        ClaimsDto claimsDto = new ClaimsDto(user.getUsername(), user.getId(), user.getRole().getName());
         String username = claimsDto.getUsername();
         claims.put("username", username);
         claims.put("id", claimsDto.getId());
@@ -42,12 +43,12 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60*10000))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10000))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(registrationProperties.getSecret());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -80,7 +81,7 @@ public class JwtService {
         String username = claims.get("username", String.class);
         Integer id = claims.get("id", Integer.class);
         String role = claims.get("role", String.class);
-      return new ClaimsDto(username,id,role);
+        return new ClaimsDto(username, id, role);
     }
 }
 

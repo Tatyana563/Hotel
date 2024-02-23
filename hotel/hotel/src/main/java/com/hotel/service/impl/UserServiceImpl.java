@@ -48,10 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(RegistrationRequest request) {
         User savedUser = null;
-        //TODO: and is enabled-> UserAlreadyCreatedException(request.getEmail(), null); flag active - Front offers login page or reset password,
-        // inactive-> check spam or go to endpoint to to resend token
-        // not enabled->
-        //TODO: remove login
+
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyCreatedException(request.getEmail(), userRepository.isEnabled(request.getEmail()));
         }
@@ -175,10 +172,8 @@ public class UserServiceImpl implements UserService {
             publisher.publishEvent(event);
         } else throw new TokenExpirationException(token);
 
-//TODO: user gets email about confirmation;
     }
 
-    //TODO: add to DB table token lastNotificationTime, send user precise time when it is allowed to come again
 
 
     @Override
@@ -204,7 +199,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setTokenReset(null);
         userRepository.save(user);
-        //TODO: notification(don't send password)
+
     }
 
 

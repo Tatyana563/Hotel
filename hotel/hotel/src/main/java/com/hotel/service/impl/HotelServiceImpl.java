@@ -79,9 +79,9 @@ HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<HotelBriefInfo> listAllHotelsBriefInfo() {
-        List<Hotel> hotelList = hotelRepository.findAll(new HotelSpecification(new FilterDTO()));
-        return hotelList.stream().map(hotel -> hotelMapper.hotelToHotelBriefInfo(hotel)).collect(Collectors.toList());
+    public List<HotelBriefInfo> listAllHotelsBriefInfo(HotelSpecification hotelSpecification) {
+        List<Hotel> hotelList = hotelRepository.findAll(hotelSpecification);
+        return hotelList.stream().map(hotelMapper::hotelToHotelBriefInfo).collect(Collectors.toList());
     }
 
     @Override
@@ -124,9 +124,8 @@ HotelServiceImpl implements HotelService {
     }
 
 
-    public List<HotelDTOWithRooms> findHotelsWithFilters(FilterDTO filters) {
-        Specification<Hotel> spec = new HotelSpecification(filters);
-        List<Hotel> hotels = hotelRepository.findAll(spec);
+    public List<HotelDTOWithRooms> findHotelsWithFilters(HotelSpecification hotelSpecification) {
+        List<Hotel> hotels = hotelRepository.findAll(hotelSpecification);
         return hotels.stream().map(hotelMapper::hotelToHotelDTO).collect(Collectors.toList());
     }
 }
