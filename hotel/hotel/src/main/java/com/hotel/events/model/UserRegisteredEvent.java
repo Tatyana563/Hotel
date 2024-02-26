@@ -9,7 +9,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserRegisteredEvent {
-    private RegistrationRequest request;
-    private VerificationToken token;
+  private VerificationToken token;
 
 }

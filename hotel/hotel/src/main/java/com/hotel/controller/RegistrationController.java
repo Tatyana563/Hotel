@@ -27,9 +27,12 @@ public class RegistrationController {
         userRegistrationService.confirmRegistration(token);
     }
 
-    @PostMapping(value = "/{token}/confirm")
-    public void confirm(@PathVariable UUID token) {
-        userRegistrationService.confirmRegistration(token);
+    // CASE#1 user wants to register, token in DB. Try to register again. Token can be  valid or invalid.
+    @PostMapping("/resendConfirmationToken")
+    public NotifyAgainResponse resendConfirmationToken(@RequestBody ShortRegistrationRequest request) {
+
+        userRegistrationService.resendRegistrationTokenRequest(request);
+        return new NotifyAgainResponse();
     }
 
 }

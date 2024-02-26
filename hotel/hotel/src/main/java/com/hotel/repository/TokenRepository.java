@@ -17,4 +17,6 @@ import java.util.UUID;
 public interface TokenRepository extends JpaRepository<VerificationToken, UUID> {
 
    void deleteByExpiryDateBefore(Date currenDate);
+
+   VerificationToken findByUserEmail(String email);
 }

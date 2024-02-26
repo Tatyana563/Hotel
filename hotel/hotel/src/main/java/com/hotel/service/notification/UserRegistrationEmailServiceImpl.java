@@ -17,11 +17,11 @@ public class UserRegistrationEmailServiceImpl implements UserRegistrationEmailSe
 
     @Override
     public void sendEmailLinkConfirmation(UserRegisteredEvent userRegistrationEvent) {
-        String username = userRegistrationEvent.getRequest().getUsername();
+        String username = userRegistrationEvent.getToken().getUser().getUsername();
         String baseUrl = registrationProperties.getBaseUrl();
         String token = userRegistrationEvent.getToken().getId().toString();
         String message = String.format("Hello, %s! Please open the %s to finish the registration using your token: %s.", username, baseUrl, token);
-        String email = userRegistrationEvent.getRequest().getEmail();
+        String email = userRegistrationEvent.getToken().getUser().getEmail();
         String userRegistration = "User registration";
         sendEmail(email, userRegistration, message);
     }
