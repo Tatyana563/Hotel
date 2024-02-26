@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
         Instant timeToRenew = tokenExpirationTime.minus(registrationProperties.getTokenTimeLeftToRenew());
         boolean isAboutToBeExpired = now.isAfter(timeToRenew);
 
-        if (isAboutToBeExpired) {
+        if (isAboutToBeExpired||tokenExpirationTime.isBefore(lastNotificationTime.plus(requestRetryDuration))) {
             dbVerificationToken.setExpiryDate(calculateExpiryDate());
         }
 
@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void confirmRegistration(UUID token) {
-        VerificationToken verificationToken = tokenRepository.findById(token).orElseThrow(() -> new RegistrationNotFoundException("Token was not found: " + token.toString(), token.toString()));
+        VerificationToken verificationToken = tokenRepository.findById(token).orElseThrow(() -> new InvalidTokenException( token.toString()));
 
         Date expiryDate = Date.from(verificationToken.getExpiryDate());
 
@@ -170,7 +170,7 @@ public class UserServiceImpl implements UserService {
             tokenRepository.delete(verificationToken);
             UserConfirmedRegistrationEvent event = new UserConfirmedRegistrationEvent(user.getUsername(), user.getEmail());
             publisher.publishEvent(event);
-        } else throw new TokenExpirationException(token);
+        } else throw new InvalidTokenException(String.valueOf(token));
 
     }
 
@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
         //TODO: use JWT token to check that it is valid;
         User user = userRepository.findByTokenReset(token);
         if (user == null) {
-            throw new InvalidTokenResetPasswordException();
+            throw new InvalidTokenException(token);
         }
         user.setPassword(passwordEncoder.encode(password));
         user.setTokenReset(null);

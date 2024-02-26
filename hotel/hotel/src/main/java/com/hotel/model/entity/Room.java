@@ -41,11 +41,8 @@ public class Room implements Serializable {
     @Column(name = "ANIMALS")
     private Boolean pets;
 
-    @Column(name = "HOTEL_FK_ID", insertable = false, updatable = false)
-    private Integer hotelId;
-
     @Column(name = "IS_DELETED")
-    private Boolean isDeleted=false;
+    private Boolean isDeleted = false;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "HOTEL_FK_ID")
