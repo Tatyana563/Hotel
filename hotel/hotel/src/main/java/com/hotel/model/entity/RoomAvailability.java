@@ -6,18 +6,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.Instant;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "room_availability")
-public class RoomAvailability {
+public class RoomAvailability extends BaseEntity implements Serializable {
     @JsonIgnore
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+
     private Integer roomId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")

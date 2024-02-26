@@ -13,11 +13,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table(name = "room")
-public class Room implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//, generator = "seq_city")
-  //  @SequenceGenerator(name = "seq_city", sequenceName = "city_sequence", allocationSize = 1)
-    private Integer id;
+public class Room extends DeletableEntity implements Serializable {
+
     @Column(name = "NUMBER", nullable = false)
     private Integer number;
 
