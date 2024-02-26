@@ -1,21 +1,16 @@
 package com.hotel.exception_handler;
 
 import com.hotel.exception_handler.exception.*;
-import com.hotel.model.dto.response.error.registration.RegistrationErrorPayload;
-import com.hotel.model.dto.response.error.registration.RegistrationErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -70,15 +65,16 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({TokenExpirationException.class, RegistrationNotFoundException.class})
+    @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<Object> handleRegistrationException(
-            AbstractNotFoundException ex) {
+            InvalidTokenException ex) {
 
         List<String> errors = Collections.singletonList(ex.getMessage());
 
         ErrorMessage errorMessage = new ErrorMessage(605, LocalDateTime.now(), errors);
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<Object> handleExpiredJwtException(
             ExpiredJwtException ex) {
@@ -94,33 +90,30 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> roleNotFoundException(
             RoleNotFoundException ex) {
 
-        List<String> errors = Collections.singletonList(ex.getResourceId());
+        List<String> errors = Collections.singletonList(ex.getMessage());
 
         ErrorMessage errorMessage = new ErrorMessage(608, LocalDateTime.now(), errors);
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserAlreadyCreatedException.class)
-    public ResponseEntity<RegistrationErrorResponse> userAlreadyCreatedExceptionException(
-            UserAlreadyCreatedException ex) {
-        RegistrationErrorResponse response = RegistrationErrorResponse.of(ex.isEnabled());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidTokenResetPasswordException.class)
-    public ResponseEntity<Object> handleInvalidTokenResetPasswordException(
-            InvalidTokenResetPasswordException ex) {
-
-        ErrorMessage errorMessage = new ErrorMessage(609, LocalDateTime.now(), Collections.singletonList(ex.getResourceId()));
-
-        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+    //    @ExceptionHandler(UserAlreadyCreatedException.class)
+//    public ResponseEntity<RegistrationErrorResponse> userAlreadyCreatedExceptionException(
+//            UserAlreadyCreatedException ex) {
+//        RegistrationErrorResponse response = RegistrationErrorResponse.of(ex.isEnabled());
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
+    @ExceptionHandler({UserAlreadyCreatedException.class,UserNotFoundException.class})
+    public ResponseEntity<Object> userAlreadyCreatedExceptionException(
+            RuntimeException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(609, LocalDateTime.now(), Collections.singletonList(ex.getMessage()));
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException ex) {
 
-        ErrorMessage errorMessage = new ErrorMessage(609, LocalDateTime.now(), Collections.singletonList(ex.getMessage()));
+        ErrorMessage errorMessage = new ErrorMessage(611, LocalDateTime.now(), Collections.singletonList(ex.getMessage()));
 
         return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }

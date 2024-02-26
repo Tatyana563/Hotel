@@ -1,9 +1,8 @@
 package com.hotel.exception_handler.exception;
 
-public class RoleNotFoundException extends AbstractNotFoundException {
+public class RoleNotFoundException extends RuntimeException {
     public RoleNotFoundException(String role) {
-
-        super("Role  " + role + " doesn't exist");
+        super(String.format("The following role doesn't exist: %s", role));
     }
 }
 

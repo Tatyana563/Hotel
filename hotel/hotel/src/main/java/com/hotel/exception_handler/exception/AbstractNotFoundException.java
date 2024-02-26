@@ -1,19 +1,13 @@
 package com.hotel.exception_handler.exception;
 
 import lombok.Getter;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+
 @Getter
 public class AbstractNotFoundException extends RuntimeException {
     private final String resourceId;
 
-    public AbstractNotFoundException( String message,String resourceId) {
-        super(message);
-        this.resourceId = resourceId;
-
-    }
-
-    public AbstractNotFoundException(String resourceId) {
-        super("Generic resource not found");
+    public AbstractNotFoundException(String resourceName, String resourceId) {
+        super(String.format("%s with id %s was not found", resourceName, resourceId));
         this.resourceId = resourceId;
 
     }
