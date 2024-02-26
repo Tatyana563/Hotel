@@ -25,7 +25,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,11 +42,11 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public void deleteSeparateRoom(int hotelId, int roomId) {
-        roomRepository.markSeparateRoomAsDeleted(hotelId,roomId);
+        roomRepository.markSeparateRoomAsDeleted(hotelId, roomId);
     }
 
     @Override
-    public RoomDTOWithHotelDTO save(int hotelId,RoomRequest roomRequest) {
+    public RoomDTOWithHotelDTO save(int hotelId, RoomRequest roomRequest) {
 
         Room room = roomMapper.roomRequestToRoom(roomRequest);
         Optional<Hotel> hotel = hotelRepository.findByIdAndIsNotDeleted(hotelId);
@@ -54,11 +54,10 @@ public class RoomServiceImpl implements RoomService {
             room.setHotel(hotel.get());
             Room savedRoom = roomRepository.save(room);
             return roomMapper.roomToRoomDTOWithHotelDTO(savedRoom);
-        }
-        else throw new HotelNotFoundException(hotelId);
+        } else throw new HotelNotFoundException(hotelId);
     }
 
-    public boolean isRoomAvailableByDates(Integer roomId, Date start, Date end) throws RoomNotFoundException {
+    public boolean isRoomAvailableByDates(Integer roomId, Instant start, Instant end) throws RoomNotFoundException {
 
         boolean isRoomPresentInDb = roomRepository.existsById(roomId);
         if (!isRoomPresentInDb) {
@@ -69,7 +68,7 @@ public class RoomServiceImpl implements RoomService {
 
     }
 
-    public RoomAvailability saveBookRequest(Integer roomId, Date start, Date end) {
+    public RoomAvailability saveBookRequest(Integer roomId, Instant start, Instant end) {
         RoomAvailability roomAvailability = new RoomAvailability();
         roomAvailability.setRoomId(roomId);
         roomAvailability.setStart(start);

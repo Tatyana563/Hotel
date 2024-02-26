@@ -1,16 +1,17 @@
 package com.hotel.model.dto.request;
 
-import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-import java.util.Date;
+import java.time.Instant;
 
-@Data
+@Setter
+@Getter
+@RequiredArgsConstructor
 public class BookingRequest {
     String username;
     String email;
-    @DateTimeFormat(pattern = "dd_MM_yyyy")
-    private Date checkIn;
-    @DateTimeFormat(pattern = "dd_MM_yyyy")
-    private Date checkOut;
+    private Instant checkIn;
+    private Instant checkOut;
 }

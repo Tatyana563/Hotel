@@ -7,13 +7,14 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
 public class BookingEmailServiceImpl implements BookingEmailService {
     private final JavaMailSender mailSender;
-@Override
+
+    @Override
     public void sendRoomBookedEmail(RoomBookedEvent roomBookedEvent) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(roomBookedEvent.getBookingRequest().getEmail());
@@ -24,7 +25,7 @@ public class BookingEmailServiceImpl implements BookingEmailService {
         mailSender.send(message);
     }
 
-    private String formMessage(Date start, Date end, String username, String hotel) {
+    private String formMessage(Instant start, Instant end, String username, String hotel) {
         return String.format("Hello, %s! You successfully booked a room in %s from %s to %s.", username, hotel, start, end);
     }
 }

@@ -21,8 +21,8 @@ public class RoomAvailability {
     private Integer roomId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
-    private Date start;
+    private Instant start;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
-    private Date end;
+    private Instant end;
 }

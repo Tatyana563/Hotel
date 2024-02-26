@@ -17,8 +17,8 @@ import java.util.List;
 public class RoomController {
     private final RoomService roomService;
 
-    @GetMapping("/{roomId}")
-    public BookingResponse bookHotelRoom(@ModelAttribute BookingRequest bookingRequest, @PathVariable int roomId) throws RoomNotFoundException {
+    @PostMapping("/{roomId}")
+    public BookingResponse bookHotelRoom(@RequestBody  BookingRequest bookingRequest, @PathVariable int roomId) throws RoomNotFoundException {
         return roomService.bookRoom(roomId, bookingRequest);
     }
 
