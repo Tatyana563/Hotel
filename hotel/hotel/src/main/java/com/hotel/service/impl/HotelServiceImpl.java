@@ -3,7 +3,6 @@ package com.hotel.service.impl;
 import com.hotel.exception_handler.exception.CityNotFoundException;
 import com.hotel.exception_handler.exception.HotelNotFoundException;
 import com.hotel.mapper.HotelMapper;
-import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.*;
 import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.entity.City;
@@ -19,12 +18,11 @@ import com.hotel.service.auditable.AuditAnnotation;
 import com.hotel.service.auditable.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -92,7 +90,7 @@ HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<HotelCounterDTO> listHotelsWithAvailableRoomsAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end) {
+    public List<HotelCounterDTO> listHotelsWithAvailableRoomsAccordingToCityAndStarRating(String city, StarRating starRating, Instant start, Instant end) {
         List<HotelCounter> hotels = hotelRepository.hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating(city, starRating, start, end);
         List<HotelCounterDTO> hotelCounterDTOList = hotels.stream().map(hotelCounter -> hotelMapper.hotelCounterToHotelCounterDTO(hotelCounter)).collect(Collectors.toList());
 
@@ -112,7 +110,7 @@ HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public HotelDTOWithRooms hotelWithAvailableRoomsByDates(int hotelId, Date start, Date end) {
+    public HotelDTOWithRooms hotelWithAvailableRoomsByDates(int hotelId, Instant start, Instant end) {
 
         Optional<Hotel> hotel = hotelRepository.hotelWithAvailableRoomsByDates(hotelId, start, end);
 

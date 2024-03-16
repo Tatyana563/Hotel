@@ -83,7 +83,7 @@ FLOW:
    "cityId": 1
 
    }
-6) get all hotels owned by  a particular person
+6) get all hotels with brief info (user should have role 'USER')
    GET
    http://{{host}}/hotels/all_hotels_brief
 
@@ -100,5 +100,6 @@ FLOW:
 8) We can delete a room
    DELETE
    http://{{host}}/hotels/1/room/1
-
+9) The user looks for hotels between 2 dates and of particular level (stars), city
+   http://{{host}}/hotel/search?city=Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=2024-05-15&checkOut=2024-05-16
 

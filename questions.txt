@@ -1,33 +1,20 @@
 TODO:
-1) projections with interface
-2) return hotels with rooms
-3) Optimise jpa model, remove redundant ids (Room-hotelId)
-4) Dynamic query?
-5) Tried to use magic JPA hotelRepository.findHotelNameById(hotelId);!!!!!!!!!!!!!!!!!!!!!
-6) use Builder or chain accessor instead of constructor with parameters - partly done;
-7) all changesets in one file
+1) projections with interface  - check
+2) return hotels with rooms - done
+3) Optimise jpa model, remove redundant ids (Room-hotelId) done
+
+5) Tried to use magic JPA hotelRepository.findHotelNameById(hotelId); - done
+6) use Builder or chain accessor instead of constructor with parameters - in case constructor has more 3 parameters -didn't see
+
 8) DB procedure (select ra from RoomAvailability ra where ra.roomId = r.id " +
-                            "and ra.end>=:start and ra.start<=:end) ADD TO LIQUIBASE!!!!
-9) Event Driven model
-Use : Spring events instead of TransactionSynchronizationManager
-EventHandler - send a mail;
-10) (thymeleaf);
-11) FUTURE:
-DB locking/synchronisation while a few microservices work (lock on DB, table with locks)
-12) TOGETHER OR SEPARATELY:
-    @ExceptionHandler({HotelNotFoundException.class, RoomNotFoundException.class})
- 13) Spring update to latest; (3.1.4), Java 17
-14) login: we get email password authorisation, get token as a return (access and refresh or at least JWT for a start), don't keep JWT in DB;
-JWT token in header for other requests;
+                            "and ra.end>=:start and ra.start<=:end) done
 
+10) (thymeleaf for email notification) for future;
 
-PROBLEM: ExceptionHandler doesn't work with security, 403 for everything
+ 13) Spring update to latest; (3.1.4), Java 17 to do; TODO  java 17
 
-15) See only booked by me.
+15) See only booked by me.to do
 
-
-PROBLEM: 401 from Spring security??? now have 403
-**********************************************
 16)
 owner can see only his property - one controller
 admin can see and filter for all ownerIds - another controller
@@ -35,8 +22,8 @@ filter by  (dataCreated, dataModified) hotels and rooms
 showMyPropertyOnly - for owner
 SEt<ownerId> - for admin
 in Spring security for endpoints isolate by roles not by annotation hasRole
-17) exc look strange
-
+17) exc look strange to do look at HotelNotFound Exc
+*******************************************************************************************************************************
 Useful links:
 1)see https://blog.tericcabrel.com/write-custom-validator-for-body-request-in-spring-boot/
 
@@ -48,4 +35,38 @@ Double check:
 1) why is it wrong?
 http://localhost:8080/hotel/search?city=Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023
 but should be
-http://localhost:8080/hotel/search?Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=08_05_2023
+http://localhost:8080/hotel/search?Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=05_05_2023&checkOut=
+
+
+QUESTIONS:
+Exce handling UserAlreadyCreatedException (flag enabled should be passed?)
+
+QUESTIONS:
+Динамические проекции only subclass?
+@Repository
+public interface AuthorRepository extends CrudRepository<Author, Long> {
+    <T> T findByLastName(String lastName, Class<T> type);
+
+    READ:
+     read about Spring magic method (count, sum)
+}
+
+TODO:
+rename check_room_availability -> isRoomAvailable
+
+FOR http://localhost:8080/hotel/1/filter?checkIn=2024-05-15&checkOut=2024-05-16
+HotelDTOWithRooms:{
+hotelDTO:{},
+rooms:[]
+}
+change the schema and  try to map (mapstruct)
+
+
+ ClaimsDto claimsDto = (ClaimsDto) authentication.getPrincipal(); should be in Controller, in service only id;
+
+  @DateTimeFormat doesn't work inside
+      public List<HotelCounterDTO> searchAvailableHotels(@ModelAttribute SearchRequest searchRequest) {
+
+
+    SearchRequestDates.java do the same as SearchRequest
+    compare 2 validators and use ValidateIntervalValidator, get rid of the second

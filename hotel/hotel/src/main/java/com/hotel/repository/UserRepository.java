@@ -29,6 +29,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(" select u.enabled from User u where u.email=:email")
     boolean isEnabled(String email);
 
+    @Query(" select u.id from User u where u.email=:email")
+    int findUserIdByEmail(String email);
+
     Optional<User> findByUsername(String username);
 
 }

@@ -7,14 +7,10 @@ public class ValidateIntervalValidator implements ConstraintValidator<ValidInter
 
     @Override
     public boolean isValid(final DateInterval value, final ConstraintValidatorContext context) {
-        try {
+
 
             return (value.getFirstDate() != null && value.getLastDate() != null)
-                    && (value.getFirstDate().before(value.getLastDate()));
-        } catch (final Exception e) {
-            e.printStackTrace();
+                    && (value.getFirstDate().isBefore(value.getLastDate()));
 
-            return false;
         }
     }
-}

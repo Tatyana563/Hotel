@@ -1,5 +1,6 @@
 package com.hotel.validation.date;
 
+import com.hotel.Utils;
 import com.hotel.model.dto.request.SearchRequest;
 
 import jakarta.validation.ConstraintValidator;
@@ -12,7 +13,7 @@ public class CompareDateValidator implements ConstraintValidator<CompareDate, Se
         try {
 
             return (value.getCheckIn() != null && value.getCheckOut() != null) &&
-                    (value.getCheckIn().before(value.getCheckOut()));
+                    (value.getCheckIn()).isBefore(value.getCheckOut());
         } catch (final Exception e) {
             e.printStackTrace();
 

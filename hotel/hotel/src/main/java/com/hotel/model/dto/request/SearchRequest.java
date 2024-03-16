@@ -1,5 +1,6 @@
 package com.hotel.model.dto.request;
 
+import com.hotel.Utils;
 import com.hotel.model.enumeration.RoomType;
 import com.hotel.model.enumeration.StarRating;
 import com.hotel.validation.date.DateInterval;
@@ -7,6 +8,9 @@ import com.hotel.validation.date.ValidInterval;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -17,18 +21,18 @@ public class SearchRequest implements DateInterval {
     private StarRating starRating;
     private RoomType roomType;
     private String city;
-    @DateTimeFormat(pattern = "dd_MM_yyyy")
-    private Date checkIn;
-    @DateTimeFormat(pattern = "dd_MM_yyyy")
-    private Date checkOut;
+    // @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Instant checkIn;
+    // @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Instant checkOut;
 
     @Override
-    public Date getFirstDate() {
+    public Instant getFirstDate() {
         return checkIn;
     }
 
     @Override
-    public Date getLastDate() {
+    public Instant getLastDate() {
         return checkOut;
     }
 }

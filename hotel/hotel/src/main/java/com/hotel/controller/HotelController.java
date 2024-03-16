@@ -1,5 +1,6 @@
 package com.hotel.controller;
 
+import com.hotel.Utils;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTOWithRooms;
@@ -44,13 +45,17 @@ public class HotelController {
     @GetMapping("/search")
     @PreAuthorize("hasRole('USER')")
     public List<HotelCounterDTO> searchAvailableHotels(@ModelAttribute SearchRequest searchRequest) {
-        return hotelService.listHotelsWithAvailableRoomsAccordingToCityAndStarRating(searchRequest.getCity(), searchRequest.getStarRating(), searchRequest.getCheckIn(), searchRequest.getCheckOut());
+        return hotelService.listHotelsWithAvailableRoomsAccordingToCityAndStarRating
+                (searchRequest.getCity(), searchRequest.getStarRating(),
+                searchRequest.getCheckIn(),
+               searchRequest.getCheckOut());
     }
 
     @GetMapping("/{hotelId}/filter")
     @PreAuthorize("hasRole('USER')")
     public HotelDTOWithRooms filterHotelRooms(@ModelAttribute @Valid SearchRequestDates searchRequestDates,/* @Valid @HotelId*/ @PathVariable int hotelId) {
-        return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequestDates.getCheckIn(), searchRequestDates.getCheckOut());
+        return hotelService.hotelWithAvailableRoomsByDates(hotelId,
+                Utils.convertStringDateToInstant(searchRequestDates.getCheckIn()), Utils.convertStringDateToInstant(searchRequestDates.getCheckOut()));
     }
 
     @GetMapping("/filter")

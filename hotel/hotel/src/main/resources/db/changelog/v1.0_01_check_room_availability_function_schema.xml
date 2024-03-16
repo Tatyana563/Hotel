@@ -9,7 +9,7 @@
     <changeSet id="01" author="petrenko">
         <sql>
         <![CDATA[
-            CREATE OR REPLACE FUNCTION check_room_availability(roomId INT, startDate DATE, endDate DATE)
+            CREATE OR REPLACE FUNCTION check_room_availability(roomId INT, startDate TIMESTAMP, endDate TIMESTAMP)
             RETURNS BOOLEAN AS '
             DECLARE
             room_available_result BOOLEAN;

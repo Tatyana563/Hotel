@@ -19,6 +19,8 @@
             <column name="room_id" type="int">
                 <constraints nullable="false" />
             </column>
+            <column name="user_id" type="int">
+            </column>
             <column name="start_date" type="timestamp">
                 <constraints nullable="false"/>
             </column>

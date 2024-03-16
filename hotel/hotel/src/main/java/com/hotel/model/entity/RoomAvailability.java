@@ -18,6 +18,7 @@ public class RoomAvailability extends BaseEntity implements Serializable {
     @JsonIgnore
 
     private Integer roomId;
+    private Integer userId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
     private Instant start;

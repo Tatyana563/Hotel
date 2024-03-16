@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -46,13 +47,13 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
             "   AND ra.start <= :end" +
             ") " +
             "GROUP BY h")
-    List<HotelCounter> hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating(String city, StarRating starRating, Date start, Date end);
+    List<HotelCounter> hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating(String city, StarRating starRating, Instant start, Instant end);
 
 
     //    @Query("select h  from Hotel h  join fetch h.roomList as r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
 //            "and ra.end>=:start and ra.start<=:end) and h.id=:hotelId")
-    @Query("select h  from Hotel h  join fetch h.roomList as r WHERE  function ('check_room_availability', r.id, CAST(:start as date), CAST(:end as date))=false   and h.id=:hotelId")
-    Optional<Hotel> hotelWithAvailableRoomsByDates(Integer hotelId, Date start, Date end);
+    @Query("select h  from Hotel h  join fetch h.roomList as r WHERE  function ('check_room_availability', r.id, :start, :end )=true   and h.id=:hotelId")
+    Optional<Hotel> hotelWithAvailableRoomsByDates(Integer hotelId, Instant start, Instant end);
 
     //  String findNameById(Integer id);
     @Query("SELECT h.name FROM Hotel h WHERE h.id = :hotelId")

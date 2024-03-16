@@ -1,10 +1,11 @@
 package com.hotel.validation.date;
 
+import java.time.Instant;
 import java.util.Date;
 
 public interface DateInterval {
-    Date getFirstDate();
+    Instant getFirstDate();
 
-    Date getLastDate();
+    Instant getLastDate();
 }
 // different DTOs have different names for data fields

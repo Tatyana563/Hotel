@@ -17,12 +17,14 @@ import com.hotel.model.entity.RoomAvailability;
 import com.hotel.repository.HotelRepository;
 import com.hotel.repository.RoomAvailabilityRepository;
 import com.hotel.repository.RoomRepository;
+import com.hotel.repository.UserRepository;
 import com.hotel.repository.specifications.RoomSpecification;
 import com.hotel.service.api.RoomService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -35,6 +37,7 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements RoomService {
     private final ApplicationEventPublisher publisher;
     private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
     private final RoomAvailabilityRepository roomAvailabilityRepository;
     private final RoomMapper roomMapper;
@@ -68,11 +71,12 @@ public class RoomServiceImpl implements RoomService {
 
     }
 
-    public RoomAvailability saveBookRequest(Integer roomId, Instant start, Instant end) {
+    public RoomAvailability saveBookRequest(Integer roomId, Instant start, Instant end, Integer userId) {
         RoomAvailability roomAvailability = new RoomAvailability();
         roomAvailability.setRoomId(roomId);
         roomAvailability.setStart(start);
         roomAvailability.setEnd(end);
+        roomAvailability.setUserId(userId);
         return roomAvailabilityRepository.save(roomAvailability);
     }
 
@@ -82,7 +86,8 @@ public class RoomServiceImpl implements RoomService {
         boolean roomAvailableByDates = isRoomAvailableByDates(roomId, bookingRequest.getCheckIn(), bookingRequest.getCheckOut());
         String hotelName = hotelRepository.findHotelNameByRoomId(roomId);
         if (roomAvailableByDates) {
-            saveBookRequest(roomId, bookingRequest.getCheckIn(), bookingRequest.getCheckOut());
+            int userIdByEmail = userRepository.findUserIdByEmail(bookingRequest.getEmail());
+            saveBookRequest(roomId, bookingRequest.getCheckIn(), bookingRequest.getCheckOut(), userIdByEmail);
 //            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
 //                @Override
 //                public void afterCommit() {
