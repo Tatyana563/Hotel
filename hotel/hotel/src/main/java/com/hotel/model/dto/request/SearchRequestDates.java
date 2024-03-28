@@ -14,17 +14,17 @@ import java.util.Date;
 @ValidInterval(message = "The interval for SearchRequest is not valid. The checkIn date must be before  the checkOut date")
 public class SearchRequestDates implements DateInterval {
  //   @DateTimeFormat(pattern = "dd_MM_yyyy")
-    private String checkIn;
+    private Instant checkIn;
 //    @DateTimeFormat(pattern = "dd_MM_yyyy")
-    private String checkOut;
+    private Instant checkOut;
 
     @Override
     public Instant getFirstDate() {
-        return Utils.convertStringDateToInstant(checkIn);
+        return checkIn;
     }
 
     @Override
     public Instant getLastDate() {
-        return  Utils.convertStringDateToInstant(checkOut);
+        return checkOut;
     }
 }

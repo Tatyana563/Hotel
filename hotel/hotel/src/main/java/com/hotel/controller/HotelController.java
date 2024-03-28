@@ -54,8 +54,7 @@ public class HotelController {
     @GetMapping("/{hotelId}/filter")
     @PreAuthorize("hasRole('USER')")
     public HotelDTOWithRooms filterHotelRooms(@ModelAttribute @Valid SearchRequestDates searchRequestDates,/* @Valid @HotelId*/ @PathVariable int hotelId) {
-        return hotelService.hotelWithAvailableRoomsByDates(hotelId,
-                Utils.convertStringDateToInstant(searchRequestDates.getCheckIn()), Utils.convertStringDateToInstant(searchRequestDates.getCheckOut()));
+        return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequestDates.getCheckIn(), searchRequestDates.getCheckOut());
     }
 
     @GetMapping("/filter")

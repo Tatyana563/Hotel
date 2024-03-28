@@ -1,5 +1,6 @@
 package com.hotel.converter;
 
+import com.hotel.exception_handler.exception.InvalidDataFormatException;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class StringToInstantConverter implements Converter<String, Instant> {
             return dateFormat.parse(stringDate).toInstant();
         } catch (ParseException e) {
             //TODO: InvalidDateFormatExc
-            throw new RuntimeException(e);
+            throw new InvalidDataFormatException(stringDate,e);
         }
 
     }

@@ -3,8 +3,10 @@ package com.hotel.service.impl;
 import com.hotel.events.model.RoomBookedEvent;
 import com.hotel.exception_handler.exception.HotelNotFoundException;
 import com.hotel.exception_handler.exception.RoomNotFoundException;
+import com.hotel.mapper.RoomAvailabilityMapper;
 import com.hotel.mapper.RoomMapper;
 import com.hotel.model.FilterDTO;
+import com.hotel.model.dto.RoomAvailabilityDTO;
 import com.hotel.model.dto.RoomDTO;
 import com.hotel.model.dto.RoomDTOWithHotelDTO;
 import com.hotel.model.dto.request.BookingRequest;
@@ -42,6 +44,8 @@ public class RoomServiceImpl implements RoomService {
     private final RoomAvailabilityRepository roomAvailabilityRepository;
     private final RoomMapper roomMapper;
 
+    private final RoomAvailabilityMapper roomAvailabilityMapper;
+
     @Override
     @Transactional
     public void deleteSeparateRoom(int hotelId, int roomId) {
@@ -73,7 +77,7 @@ public class RoomServiceImpl implements RoomService {
 
     public RoomAvailability saveBookRequest(Integer roomId, Instant start, Instant end, Integer userId) {
         RoomAvailability roomAvailability = new RoomAvailability();
-        roomAvailability.setRoomId(roomId);
+//        roomAvailability.setRoomId(roomId);
         roomAvailability.setStart(start);
         roomAvailability.setEnd(end);
         roomAvailability.setUserId(userId);
@@ -107,6 +111,13 @@ public class RoomServiceImpl implements RoomService {
         List<Room> rooms = roomRepository.findAll(spec);
 
         return rooms.stream().map(roomMapper::roomToRoomDTO).collect(Collectors.toList());
+
+    }
+//TODO: write mapper
+    @Override
+    public   List<RoomAvailabilityDTO> findRoomsBookedByMe(int userId) {
+        List<RoomAvailability> roomAvailabilities = roomRepository.findRoomAvailabilitiesByUserId(userId);
+       return roomAvailabilities.stream().map(roomAvailabilityMapper::roomAvailabilityToRoomAvailabilityDTO).collect(Collectors.toList());
 
     }
 }

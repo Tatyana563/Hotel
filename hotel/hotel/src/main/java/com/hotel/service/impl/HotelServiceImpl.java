@@ -8,10 +8,7 @@ import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.entity.City;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.enumeration.StarRating;
-import com.hotel.repository.CityRepository;
-import com.hotel.repository.HotelCounter;
-import com.hotel.repository.HotelRepository;
-import com.hotel.repository.RoomRepository;
+import com.hotel.repository.*;
 import com.hotel.repository.specifications.HotelSpecification;
 import com.hotel.service.api.HotelService;
 import com.hotel.service.auditable.AuditAnnotation;
@@ -30,8 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class
-HotelServiceImpl implements HotelService {
+public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
@@ -83,15 +79,13 @@ HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<HotelBriefInfo> listAllHotelsBriefInfoForOwner(Authentication authentication) {
-        ClaimsDto principal = (ClaimsDto) authentication.getPrincipal();
-        int userId =  principal.getId();
+    public List<HotelBriefInfo> listAllHotelsBriefInfoForOwner(int userId) {
         return hotelRepository.listHotelsBriefInfoForOwner(userId);
     }
 
     @Override
     public List<HotelCounterDTO> listHotelsWithAvailableRoomsAccordingToCityAndStarRating(String city, StarRating starRating, Instant start, Instant end) {
-        List<HotelCounter> hotels = hotelRepository.hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating(city, starRating, start, end);
+        List<HotelCounterProjection> hotels = hotelRepository.hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating_2(city, starRating, start, end);
         List<HotelCounterDTO> hotelCounterDTOList = hotels.stream().map(hotelCounter -> hotelMapper.hotelCounterToHotelCounterDTO(hotelCounter)).collect(Collectors.toList());
 
         return hotelCounterDTOList;
@@ -125,5 +119,10 @@ HotelServiceImpl implements HotelService {
     public List<HotelDTOWithRooms> findHotelsWithFilters(HotelSpecification hotelSpecification) {
         List<Hotel> hotels = hotelRepository.findAll(hotelSpecification);
         return hotels.stream().map(hotelMapper::hotelToHotelDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public <T> List<T> findAll(Class<T> type) {
+        return hotelRepository.findAllBy(type);
     }
 }

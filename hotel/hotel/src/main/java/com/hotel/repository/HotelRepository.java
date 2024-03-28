@@ -30,7 +30,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
 
     @Query("select new com.hotel.model.dto.HotelBriefInfo(h.id,h.name, hc.name) from Hotel h inner join h.city hc where h.ownerId=:ownerId")
     List<HotelBriefInfo> listHotelsBriefInfoForOwner(int ownerId);
-    @Query("select new com.hotel.repository.HotelCounter(r.hotel, count(r.id)) from Room r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
+    @Query("select new com.hotel.repository.HotelCounter(r.hotel, count(r.id)) from Room r where not exists (select ra from RoomAvailability ra where ra.room.id = r.id " +
             "and ra.end>=:start and ra.start<=:end)" +
             "group by r.hotel")
     List<HotelCounter> listAvailableHotelsByDates(Date start, Date end);
@@ -42,17 +42,30 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
             "AND h.starRating = :starRating " +
             "AND NOT EXISTS (" +
             "   SELECT ra FROM RoomAvailability ra " +
-            "   WHERE ra.roomId = r.id " +
+            "   WHERE ra.room.id = r.id " +
             "   AND ra.end >= :start " +
             "   AND ra.start <= :end" +
             ") " +
             "GROUP BY h")
     List<HotelCounter> hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating(String city, StarRating starRating, Instant start, Instant end);
-
+// todo: HQL in low case
+    @Query("select h as hotel, count(r.id) as total " +
+            "from Hotel h " +
+            "join h.roomList r " +
+            "where h.city.name = :city " +
+            "and h.starRating = :starRating " +
+            "and not exists (" +
+            "   select ra from RoomAvailability ra " +
+            "   where ra.room.id = r.id " +
+            "   and ra.end >= :start " +
+            "   and ra.start <= :end" +
+            ") " +
+            "group by h")
+    List<HotelCounterProjection> hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating_2(String city, StarRating starRating, Instant start, Instant end);
 
     //    @Query("select h  from Hotel h  join fetch h.roomList as r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
 //            "and ra.end>=:start and ra.start<=:end) and h.id=:hotelId")
-    @Query("select h  from Hotel h  join fetch h.roomList as r WHERE  function ('check_room_availability', r.id, :start, :end )=true   and h.id=:hotelId")
+    @Query("select h  from Hotel h  join fetch h.roomList as r WHERE  function ('isRoomAvailable', r.id, :start, :end )=true   and h.id=:hotelId")
     Optional<Hotel> hotelWithAvailableRoomsByDates(Integer hotelId, Instant start, Instant end);
 
     //  String findNameById(Integer id);
@@ -70,5 +83,6 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
 
     @Query("SELECT h FROM Hotel h WHERE h.id = :hotelId AND h.isDeleted = false")
     Optional<Hotel> findByIdAndIsNotDeleted(int hotelId);
-
+//TODO: create a few HotelDto_1, check sql query fetches not all fields
+   <T> List<T> findAllBy(Class<T> type);
 }

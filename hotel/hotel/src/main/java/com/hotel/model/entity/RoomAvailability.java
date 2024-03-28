@@ -5,9 +5,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -17,7 +20,7 @@ import java.time.Instant;
 public class RoomAvailability extends BaseEntity implements Serializable {
     @JsonIgnore
 
-    private Integer roomId;
+   // private Integer roomId;
     private Integer userId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
@@ -25,4 +28,11 @@ public class RoomAvailability extends BaseEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
     private Instant end;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "ROOM_ID")
+    @ToString.Exclude
+    private Room room;
+
 }
+

@@ -52,9 +52,9 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
 }
 
 TODO:
-rename check_room_availability -> isRoomAvailable
+rename check_room_availability -> isRoomAvailable - DONE;
 
-FOR http://localhost:8080/hotel/1/filter?checkIn=2024-05-15&checkOut=2024-05-16
+FOR http://localhost:8080/hotel/1/filter?checkIn=2024-05-15&checkOut=2024-05-16  DONE
 HotelDTOWithRooms:{
 hotelDTO:{},
 rooms:[]
@@ -62,11 +62,12 @@ rooms:[]
 change the schema and  try to map (mapstruct)
 
 
- ClaimsDto claimsDto = (ClaimsDto) authentication.getPrincipal(); should be in Controller, in service only id;
+ ClaimsDto claimsDto = (ClaimsDto) authentication.getPrincipal(); should be in Controller, in service only id; DONE but not for annotation;
 
   @DateTimeFormat doesn't work inside
       public List<HotelCounterDTO> searchAvailableHotels(@ModelAttribute SearchRequest searchRequest) {
 
 
-    SearchRequestDates.java do the same as SearchRequest
-    compare 2 validators and use ValidateIntervalValidator, get rid of the second
+    SearchRequestDates.java do the same as SearchRequest  DONE
+
+    compare 2 validators and use ValidateIntervalValidator, get rid of the second  DONE

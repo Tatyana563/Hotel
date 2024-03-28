@@ -1,8 +1,6 @@
 package com.hotel.controller;
 
-import com.hotel.model.dto.HotelBriefInfo;
-import com.hotel.model.dto.HotelDTO;
-import com.hotel.model.dto.RoomDTOWithHotelDTO;
+import com.hotel.model.dto.*;
 import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.dto.request.RoomRequest;
 import com.hotel.service.api.HotelService;
@@ -29,7 +27,14 @@ public class OwnerPropertyController {
     @GetMapping("/all_hotels_brief")
     @PreAuthorize("hasRole('OWNER')")
     public Collection<HotelBriefInfo> allHotelsBriefInfo(Authentication authentication) {
-        return hotelService.listAllHotelsBriefInfoForOwner(authentication);
+        ClaimsDto claimsDto = (ClaimsDto) authentication.getPrincipal();
+        int userId = claimsDto.getId();
+        return hotelService.listAllHotelsBriefInfoForOwner(userId);
+    }
+    @GetMapping("/all_hotels_list")
+    @PreAuthorize("hasRole('OWNER')")
+    public Collection<HotelDTOWithoutCity> allHotelsList() {
+        return hotelService.findAll(HotelDTOWithoutCity.class);
     }
 
 

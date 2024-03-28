@@ -1,5 +1,6 @@
 package com.hotel.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hotel.model.enumeration.RoomType;
 import com.hotel.model.enumeration.Sleeps;
 import jakarta.persistence.*;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -44,6 +47,7 @@ public class Room extends DeletableEntity implements Serializable {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "HOTEL_FK_ID")
     @ToString.Exclude
+   // @JsonIgnore
     private Hotel hotel;
 
 }
