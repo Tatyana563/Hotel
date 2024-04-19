@@ -1,7 +1,7 @@
 package com.hotel.mapper;
 
 import com.hotel.model.dto.RoomAvailabilityDTO;
-import com.hotel.model.entity.RoomAvailability;
+import com.hotel.model.entity.BookRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -10,5 +10,5 @@ public interface RoomAvailabilityMapper {
     @Mapping(target = "type", source = "room.type")
     @Mapping(target = "sleeps", source = "room.sleeps")
     @Mapping(target = "price", source = "room.price")
-    RoomAvailabilityDTO roomAvailabilityToRoomAvailabilityDTO(RoomAvailability roomAvailability);
+    RoomAvailabilityDTO roomAvailabilityToRoomAvailabilityDTO(BookRequest roomAvailability);
 }

@@ -35,7 +35,8 @@ public class User extends BaseEntity implements Serializable {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+  //  @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "role_fk_id")
     private Role role;
 

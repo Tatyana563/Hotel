@@ -13,11 +13,11 @@ import com.hotel.model.dto.request.BookingRequest;
 import com.hotel.model.dto.request.RoomRequest;
 import com.hotel.model.dto.response.BookingResponse;
 import com.hotel.model.dto.response.RequestStatus;
+import com.hotel.model.entity.BookRequest;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.entity.Room;
-import com.hotel.model.entity.RoomAvailability;
 import com.hotel.repository.HotelRepository;
-import com.hotel.repository.RoomAvailabilityRepository;
+import com.hotel.repository.BookRequestRepository;
 import com.hotel.repository.RoomRepository;
 import com.hotel.repository.UserRepository;
 import com.hotel.repository.specifications.RoomSpecification;
@@ -26,10 +26,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,7 +41,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
-    private final RoomAvailabilityRepository roomAvailabilityRepository;
+    private final BookRequestRepository roomAvailabilityRepository;
     private final RoomMapper roomMapper;
 
     private final RoomAvailabilityMapper roomAvailabilityMapper;
@@ -75,13 +75,14 @@ public class RoomServiceImpl implements RoomService {
 
     }
 
-    public RoomAvailability saveBookRequest(Integer roomId, Instant start, Instant end, Integer userId) {
-        RoomAvailability roomAvailability = new RoomAvailability();
-//        roomAvailability.setRoomId(roomId);
-        roomAvailability.setStart(start);
-        roomAvailability.setEnd(end);
-        roomAvailability.setUserId(userId);
-        return roomAvailabilityRepository.save(roomAvailability);
+    public BookRequest saveBookRequest(Integer roomId, Instant start, Instant end, Integer userId) {
+        BookRequest bookRequest = new BookRequest();
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new RoomNotFoundException(roomId));
+        bookRequest.setRoom(room);
+        bookRequest.setStart(start);
+        bookRequest.setEnd(end);
+        bookRequest.setUserId(userId);
+        return roomAvailabilityRepository.save(bookRequest);
     }
 
     @Transactional
@@ -116,7 +117,7 @@ public class RoomServiceImpl implements RoomService {
 //TODO: write mapper
     @Override
     public   List<RoomAvailabilityDTO> findRoomsBookedByMe(int userId) {
-        List<RoomAvailability> roomAvailabilities = roomRepository.findRoomAvailabilitiesByUserId(userId);
+        List<BookRequest> roomAvailabilities = roomRepository.findRoomAvailabilitiesByUserId(userId);
        return roomAvailabilities.stream().map(roomAvailabilityMapper::roomAvailabilityToRoomAvailabilityDTO).collect(Collectors.toList());
 
     }

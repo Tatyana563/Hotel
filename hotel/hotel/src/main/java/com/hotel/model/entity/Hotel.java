@@ -37,4 +37,7 @@ public class Hotel extends OwnedEntity  implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "hotel")
     private List<Room> roomList = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "hotel")
+    private AverageCustomersFeedback averageCustomersFeedback;
 }

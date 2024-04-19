@@ -7,7 +7,6 @@ import com.hotel.model.dto.RoomAvailabilityDTO;
 import com.hotel.model.dto.RoomDTO;
 import com.hotel.model.dto.request.BookingRequest;
 import com.hotel.model.dto.response.BookingResponse;
-import com.hotel.model.entity.RoomAvailability;
 import com.hotel.service.api.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

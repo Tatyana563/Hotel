@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(" select u from User u where u.id=:p_id ")
     User loadUserByUserId(@Param("p_id") Integer id);
 
-    User findUserByEmail(String email);
+    Optional<User> findUserByEmail(String email);
 
     User findByTokenReset(String token);
 
@@ -33,5 +33,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     int findUserIdByEmail(String email);
 
     Optional<User> findByUsername(String username);
+    Optional<User> findById(int id);
 
 }

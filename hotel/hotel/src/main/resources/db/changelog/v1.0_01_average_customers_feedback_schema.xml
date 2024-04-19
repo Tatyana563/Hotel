@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01" author="petrenko">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="average_customers_feedback"/>
+            </not>
+        </preConditions>
+        <createTable tableName="average_customers_feedback">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="hotel_fk_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="average_mark" type="double precision">
+                <constraints nullable="false"/>
+            </column>
+                <column name="feedbacks_number" type="int">
+                </column>
+            <column name="is_deleted" type="boolean">
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="average_customers_feedback" baseColumnNames="hotel_fk_id"
+                                 constraintName="hotel_rating_hotel"
+                                 referencedTableName="hotel" referencedColumnNames="id"/>
+
+        <rollback>
+            <dropTable tableName="average_customers_feedback"/>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.verify;
@@ -106,7 +107,7 @@ class UserServiceImplTest {
         verificationToken.setExpiryDate(expiryDate);
         request.setEmail("example@gmail.com");
 
-        when(userRepository.findUserByEmail("example@gmail.com")).thenReturn(user);
+        when(userRepository.findUserByEmail("example@gmail.com")).thenReturn(Optional.of(user));
         when(registrationProperties.getRequestRetryDuration()).thenReturn(Duration.ofMinutes(30));
         when(registrationProperties.getTokenExpiration()).thenReturn(Duration.ofMinutes(60));
         Instant now = Instant.parse("2024-02-09T19:00:00.432702600Z");
@@ -164,7 +165,7 @@ class UserServiceImplTest {
         verificationToken.setLastNotificationDate(lastNotificationDate);
         verificationToken.setExpiryDate(expiryDate);
         request.setEmail("example@gmail.com");
-        when(userRepository.findUserByEmail("example@gmail.com")).thenReturn(user);
+        when(userRepository.findUserByEmail("example@gmail.com")).thenReturn(Optional.of(user));
 
         when(tokenRepository.findByUserEmail(request.getEmail())).thenReturn(verificationToken);
         when(registrationProperties.getRequestRetryDuration()).thenReturn(Duration.ofMinutes(30));

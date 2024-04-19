@@ -71,3 +71,49 @@ change the schema and  try to map (mapstruct)
     SearchRequestDates.java do the same as SearchRequest  DONE
 
     compare 2 validators and use ValidateIntervalValidator, get rid of the second  DONE
+
+    *****************************
+  1)  can't use smallint in db
+
+  2) room availability empty table
+  org.postgresql.util.PSQLException: ERROR: null value in column "room_id" of relation "room_availability" violates not-null constraint
+3) cant add comment
+4)30 days
+
+
+TODO:
+1) rename table customers_feedback, hotel_rating, room_availability -> RENAME INTO BOOK_REQUEST!, liqubase hotel_rating new schema
+2) add to hotel_rating column feedbacks_number, calculate average not by cron job but after adding each comment
+3) RatingService //TODO: get avail by id and by userId;
+4) init method to insert date in DB - >test
+
+5) optimistic lock with JPA (annotation) see article
+6)FOr future - split room_availability into active_request(for search and booking) and finished(for comments, for history)
+
+*****************************************
+1) create many hotels:  DONE
+ properties: numberoFUsers 10
+ hotelsPerUser (1-3),
+ roomsPerHotel (from 2-5),
+ take names from file or simply add counter in the end test_1, test_2;
+ Random param for ENUMS,
+
+ 2) fill book_request:
+ request to DB - get all rooms;
+ duration from 3 to 10 days;
+ from 2024 -June 2024;
+ - start of the stay in the past, in the past;
+ - start of the stay in the past, duration up to tomorrow;
+ - start of the stay in the future, duration, end in future;
+3) Java method iterate over JSON file with countries and cities and create
+      <insert tableName="city">
+            <column name="name" value="Milan"/>
+            <column name="country" value="Italy"/>
+        </insert>
+[{"Spain":["Barcelona", "Valencia"]},
+{"Ukraine":["Kyiv", "Mykolaiv"]}], DONE!
+
+4) add hotel rating to hotelDTO
+
+5) Add user to Specification and combine 2 methods List<HotelBriefInfo> listAllHotelsBriefInfo(HotelSpecification hotelSpecification);
+       List<HotelBriefInfo> listAllHotelsBriefInfoForOwner(int userId);

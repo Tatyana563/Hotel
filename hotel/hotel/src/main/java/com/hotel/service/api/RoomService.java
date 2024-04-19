@@ -8,7 +8,6 @@ import com.hotel.model.dto.RoomDTOWithHotelDTO;
 import com.hotel.model.dto.request.BookingRequest;
 import com.hotel.model.dto.request.RoomRequest;
 import com.hotel.model.dto.response.BookingResponse;
-import com.hotel.model.entity.RoomAvailability;
 
 import java.util.List;
 

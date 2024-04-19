@@ -29,6 +29,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -124,13 +125,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private NotifyAgainResponse createNewTokenAndNotify(ShortRegistrationRequest request, Duration requestRetryDuration, Instant now) {
-        User dbUser = userRepository.findUserByEmail(request.getEmail());
+        Optional<User> dbUser = userRepository.findUserByEmail(request.getEmail());
         //User was manually deleted from DB by mistake, a rare case
         if (dbUser == null) {
             throw new UserNotFoundException((request.getEmail()));
         }
         VerificationToken verificationToken = createVerificationToken();
-        verificationToken.setUser(dbUser);
+        verificationToken.setUser(dbUser.get());
         tokenRepository.save(verificationToken);
 
         UserRegisteredEvent registrationEvent = new UserRegisteredEvent(verificationToken);
@@ -138,7 +139,7 @@ public class UserServiceImpl implements UserService {
         return new NotifyAgainResponse(true, now.plus(requestRetryDuration));
     }
 
-    private VerificationToken createVerificationToken() {
+    public  VerificationToken createVerificationToken() {
         VerificationToken verificationToken = new VerificationToken();
         Instant expiryDate = calculateExpiryDate();
         verificationToken.setExpiryDate(expiryDate);
@@ -180,12 +181,12 @@ public class UserServiceImpl implements UserService {
     public void reset(String email) {
         String resetToken = generateToken();
         PasswordResetEvent event = new PasswordResetEvent(resetToken, email);
-        User user = userRepository.findUserByEmail(email);
-        if (user == null) {
+        Optional<User> userByEmail = userRepository.findUserByEmail(email);
+        if (userByEmail == null) {
             throw new UserNotFoundException(email);
         }
-        user.setTokenReset(resetToken);
-        userRepository.save(user);
+        userByEmail.get().setTokenReset(resetToken);
+        userRepository.save(userByEmail.get());
         publisher.publishEvent(event);
     }
 

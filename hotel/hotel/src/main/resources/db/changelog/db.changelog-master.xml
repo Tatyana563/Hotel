@@ -8,7 +8,7 @@
     <include file="v1.0_01_city_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_hotel_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_room_schema.xml" relativeToChangelogFile="true"/>
-    <include file="v1.0_01_room_availability_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_book_request_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_role_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_role_values_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_users_schema.xml" relativeToChangelogFile="true"/>
@@ -18,6 +18,8 @@
     <include file="v1.0_01_token_modified_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_isRoomAvailable_function_schema.xml" relativeToChangelogFile="true"/>
     <include file="v1.0_01_city_values_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_customers_feedback_schema.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_01_average_customers_feedback_schema.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
 
 

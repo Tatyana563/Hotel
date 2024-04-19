@@ -30,7 +30,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
 
     @Query("select new com.hotel.model.dto.HotelBriefInfo(h.id,h.name, hc.name) from Hotel h inner join h.city hc where h.ownerId=:ownerId")
     List<HotelBriefInfo> listHotelsBriefInfoForOwner(int ownerId);
-    @Query("select new com.hotel.repository.HotelCounter(r.hotel, count(r.id)) from Room r where not exists (select ra from RoomAvailability ra where ra.room.id = r.id " +
+    @Query("select new com.hotel.repository.HotelCounter(r.hotel, count(r.id)) from Room r where not exists (select ra from BookRequest ra where ra.room.id = r.id " +
             "and ra.end>=:start and ra.start<=:end)" +
             "group by r.hotel")
     List<HotelCounter> listAvailableHotelsByDates(Date start, Date end);
@@ -41,7 +41,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
             "WHERE h.city.name = :city " +
             "AND h.starRating = :starRating " +
             "AND NOT EXISTS (" +
-            "   SELECT ra FROM RoomAvailability ra " +
+            "   SELECT ra FROM BookRequest ra " +
             "   WHERE ra.room.id = r.id " +
             "   AND ra.end >= :start " +
             "   AND ra.start <= :end" +
@@ -55,7 +55,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
             "where h.city.name = :city " +
             "and h.starRating = :starRating " +
             "and not exists (" +
-            "   select ra from RoomAvailability ra " +
+            "   select ra from BookRequest ra " +
             "   where ra.room.id = r.id " +
             "   and ra.end >= :start " +
             "   and ra.start <= :end" +
