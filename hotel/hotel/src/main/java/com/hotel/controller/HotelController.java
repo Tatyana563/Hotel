@@ -1,6 +1,5 @@
 package com.hotel.controller;
 
-import com.hotel.Utils;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTOWithRooms;
@@ -33,7 +32,7 @@ public class HotelController {
                                                          @RequestParam(required = false) Integer distance,
                                                          @RequestParam(required = false) Integer price,
                                                          @RequestParam(required = false) StarRating starRating) {
-        HotelSpecification hotelSpecification = new HotelSpecification.HotelSpecificationBuilder()
+        HotelSpecification hotelSpecification = HotelSpecification.builder()
                 .meal(meal)
                 .distance(distance)
                 .price(price)
@@ -47,8 +46,8 @@ public class HotelController {
     public List<HotelCounterDTO> searchAvailableHotels(@ModelAttribute SearchRequest searchRequest) {
         return hotelService.listHotelsWithAvailableRoomsAccordingToCityAndStarRating
                 (searchRequest.getCity(), searchRequest.getStarRating(),
-                searchRequest.getCheckIn(),
-               searchRequest.getCheckOut());
+                        searchRequest.getCheckIn(),
+                        searchRequest.getCheckOut());
     }
 
     @GetMapping("/{hotelId}/filter")
@@ -63,7 +62,7 @@ public class HotelController {
                                                         @RequestParam(required = false) Integer distance,
                                                         @RequestParam(required = false) Integer price,
                                                         @RequestParam(required = false) StarRating starRating) {
-        HotelSpecification hotelSpecification = new HotelSpecification.HotelSpecificationBuilder()
+        HotelSpecification hotelSpecification = HotelSpecification.builder()
                 .meal(meal)
                 .distance(distance)
                 .price(price)

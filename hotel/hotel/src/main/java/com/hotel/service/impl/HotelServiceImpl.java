@@ -15,6 +15,7 @@ import com.hotel.service.auditable.AuditAnnotation;
 import com.hotel.service.auditable.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,19 +50,6 @@ public class HotelServiceImpl implements HotelService {
         return hotelMapper.hotelToHotelDTOWithoutRooms(savedHotel);
     }
 
-    // TODO or else throw HotelNotFound Exc
-//    @Transactional
-//    @Override
-//    public void delete(int id, Authentication authentication) {
-//        Optional<Hotel> hotel = findById(id);
-//        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
-//        if (!hotel.isPresent()) {
-//            throw new HotelNotFoundException(id);
-//        }
-//        if (hotel.get().getUserId() != null && userDetails.getUserId().equals(hotel.get().getUserId().toString())) {
-//            hotelRepository.delete(hotel.get());
-//        }
-//    }
     @Transactional
     @Override
     public void delete(int id) {
@@ -73,14 +61,9 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<HotelBriefInfo> listAllHotelsBriefInfo(HotelSpecification hotelSpecification) {
+    public List<HotelBriefInfo> listAllHotelsBriefInfo(Specification<Hotel> hotelSpecification) {
         List<Hotel> hotelList = hotelRepository.findAll(hotelSpecification);
         return hotelList.stream().map(hotelMapper::hotelToHotelBriefInfo).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<HotelBriefInfo> listAllHotelsBriefInfoForOwner(int userId) {
-        return hotelRepository.listHotelsBriefInfoForOwner(userId);
     }
 
     @Override

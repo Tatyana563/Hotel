@@ -25,21 +25,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class Utils {
-    public static void main(String[] args) throws JSONException, IOException {
-
-        String filePath = "hotel/hotel/src/main/resources/countries_with_cities.json";
-        String filePathWithoutDuplicates = "hotel/hotel/src/main/resources/countries_with_cities_duplicates_removed.json";
-        String input = Files.readString(Paths.get(filePath));
-        removeDuplicatesCities(input, filePathWithoutDuplicates);
-
-        try {
-            String jsonData = Files.readString(Paths.get(filePathWithoutDuplicates));
-            convertJsonToXml(jsonData);
-        } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
-        }
-    }
-
     private final RegistrationProperties registrationProperties;
     private final Clock clock;
 
@@ -54,21 +39,20 @@ public class Utils {
         return checkInDate.toInstant();
     }
 
-//
-//    public static VerificationToken createVerificationToken() {
-//        VerificationToken verificationToken = new VerificationToken();
-//        Instant expiryDate = calculateExpiryDate();
-//        verificationToken.setExpiryDate(expiryDate);
-//        verificationToken.setLastNotificationDate(expiryDate);
-//        return verificationToken;
-//    }
-//
-//    private static Instant calculateExpiryDate() {
-//        Duration tokenExpiration = registrationProperties.getTokenExpiration();
-//        Instant now = Instant.now(clock);
-//        return now.plus(tokenExpiration);
-//
-//    }
+    public static void main(String[] args) throws JSONException, IOException {
+        String filePath = "hotel/hotel/src/main/resources/countries_with_cities.json";
+        String filePathWithoutDuplicates = "hotel/hotel/src/main/resources/countries_with_cities_duplicates_removed.json";
+        String input = Files.readString(Paths.get(filePath));
+        removeDuplicatesCities(input, filePathWithoutDuplicates);
+
+        try {
+            String jsonData = Files.readString(Paths.get(filePathWithoutDuplicates));
+            convertJsonToXml(jsonData);
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+    }
+
 
     public static void convertJsonToXml(String json) {
         StringBuilder xmlOutput = new StringBuilder();
@@ -132,6 +116,7 @@ public class Utils {
         }
     }
 
+    // TODO: POJO for Json country, Set cities;
     private static void removeDuplicatesCities(String input, String outputFile) {
         try {
             if (input == null || input.isEmpty()) {

@@ -117,3 +117,6 @@ TODO:
 
 5) Add user to Specification and combine 2 methods List<HotelBriefInfo> listAllHotelsBriefInfo(HotelSpecification hotelSpecification);
        List<HotelBriefInfo> listAllHotelsBriefInfoForOwner(int userId);
+
+6)  check if distinct() is copied from RoomSpec
+7)  create OwnerSpecification as parent class for HotelSpecification, check that super is called

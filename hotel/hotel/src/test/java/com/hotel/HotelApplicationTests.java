@@ -14,7 +14,6 @@ import com.hotel.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +25,7 @@ import java.util.Random;
 
 @SpringBootTest
 class HotelApplicationTests {
+    private static final int NUMBER_OF_USERS = 10;
     private static final Random random = new Random();
     @Autowired
     private HotelRepository hotelRepository;
@@ -38,7 +38,8 @@ class HotelApplicationTests {
 
     @Autowired
     private RoleRepository roleRepository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void contextLoads() throws IOException {
@@ -54,13 +55,16 @@ class HotelApplicationTests {
     public void generateRandomUsers() throws IOException {
         List<User> users = new ArrayList<>();
         List<Role> roles = roleRepository.findAll();
-        for (int i = 0; i < 9; i++) {
+        List<String> namesFromFile = readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\names.json");
+        List<String> surnamesFromFile = readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\surnames.json");
+        List<String> emailsFromFile = readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\emails.json");
+
+        for (int i = 1; i < NUMBER_OF_USERS; i++) {
             User user = new User();
 
-            List<String> namesFromFile = readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\names.json");
             user.setName(namesFromFile.get(i));
-            user.setSurname(readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\surnames.json").get(i));
-            user.setUsername(readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\names.json").get(i) + "_" + (readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\surnames.json")).get(i));
+            user.setSurname(surnamesFromFile.get(i));
+            user.setUsername(namesFromFile.get(i) + "_" + surnamesFromFile.get(i));
 
             user.setPassword(generateRandomPassword(8));
 
@@ -68,7 +72,7 @@ class HotelApplicationTests {
             user.setPhone(generateRandomPhoneNumber());
 
             // Generate random email (assuming a simple format)
-            user.setEmail(readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\emails.json").get(i));
+            user.setEmail(emailsFromFile.get(i));
 
             // Set enabled status randomly
             user.setEnabled(random.nextBoolean());
@@ -84,7 +88,7 @@ class HotelApplicationTests {
     }
 
     public void generateTestDataForHotels(User user) throws IOException {
-
+        List<String> hotelNamesFromFile = readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\hotel_names.json");
         List<Hotel> hotels = new ArrayList<>();
 
         // Generate random number of hotels for the user (between 1 and 3)
@@ -93,7 +97,7 @@ class HotelApplicationTests {
         for (int i = 0; i < numHotels; i++) {
             Hotel hotel = new Hotel();
 
-            hotel.setName(getRandomHotelName(readNamesFromFile("C:\\Users\\tpetrenko\\IdeaProjects\\Hotel\\hotel\\hotel\\src\\main\\resources\\hotel_names.json")));
+            hotel.setName(getRandomHotelName(hotelNamesFromFile));
             hotel.setStarRating(StarRating.values()[random.nextInt(StarRating.values().length)]);
             hotel.setMeals(Meals.values()[random.nextInt(Meals.values().length)]);
             hotel.setDistance(random.nextInt(100)); // Assuming distance is in kilometers
@@ -162,8 +166,8 @@ class HotelApplicationTests {
         return hotelNames.get(random.nextInt(hotelNames.size()));
     }
 
-    public static String generateRandomPassword(int length) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    public String generateRandomPassword(int length) {
+
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
         StringBuilder password = new StringBuilder();
 
@@ -172,7 +176,6 @@ class HotelApplicationTests {
             password.append(characters.charAt(index));
         }
         return passwordEncoder.encode(password.toString());
-
     }
 
     public static String generateRandomPhoneNumber() {

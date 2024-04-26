@@ -40,4 +40,5 @@ public class Hotel extends OwnedEntity  implements Serializable {
 
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "hotel")
     private AverageCustomersFeedback averageCustomersFeedback;
+    //create hotel, create feedback, feedback.set(hotel), save feedback
 }

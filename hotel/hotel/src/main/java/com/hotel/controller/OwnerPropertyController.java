@@ -3,6 +3,7 @@ package com.hotel.controller;
 import com.hotel.model.dto.*;
 import com.hotel.model.dto.request.HotelRequest;
 import com.hotel.model.dto.request.RoomRequest;
+import com.hotel.repository.specifications.HotelSpecification;
 import com.hotel.service.api.HotelService;
 import com.hotel.service.api.RoomService;
 import jakarta.validation.Valid;
@@ -29,7 +30,12 @@ public class OwnerPropertyController {
     public Collection<HotelBriefInfo> allHotelsBriefInfo(Authentication authentication) {
         ClaimsDto claimsDto = (ClaimsDto) authentication.getPrincipal();
         int userId = claimsDto.getId();
-        return hotelService.listAllHotelsBriefInfoForOwner(userId);
+
+        HotelSpecification hotelSpecification = HotelSpecification.builder()
+                .ownerId(userId)
+                .build();
+
+        return hotelService.listAllHotelsBriefInfo(hotelSpecification);
     }
     @GetMapping("/all_hotels_list")
     @PreAuthorize("hasRole('OWNER')")
