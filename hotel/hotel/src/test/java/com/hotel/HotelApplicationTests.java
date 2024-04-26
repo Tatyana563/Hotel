@@ -7,10 +7,7 @@ import com.hotel.model.enumeration.Meals;
 import com.hotel.model.enumeration.RoomType;
 import com.hotel.model.enumeration.Sleeps;
 import com.hotel.model.enumeration.StarRating;
-import com.hotel.repository.CityRepository;
-import com.hotel.repository.HotelRepository;
-import com.hotel.repository.RoleRepository;
-import com.hotel.repository.UserRepository;
+import com.hotel.repository.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @SpringBootTest
 class HotelApplicationTests {
@@ -41,6 +43,11 @@ class HotelApplicationTests {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private BookRequestRepository bookRequestRepository;
+
     @Test
     void contextLoads() throws IOException {
 
@@ -49,6 +56,15 @@ class HotelApplicationTests {
         for (User user : users) {
             generateTestDataForHotels(user);
         }
+        List<BookRequest> requestsInThePast = IntStream.range(0, 5)
+                .mapToObj(i -> generateRandomBookRequest(true)).toList();
+        List<BookRequest> requestsInTheFuture = IntStream.range(0, 5)
+                .mapToObj(i -> generateRandomBookRequest(false)).toList();
+
+        List<BookRequest> requests = Stream.concat(requestsInThePast.stream(), requestsInTheFuture.stream())
+                .collect(Collectors.toList());
+        bookRequestRepository.saveAll(requests);
+
     }
 
     @Transactional
@@ -188,6 +204,56 @@ class HotelApplicationTests {
         return phoneNumber.toString();
     }
 
+    public BookRequest generateRandomBookRequest(boolean isPast) {
+        List<Room> rooms = roomRepository.findAll();
+        List<User> users = userRepository.findAll();
+        Room room = getRandomEntity(rooms);
+        User user = getRandomEntity(users);
+        BookRequest bookRequest = new BookRequest();
+        bookRequest.setUserId(user.getId());
+        bookRequest.setRoom(room);
+        return setCheckInCheckOut(bookRequest, isPast);
+
+    }
+
+    public <T> T getRandomEntity(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("List cannot be null or empty");
+        }
+        int randomIndex = random.nextInt(list.size());
+        return list.get(randomIndex);
+    }
+
+    public static BookRequest setCheckInCheckOut(BookRequest bookRequest, boolean past) {
+        Instant currentTime = Instant.now();
+        Instant firstPoint;
+        Instant secondPoint;
+
+        if (past) {
+            secondPoint = currentTime.minus(30, ChronoUnit.DAYS);
+            firstPoint = currentTime.minus(15, ChronoUnit.DAYS);
+        } else {
+            secondPoint = currentTime.plus(30, ChronoUnit.DAYS);
+            firstPoint = currentTime.plus(15, ChronoUnit.DAYS);
+        }
+        Instant start = generateRandomInstantBetween(secondPoint, firstPoint);
+        Instant end = generateRandomInstantBetween(firstPoint, currentTime);
+        bookRequest.setStart(start);
+        bookRequest.setEnd(end);
+        return bookRequest;
+    }
+
+    public static Instant generateRandomInstantBetween(Instant startInstant, Instant endInstant) {
+        // Convert start and end instants to milliseconds since the epoch
+        long startMillis = startInstant.toEpochMilli();
+        long endMillis = endInstant.toEpochMilli();
+
+        // Generate a random number of milliseconds between the start and end millis
+        long randomMillis = startMillis + (long) (Math.random() * (endMillis - startMillis));
+
+        // Convert the random milliseconds back to Instant
+        return Instant.ofEpochMilli(randomMillis);
+    }
 }
 
 

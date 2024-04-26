@@ -17,8 +17,6 @@ import java.time.Instant;
 @Table(name = "book_request")
 public class BookRequest extends BaseEntity implements Serializable {
     @JsonIgnore
-
-   // private Integer roomId;
     private Integer userId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
@@ -27,7 +25,7 @@ public class BookRequest extends BaseEntity implements Serializable {
     @Column(name = "end_date")
     private Instant end;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "ROOM_ID")
     @ToString.Exclude
     private Room room;
