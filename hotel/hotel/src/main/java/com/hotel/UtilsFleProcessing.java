@@ -1,4 +1,4 @@
-package com;
+package com.hotel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,9 @@ import com.hotel.model.pojo.Countries;
 import com.hotel.model.pojo.Country;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,19 +17,11 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
-@RequiredArgsConstructor
 @Slf4j
-public class UtilsFleProcessing {
+@Component
+@RequiredArgsConstructor
 
-    public static void main(String[] args) throws JSONException, IOException {
-
-        Path filePath = Path.of("hotel/hotel/src/main/resources/countries_with_cities.json");
-
-        String input = Files.readString(filePath);
-        Countries countries = removeDuplicatesCities(input);
-
-        convertPOJOIntoXml(countries);
-    }
+public class UtilsFleProcessing implements ApplicationRunner {
 
     public static void convertPOJOIntoXml(Countries countries) {
         StringBuilder xmlOutput = new StringBuilder();
@@ -86,5 +80,15 @@ public class UtilsFleProcessing {
         }
     }
 
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+
+        Path filePath = Path.of("hotel/hotel/src/main/resources/countries_with_cities.json");
+
+        String input = Files.readString(filePath);
+        Countries countries = removeDuplicatesCities(input);
+
+        convertPOJOIntoXml(countries);
+    }
 }
 
