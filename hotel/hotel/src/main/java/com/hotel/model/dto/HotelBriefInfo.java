@@ -10,5 +10,5 @@ public class HotelBriefInfo {
     private int id;
     private String name;
     private String city;
-
+    private Double averageMark;
 }

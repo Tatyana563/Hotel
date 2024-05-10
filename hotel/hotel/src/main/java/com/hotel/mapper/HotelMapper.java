@@ -19,6 +19,7 @@ public interface HotelMapper {
     HotelCounterDTO hotelCounterToHotelCounterDTO(HotelCounterProjection hotelCounter);
 
     @Mapping(target = "city", source = "city.name")
+    @Mapping(target = "averageMark", source = "averageCustomersFeedback.averageMark")
     HotelBriefInfo hotelToHotelBriefInfo(Hotel hotel);
 
 
