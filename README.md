@@ -103,3 +103,10 @@ FLOW:
 9) The user looks for hotels between 2 dates and of particular level (stars), city
    http://{{host}}/hotel/search?city=Barcelona&starRating=THREE&roomType=DOUBLE&checkIn=2024-05-15&checkOut=2024-05-16
 
+
+
+
+OpenApi definition http://localhost:8080/swagger-ui/index.html
+
+http://localhost:8080/swagger-ui/index.html
+

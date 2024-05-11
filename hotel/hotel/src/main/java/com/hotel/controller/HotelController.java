@@ -9,6 +9,8 @@ import com.hotel.model.enumeration.Meals;
 import com.hotel.model.enumeration.StarRating;
 import com.hotel.repository.specifications.HotelSpecification;
 import com.hotel.service.api.HotelService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,6 +59,7 @@ public class HotelController {
     }
 
     @GetMapping("/filter")
+    @Operation(summary = "My endpoint", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('USER')")
     public List<HotelDTOWithRooms> getHotelsWithFilters(@RequestParam(required = false) Meals meal,
                                                         @RequestParam(required = false) Integer distance,
