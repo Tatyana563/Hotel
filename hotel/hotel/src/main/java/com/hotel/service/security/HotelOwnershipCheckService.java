@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class HotelOwnershipCheckService {
     private final HotelRepository hotelRepository;
 
-    public boolean checkOwnershipForDelete(int id, Authentication authentication) {
+    public boolean checkOwnership(int id, Authentication authentication) {
         ClaimsDto principal = (ClaimsDto) authentication.getPrincipal();
         int userId = principal.getId();
         return hotelRepository.existsByIdAndOwnerId(id, userId);

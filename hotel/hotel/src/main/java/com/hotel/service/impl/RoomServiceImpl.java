@@ -5,9 +5,7 @@ import com.hotel.exception_handler.exception.HotelNotFoundException;
 import com.hotel.exception_handler.exception.RoomNotFoundException;
 import com.hotel.mapper.RoomAvailabilityMapper;
 import com.hotel.mapper.RoomMapper;
-import com.hotel.model.FilterDTO;
 import com.hotel.model.dto.RoomAvailabilityDTO;
-import com.hotel.model.dto.RoomDTO;
 import com.hotel.model.dto.RoomDTOWithHotelDTO;
 import com.hotel.model.dto.request.BookingRequest;
 import com.hotel.model.dto.request.RoomRequest;
@@ -16,11 +14,10 @@ import com.hotel.model.dto.response.RequestStatus;
 import com.hotel.model.entity.BookRequest;
 import com.hotel.model.entity.Hotel;
 import com.hotel.model.entity.Room;
-import com.hotel.repository.HotelRepository;
 import com.hotel.repository.BookRequestRepository;
+import com.hotel.repository.HotelRepository;
 import com.hotel.repository.RoomRepository;
 import com.hotel.repository.UserRepository;
-import com.hotel.repository.specifications.RoomSpecification;
 import com.hotel.service.api.RoomService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +26,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -106,19 +102,26 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomDTO> findRoomsWithFilters(FilterDTO filters) {
+    public List<RoomDTOWithHotelDTO> findRoomsWithFilters(Specification<Room> filters) {
+        List<Room> rooms = roomRepository.findAll(filters);
 
-        Specification<Room> spec = new RoomSpecification(filters);
-        List<Room> rooms = roomRepository.findAll(spec);
-
-        return rooms.stream().map(roomMapper::roomToRoomDTO).collect(Collectors.toList());
-
+        return rooms.stream().map(roomMapper::roomToRoomDTOWithHotelDTO).collect(Collectors.toList());
     }
+
+    //    @Override
+//    public List<RoomDTO> findRoomsWithFilters(FilterDTO filters) {
+//
+//        Specification<Room> spec = new RoomSpecification(filters);
+//        List<Room> rooms = roomRepository.findAll(spec);
+//
+//        return rooms.stream().map(roomMapper::roomToRoomDTO).collect(Collectors.toList());
+//
+//    }
 //TODO: write mapper
     @Override
-    public   List<RoomAvailabilityDTO> findRoomsBookedByMe(int userId) {
+    public List<RoomAvailabilityDTO> findRoomsBookedByMe(int userId) {
         List<BookRequest> roomAvailabilities = roomRepository.findRoomAvailabilitiesByUserId(userId);
-       return roomAvailabilities.stream().map(roomAvailabilityMapper::roomAvailabilityToRoomAvailabilityDTO).collect(Collectors.toList());
+        return roomAvailabilities.stream().map(roomAvailabilityMapper::roomAvailabilityToRoomAvailabilityDTO).collect(Collectors.toList());
 
     }
 }

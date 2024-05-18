@@ -120,6 +120,8 @@ TODO:
 
 6)  check if distinct() is copied from RoomSpec
 7)  create OwnerSpecification as parent class for HotelSpecification, check that super is called
+*******************************************
+When running HotelApplicationTest error from UtilsFleProcessing
 
 *********************
 1) add example value to open api  - annotation on Entity, description for controller

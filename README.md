@@ -110,3 +110,35 @@ OpenApi definition http://localhost:8080/swagger-ui/index.html
 
 http://localhost:8080/swagger-ui/index.html
 
+Error Handling
+
+1) handleHttpMessageNotReadableException (unexpected field "extraField")
+POST http://{{host}}/hotels
+   {
+   "name": "Hotel_1",
+   "starRating": "FOUR",
+   "meals": "BREAKFAST",
+   "distance": 100,
+   "cityId": 1,
+   "extraField": "extra"
+}
+2) handleInvalidFormatException (enum value is wrong  "meals": "BREAKFAST2",)
+if http://{{host}}/hotels
+   {
+   "name": "Hotel_1",
+   "starRating": "FOUR",
+   "meals": "BREAKFAST2",
+   "distance": 100,
+   "cityId": 1
+3) handleMethodArgumentNotValidException
+POST http://{{host}}/hotels
+   {
+   "name": "",
+   "starRating": "FOUR",
+   "meals": "BREAKFAST",
+   "distance": 100,
+   "cityId": 1
+
+}
+}
+

@@ -6,10 +6,12 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import static com.hotel.exception_handler.exception.ValidationErrorDTO.REQUIRED_FIELD;
+
 
 @Data
 public class HotelRequest {
-    @NotEmpty
+    @NotEmpty(message = REQUIRED_FIELD)
     private String name;
     @NotNull
     private StarRating starRating;

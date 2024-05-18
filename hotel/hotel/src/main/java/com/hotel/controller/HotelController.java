@@ -3,6 +3,7 @@ package com.hotel.controller;
 import com.hotel.model.dto.HotelBriefInfo;
 import com.hotel.model.dto.HotelCounterDTO;
 import com.hotel.model.dto.HotelDTOWithRooms;
+import com.hotel.model.dto.request.HotelSearchRequest;
 import com.hotel.model.dto.request.SearchRequest;
 import com.hotel.model.dto.request.SearchRequestDates;
 import com.hotel.model.enumeration.Meals;
@@ -30,15 +31,12 @@ public class HotelController {
 
     @GetMapping("/all_hotels_brief")
     @PreAuthorize("hasRole('USER')")
-    public Collection<HotelBriefInfo> allHotelsBriefInfo(@RequestParam(required = false) Meals meal,
-                                                         @RequestParam(required = false) Integer distance,
-                                                         @RequestParam(required = false) Integer price,
-                                                         @RequestParam(required = false) StarRating starRating) {
+    public Collection<HotelBriefInfo> allHotelsBriefInfo(@RequestBody @Valid HotelSearchRequest hotelSearchRequest) {
         HotelSpecification hotelSpecification = HotelSpecification.builder()
-                .meal(meal)
-                .distance(distance)
-                .price(price)
-                .starRating(starRating)
+                .meal(hotelSearchRequest.getMeal())
+                .distance(hotelSearchRequest.getDistance())
+                .price(hotelSearchRequest.getPrice())
+                .starRating(hotelSearchRequest.getStarRating())
                 .build();
         return hotelService.listAllHotelsBriefInfo(hotelSpecification);
     }

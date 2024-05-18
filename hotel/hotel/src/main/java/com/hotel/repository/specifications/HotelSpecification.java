@@ -35,7 +35,7 @@ public class HotelSpecification implements Specification<Hotel> {
         // Add condition to exclude deleted hotels
         predicateList.add(criteriaBuilder.equal(root.get(Hotel_.IS_DELETED), Boolean.FALSE));
 
-        query.distinct(true);
+      //  query.distinct(true);
         if (distance != null) {
             predicateList.add(criteriaBuilder.lessThanOrEqualTo(root.get(Hotel_.DISTANCE), distance));
         }
