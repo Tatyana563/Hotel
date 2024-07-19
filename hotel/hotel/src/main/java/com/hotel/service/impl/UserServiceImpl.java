@@ -4,7 +4,10 @@ import com.hotel.config.properties.RegistrationProperties;
 import com.hotel.events.model.PasswordResetEvent;
 import com.hotel.events.model.UserConfirmedRegistrationEvent;
 import com.hotel.events.model.UserRegisteredEvent;
-import com.hotel.exception_handler.exception.*;
+import com.hotel.exception_handler.exception.InvalidTokenException;
+import com.hotel.exception_handler.exception.RoleNotFoundException;
+import com.hotel.exception_handler.exception.UserAlreadyCreatedException;
+import com.hotel.exception_handler.exception.UserNotFoundException;
 import com.hotel.model.dto.request.RegistrationRequest;
 import com.hotel.model.dto.request.ShortRegistrationRequest;
 import com.hotel.model.dto.response.NotifyAgainResponse;
@@ -48,7 +51,7 @@ public class UserServiceImpl implements UserService {
     //   @Transactional
     @Override
     public User register(RegistrationRequest request) {
-        User savedUser = null;
+
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyCreatedException(request.getEmail(), userRepository.isEnabled(request.getEmail()));
@@ -75,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
         UserRegisteredEvent registrationEvent = new UserRegisteredEvent(verificationToken);
         publisher.publishEvent(registrationEvent);
-        return savedUser;
+        return user;
     }
 
     @Override
@@ -111,7 +114,7 @@ public class UserServiceImpl implements UserService {
         Instant timeToRenew = tokenExpirationTime.minus(registrationProperties.getTokenTimeLeftToRenew());
         boolean isAboutToBeExpired = now.isAfter(timeToRenew);
 
-        if (isAboutToBeExpired||tokenExpirationTime.isBefore(lastNotificationTime.plus(requestRetryDuration))) {
+        if (isAboutToBeExpired || tokenExpirationTime.isBefore(lastNotificationTime.plus(requestRetryDuration))) {
             dbVerificationToken.setExpiryDate(calculateExpiryDate());
         }
 
@@ -139,7 +142,7 @@ public class UserServiceImpl implements UserService {
         return new NotifyAgainResponse(true, now.plus(requestRetryDuration));
     }
 
-    public  VerificationToken createVerificationToken() {
+    public VerificationToken createVerificationToken() {
         VerificationToken verificationToken = new VerificationToken();
         Instant expiryDate = calculateExpiryDate();
         verificationToken.setExpiryDate(expiryDate);
@@ -155,26 +158,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void confirmRegistration(UUID token) {
-        VerificationToken verificationToken = tokenRepository.findById(token).orElseThrow(() -> new InvalidTokenException( token.toString()));
+    public UserConfirmedRegistrationEvent confirmRegistration(UUID token) {
+        VerificationToken verificationToken = tokenRepository.findById(token).orElseThrow(() -> new InvalidTokenException(token.toString()));
 
         Date expiryDate = Date.from(verificationToken.getExpiryDate());
 
         Date currentDate = new Date();
 
         boolean isTokenValid = expiryDate.after(currentDate);
+        UserConfirmedRegistrationEvent event;
         if (isTokenValid) {
             User user = verificationToken.getUser();
             user.setEnabled(true);
             userRepository.save(user);
             verificationToken.setUser(null);
             tokenRepository.delete(verificationToken);
-            UserConfirmedRegistrationEvent event = new UserConfirmedRegistrationEvent(user.getUsername(), user.getEmail());
+            event = new UserConfirmedRegistrationEvent(user.getUsername(), user.getEmail());
             publisher.publishEvent(event);
-        } else throw new InvalidTokenException(String.valueOf(token));
-
+        }
+        else throw new InvalidTokenException(String.valueOf(token));
+        return event;
     }
-
 
 
     @Override

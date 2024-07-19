@@ -11,12 +11,12 @@ import java.util.Date;
 
 @Data
 //@CompareDate(/*before = "checkIn", after="checkOut",*/ message = "The checkIn date must be before  the checkOut date")
-@ValidInterval(message = "The interval for SearchRequest is not valid. The checkIn date must be before  the checkOut date")
-public class SearchRequestDates implements DateInterval {
- //   @DateTimeFormat(pattern = "dd_MM_yyyy")
-    private Instant checkIn;
-//    @DateTimeFormat(pattern = "dd_MM_yyyy")
-    private Instant checkOut;
+    @ValidInterval(message = "The interval for SearchRequest is not valid. The checkIn date must be before  the checkOut date")
+    public class SearchRequestDates implements DateInterval {
+        //   @DateTimeFormat(pattern = "dd_MM_yyyy")
+        private Instant checkIn;
+        //    @DateTimeFormat(pattern = "dd_MM_yyyy")
+        private Instant checkOut;
 
     @Override
     public Instant getFirstDate() {

@@ -1,5 +1,6 @@
 package com.hotel.service.api;
 
+import com.hotel.events.model.UserConfirmedRegistrationEvent;
 import com.hotel.model.dto.request.RegistrationRequest;
 import com.hotel.model.dto.request.ShortRegistrationRequest;
 import com.hotel.model.dto.response.NotifyAgainResponse;
@@ -16,5 +17,5 @@ public interface UserService {
 
     NotifyAgainResponse resendRegistrationTokenRequest(ShortRegistrationRequest request);
 
-    void confirmRegistration(UUID token);
+    UserConfirmedRegistrationEvent confirmRegistration(UUID token);
 }

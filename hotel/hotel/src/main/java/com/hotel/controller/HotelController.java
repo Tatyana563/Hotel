@@ -52,10 +52,10 @@ public class HotelController {
 
     @GetMapping("/{hotelId}/filter")
     @PreAuthorize("hasRole('USER')")
-    public HotelDTOWithRooms filterHotelRooms(@ModelAttribute @Valid SearchRequestDates searchRequestDates,/* @Valid @HotelId*/ @PathVariable int hotelId) {
+    public HotelDTOWithRooms filterHotelRooms(@RequestBody @Valid SearchRequestDates searchRequestDates,/* @Valid @HotelId*/ @PathVariable int hotelId) {
         return hotelService.hotelWithAvailableRoomsByDates(hotelId, searchRequestDates.getCheckIn(), searchRequestDates.getCheckOut());
     }
-
+// TODO: POST + body, @RequestBody can be used instead of GET and @ModelAttribute
     @GetMapping("/filter")
     @Operation(summary = "My endpoint", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('USER')")

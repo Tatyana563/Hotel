@@ -20,7 +20,7 @@ public class UserRegistrationEventsListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void listenUserRegisteredEvent(UserRegisteredEvent userRegistrationEvent) {
-        log.info("User was sent email with confirmation link to complete registration: {}", userRegistrationEvent);
+        log.info("User was sent email to the mailbox: {} with confirmation link to complete registration", userRegistrationEvent.getToken().getUser().getEmail());
         userRegistrationEmailService.sendEmailLinkConfirmation(userRegistrationEvent);
     }
 

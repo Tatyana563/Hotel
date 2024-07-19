@@ -15,8 +15,8 @@
             room_available_result BOOLEAN;
             BEGIN
             SELECT COUNT(*) = 0 INTO room_available_result
-            FROM room_availability ra
-            WHERE ra.room_id = roomId AND ra.end_date >= startDate AND ra.start_date <= endDate;
+            FROM book_request br
+            WHERE br.room_id = roomId AND br.end_date >= startDate AND br.start_date <= endDate;
             RETURN room_available_result;
             END;
             ' LANGUAGE plpgsql;

@@ -63,7 +63,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpeci
             "group by h")
     List<HotelCounterProjection> hotelWithAvailableRoomsByDatesAccordingToCityAndStarRating_2(String city, StarRating starRating, Instant start, Instant end);
 
-    //    @Query("select h  from Hotel h  join fetch h.roomList as r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
+//        @Query("select h  from Hotel h  join fetch h.roomList as r where not exists (select ra from RoomAvailability ra where ra.roomId = r.id " +
 //            "and ra.end>=:start and ra.start<=:end) and h.id=:hotelId")
     @Query("select h  from Hotel h  join fetch h.roomList as r WHERE  function ('isRoomAvailable', r.id, :start, :end )=true   and h.id=:hotelId")
     Optional<Hotel> hotelWithAvailableRoomsByDates(Integer hotelId, Instant start, Instant end);

@@ -125,3 +125,8 @@ When running HotelApplicationTest error from UtilsFleProcessing
 
 *********************
 1) add example value to open api  - annotation on Entity, description for controller
+
+
+QUESTIONS:
+1) [INFO] New row inserted into city - how to remove from logs???
+2) HotelController @@RequestParam?
